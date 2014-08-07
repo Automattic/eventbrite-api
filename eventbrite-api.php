@@ -15,7 +15,6 @@ add_action( 'keyring_load_services', 'init_eventbrite_api', 11 );
 function init_eventbrite_api() {
 	require_once( 'inc/api.php' );
 	require_once( 'inc/admin.php' );
-	get_eventbrite_user_owned_events();
 }
 
 function get_eventbrite_user_owned_events() {
