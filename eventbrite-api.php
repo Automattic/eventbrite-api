@@ -19,6 +19,6 @@ function init_eventbrite_api() {
 
 function get_eventbrite_user_owned_events() {
 	$request = Eventbrite_API::call( 'user_owned_events' );
-	return $request;
+	return $request->events;
 }
 
