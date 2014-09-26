@@ -6,6 +6,23 @@
  * @package Eventbrite_API
  */
 class Eventbrite_Query extends WP_Query {
+	/**
+	 * Constructor.
+	 *
+	 * Sets up the WordPress query, if parameter is not empty.
+	 *
+	 * @access public
+	 *
+	 * @param string $query URL query string.
+	 * @return WP_Query
+	 */
+	public function __construct( $query = '' ) {
+		// if ( ! empty( $query ) ) {
+		// 	$this->query( $query );
+		// }
+		$this->query( $query );
+
+	}
 
 	/**
 	 * Retrieve the posts based on query variables.
@@ -42,23 +59,5 @@ class Eventbrite_Query extends WP_Query {
 	 */
 	private function set_found_posts() {
 		$this->found_posts = count( $this->posts );
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * Sets up the WordPress query, if parameter is not empty.
-	 *
-	 * @access public
-	 *
-	 * @param string $query URL query string.
-	 * @return WP_Query
-	 */
-	public function __construct( $query = '' ) {
-		// if ( ! empty( $query ) ) {
-		// 	$this->query( $query );
-		// }
-		$this->query( $query );
-
 	}
 }
