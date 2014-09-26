@@ -6,87 +6,15 @@
  */
 
 /**
- * Make an Eventbrite API call for the user-owned events.
- *
- * @param
- * @uses
- * @return
- */
-function eventbrite_request_user_owned_events( $force = false ) {
-	if ( false === ( $request = get_transient( 'eventbrite_api_results' ) ) || true == $force ) {
-		$request = Eventbrite_API::call( 'user_owned_events' );
-		set_transient( 'eventbrite_api_results', $request );
-	}
-	
-	return $request;
-}
-
-/**
  * Get an array of Eventbrite events, in the format expected by Eventbrite_Post
  *
  * @param
  * @uses
  * @return
  */
-function eventbrite_request_events() {
-	// Get the API raw events
-	$api_events = eventbrite_request_user_owned_events()->events;
-
-	$api_events = array_slice($api_events, 0, 10); // kwight: Temp limit to 10
-
-	// Map our events to the format expected by Eventbrite_Post
-	$events = array_map( 'eventbrite_map_keys', $api_events );
-
-	return $events;
+function eventbrite_get_events( $params = array(), $force = false ) {
+	return eventbrite()->get_user_owned_events( $params, $force );
 }
-
-/**
- * Convert the Eventbrite API elements into elements used by Eventbrite_Post.
- *
- * @param
- * @uses
- * @return
- */
-function eventbrite_map_keys( $api_event ) {
-	$event = array();
-
-	$event['ID']           = ( isset( $api_event->id ) )                ? $api_event->id                : '';
-	$event['post_title']   = ( isset( $api_event->name->text ) )        ? $api_event->name->text        : '';
-	$event['post_content'] = ( isset( $api_event->description->html ) ) ? $api_event->description->html : '';
-	$event['post_date']    = ( isset( $api_event->created ) )           ? $api_event->created           : '';
-	$event['url']          = ( isset( $api_event->url ) )               ? $api_event->url               : '';
-	$event['logo_url']     = ( isset( $api_event->logo_url ) )          ? $api_event->logo_url          : '';
-	$event['post_status']  = ( isset( $api_event->status ) )            ? $api_event->status            : '';
-	$event['start']        = ( isset( $api_event->start->utc ) )        ? $api_event->start->utc        : '';
-	$event['end']          = ( isset( $api_event->end->utc ) )          ? $api_event->end->utc          : '';
-	$event['post_author']  = ( isset( $api_event->organizer->name ) )   ? $api_event->organizer->name   : '';
-	$event['organizer_id'] = ( isset( $api_event->organizer->id ) )     ? $api_event->organizer->id     : '';
-	$event['venue']        = ( isset( $api_event->venue->name ) )       ? $api_event->venue->name       : '';
-	$event['venue_id']     = ( isset( $api_event->venue->id ) )         ? $api_event->venue->id         : '';
-
-	return (object) $event;
-}
-
-/**
- * Get pagination information from the Eventbrite API call.
- *
- * @param
- * @uses
- * @return
- */
-function eventbrite_request_events_pagination() {
-	return eventbrite_request_user_owned_events()->pagination;
-}
-
-/**
- * Allow themes and plugins to access Eventbrite_Query methods and properties, without using globals.
- *
- * @uses Eventbrite_Query::instance()
- * @return object Eventbrite_Query
- */
-// function eventbrite() {
-// 	return Eventbrite_Query::get_current_event();
-// }
 
 /**
  * Retrieves post data given a post ID or post object.
