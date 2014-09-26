@@ -37,7 +37,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		$this->set_endpoint( 'user_owned_events', self::API_BASE . 'users/' . $token->get_meta( 'user_id' ) . '/owned_events', 'GET' );
 	}
 
-	static public function call( $endpoint, $params = array() ) {
+	public static function call( $endpoint, $params = array() ) {
 		$token = self::$instance->get_token();
 		if ( empty( $token ) )
 			return new Keyring_Error( '400', 'No token present for the Eventbrite API.' );

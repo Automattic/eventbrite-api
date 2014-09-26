@@ -10,7 +10,17 @@ Author URI: http://automattic.com
 License: GPL v2 or newer <https://www.gnu.org/licenses/gpl.txt>
 */
 
-add_action( 'keyring_load_services', 'init_eventbrite_api', 11 );
+/**
+ * Load our API on top of the Keyring Eventbrite service.
+ *
+ * @param
+ * @uses
+ * @return
+ */
+function eventbrite_api_load_keyring_service() {
+	require_once( 'inc/class-eventbrite-api.php' );
+}
+add_action( 'keyring_load_services', 'eventbrite_api_load_keyring_service', 11 );
 
 function init_eventbrite_api() {
 	require_once( 'inc/api.php' );
