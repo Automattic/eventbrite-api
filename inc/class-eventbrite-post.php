@@ -87,22 +87,17 @@ class Eventbrite_Post {
 	 * @return WP_Post|bool Post object, false otherwise.
 	 */
 	public static function get_instance( $post_id ) {
-		//global $wpdb;
-		$api_events = eventbrite_request_events();
+		// We can bail if no valid events are returned, or if no post ID was passed.
+		$api_events = eventbrite_get_events();
 		$post_id = (int) $post_id;
 		
 		if ( ! $api_events || ! $post_id ) {
 			return false;
 		}
 
-		//$_post = wp_cache_get( $post_id, 'posts' );
-
-		// if ( ! $_post ) {
-		// 	$_post = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE ID = %d LIMIT 1", $post_id ) );
-
+		// Return false if the post requested isn't found in the returned events.
 		$_post = false;
 
-			//error_log( print_r( $api_events, true ) );
 		foreach ( $api_events as $event ) {
 			if ( $post_id == $event->ID ) {
 				$_post = $event;
@@ -112,11 +107,8 @@ class Eventbrite_Post {
 		if ( ! $_post ) {
 			return false;
 		}
-		// 	$_post = sanitize_post( $_post, 'raw' );
-		// 	wp_cache_add( $_post->ID, $_post, 'posts' );
-		// } elseif ( empty( $_post->filter ) ) {
-		// 	$_post = sanitize_post( $_post, 'raw' );
-		// }
+
+		$_post = sanitize_post( $_post, 'raw' );
 
 		return new Eventbrite_Post( $_post );
 	}
