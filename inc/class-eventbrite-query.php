@@ -17,11 +17,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @return WP_Query
 	 */
 	public function __construct( $query = '' ) {
-		// if ( ! empty( $query ) ) {
-		// 	$this->query( $query );
-		// }
 		$this->query( $query );
-
 	}
 
 	/**
