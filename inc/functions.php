@@ -32,8 +32,8 @@ function eventbrite_get_events( $params = array(), $force = false ) {
  * @return WP_Post|null WP_Post on success or null on failure.
  */
 function eventbrite_get_event( $post = null ) {
-	if ( empty( $post ) && isset( $GLOBALS['event'] ) ) {
-		$post = $GLOBALS['event'];
+	if ( empty( $post ) ) {
+		return null;
 	}
 
 	if ( is_a( $post, 'Eventbrite_Post' ) ) {
@@ -51,8 +51,9 @@ function eventbrite_get_event( $post = null ) {
 		$_post = Eventbrite_Post::get_instance( $post );
 	}
 
-	if ( ! $_post )
+	if ( ! $_post ) {
 		return null;
+	}
 
 	// $_post = $_post->filter( $filter );
 
