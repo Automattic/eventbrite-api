@@ -27,7 +27,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @return array List of posts.
 	 */
 	public function get_posts() {
-		$this->posts = eventbrite_get_events(); // kwight: set back to empty
+		$this->posts = eventbrite_get_events( $this->query );
 
 		$this->set_found_posts();
 
