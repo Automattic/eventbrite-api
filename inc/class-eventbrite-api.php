@@ -37,13 +37,24 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		$this->set_endpoint( 'user_owned_events', self::API_BASE . 'users/' . $token->get_meta( 'user_id' ) . '/owned_events', 'GET' );
 	}
 
-	public static function call( $endpoint, $params = array() ) {
+	public static function call( $endpoint, $query_params = array() ) {
 		$token = self::$instance->get_token();
 		if ( empty( $token ) )
 			return new Keyring_Error( '400', 'No token present for the Eventbrite API.' );
 
-		$endpoint_url = $endpoint . '_url';
-		$response = self::$instance->request( self::$instance->{$endpoint_url}, $params );
+		$endpoint_url = self::$instance->{$endpoint . '_url'};
+		$method = self::$instance->{$endpoint . '_method'};
+		$params = array( 'method' => $method );
+
+		if ( 'GET' == $method ) {
+			$endpoint_url = add_query_arg( $query_params, $endpoint_url );
+		} else if ( 'POST' == $method ) {
+			$params['body'] = $query_params;
+		} else {
+			return new WP_Error( '500', 'Method ' . $method . ' is not implemented in the Eventbrite API.' );
+		}
+		
+		$response = self::$instance->request( $endpoint_url, $params );
 		return $response;
 	}
 
