@@ -12,6 +12,13 @@ class Eventbrite_Manager {
 	private static $instance;
 
 	/**
+	 * Parameters used in calls to the Eventbrite API.
+	 *
+	 * @var array
+	 */
+	public $api_params = array();
+
+	/**
 	 * Return our instance, creating a new one if necessary.
 	 *
 	 * @uses Eventbrite_Manager::$instance
@@ -119,22 +126,83 @@ class Eventbrite_Manager {
 	 * @return object Eventbrite_Manager
 	 */
 	public function get_user_owned_events( $params = array(), $force = false ) {
-		// Get the raw events.
-		$events = $this->request( 'user_owned_events', $params, $force );
-
-		// Bail if we get nothing back.
-		if ( ! isset( $events ) || empty( $events->events ) ) {
-			return array();
+		// Sort out internal and external parameters.
+		if ( ! empty( $params ) ) {
+			$this->process_params( $params );
 		}
 
-		// kwight: Temp limit
-		$events = array_slice( $events->events, 0, 3 );
+		// Get the raw results.
+		$results = $this->request( 'user_owned_events', $this->api_params, $force );
 
-		// Map our events to the format expected by Eventbrite_Post
-		$events = array_map( array( $this, 'map_event_keys' ), $events );
+		// If we have events, map them to the format expected by Eventbrite_Post
+		if ( ! empty( $results->events ) ) {
+			$results->events = array_map( array( $this, 'map_event_keys' ), $results->events );
+		}
 
-		return $events;
- 	}
+		return $results;
+	}
+
+	/**
+	 * Sort out parameters used in API calls from those used internally (WP_Query-style parameters).
+	 * Also reconciles any oddness between the two.
+	 *
+	 * @param
+	 * @uses
+	 * @return
+	 */
+	public function process_params( $params ) {
+		// Create array of parameters for API calls.
+		$this->api_params = array_intersect_key( $params, array(
+			'post_status' => null,
+			'order' => null,
+			'orderby' => null,
+		) );
+
+		// Change WP_Query 'post_status' query arg to its equivalent Eventbrite 'status' query arg.
+		if ( ! empty( $this->api_params['post_status'] ) ) {
+			$valid = array(
+				'all',
+				'draft',
+				'ended',
+				'live',
+				'started',
+			);
+			$this->api_params['status'] = ( in_array( $this->api_params['post_status'], $valid ) ) ? $this->api_params['post_status'] : 'all' ;
+		}
+
+		// Validate the 'order' arg.
+		if ( empty( $this->api_params['order'] ) || ! in_array( $this->api_params['order'], array( 'ASC', 'DESC' ) ) ) {
+			$this->api_params['order'] = 'asc';
+		} else {
+			// Default value in WP_Query is 'DESC', while the Eventbrite API default is 'asc'. Flip whatever we've got.
+			if ( 'ASC' == $this->api_params['order'] ) {
+				$this->api_params['order'] = 'desc';
+			} else {
+				$this->api_params['order'] = 'asc';
+			}
+		}
+
+		// Validate the 'orderby' arg.
+		if ( ! empty( $this->api_params['orderby'] ) ) {
+			$valid = array(
+				'created',
+				'start',
+			);
+			$this->api_params['orderby'] = ( in_array( $this->api_params['orderby'], $valid ) ) ? $this->api_params['orderby'] : 'start' ;
+		} else {
+			$this->api_params['orderby'] = 'start';
+		}
+
+		// Determine Eventbrite 'order_by' query arg based on WP_Query 'order' and 'orderby' values.
+		$this->api_params['order_by'] = $this->api_params['orderby'] . '_' . $this->api_params['order'];
+
+		// Remove extraneous keys.
+		unset(
+			$this->api_params['post_status'],
+			$this->api_params['order'],
+			$this->api_params['orderby']
+		);
+	}
 
 	/**
 	 * Get the transient for a certain endpoint and combination of parameters.
@@ -195,9 +263,7 @@ class Eventbrite_Manager {
 	/**
 	 * Convert the Eventbrite API elements into elements used by Eventbrite_Post.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @return object Event with Eventbrite_Post keys.
 	 */
 	function map_event_keys( $api_event ) {
 		$event = array();

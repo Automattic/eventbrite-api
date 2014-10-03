@@ -88,7 +88,7 @@ class Eventbrite_Post {
 	 */
 	public static function get_instance( $post_id ) {
 		// We can bail if no valid events are returned, or if no post ID was passed.
-		$api_events = eventbrite_get_events();
+		$api_events = eventbrite_get_events()->events;
 		$post_id = (int) $post_id;
 		
 		if ( ! $api_events || ! $post_id ) {
