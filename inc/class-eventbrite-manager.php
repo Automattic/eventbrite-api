@@ -242,7 +242,6 @@ class Eventbrite_Manager {
 	 */
 	protected function get_transient_name( $endpoint, $params ) {
 		return 'eb_' . md5( $endpoint . implode( $params ) );
-		//return 'eventbrite_' . $endpoint . implode( $params );
 	}
 
 	/**
