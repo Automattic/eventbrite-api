@@ -138,6 +138,8 @@ add_filter( 'post_thumbnail_html', 'eventbrite_event_image_url', 9, 2 );
  */
 function eventbrite_post_classes( $classes ) {
 	if ( is_eventbrite_event() ) {
+		$classes[] = 'eventbrite-event';
+
 		global $post;
 		if ( isset( $post->logo_url ) ) {
 			$classes[] = 'has-post-thumbnail';
