@@ -105,7 +105,7 @@ class Eventbrite_Manager {
 						'all',
 						'draft',
 						'live',
-						'cancelled',
+						// 'cancelled', October 3, 2014: Listed in docs as valid, but returns an error.
 						'started',
 						'ended',
 					),
@@ -170,6 +170,7 @@ class Eventbrite_Manager {
 		if ( ! empty( $this->api_params['post_status'] ) ) {
 			$valid = array(
 				'all',
+				// 'cancelled', October 3, 2014: Listed in docs as valid, but returns an error.
 				'draft',
 				'ended',
 				'live',
