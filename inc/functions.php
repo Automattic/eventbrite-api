@@ -90,67 +90,6 @@ function is_eventbrite_event( $post = null ) {
 }
 
 /**
- * Filter the Edit Post link to point to the Eventbrite event edit page.
- *
- * @param
- * @uses
- * @return
- */
-function eventbrite_event_edit_link( $link, $post_id, $text ) {
-	// kwight: blame get_edit_post_link()
-	return $link;
-}
-//add_filter( 'edit_post_link', 'eventbrite_event_edit_link', 10, 3 );
-
-/**
- * Replace featured images with the Eventbrite event logo.
- *
- * @param
- * @uses
- * @return
- */
-function eventbrite_event_image_url( $html, $post_id ) {
-	// Are we dealing with an Eventbrite event?
-	if ( is_eventbrite_event() ) {
-		$html = '';
-
-		$event = eventbrite_get_event( $post_id );
-
-		if ( isset( $event->logo_url ) ) {
-			$html = '<img src="' . $event->logo_url . '" />';
-			$html = sprintf( '<a class="post-thumbnail" href="%1$s"><img src="%2$s" class="wp-post-image"></a>',
-				esc_url( get_the_permalink() ),
-				esc_url( $event->logo_url )
-			);
-		}
-	}
-	
-	return $html;
-}
-add_filter( 'post_thumbnail_html', 'eventbrite_event_image_url', 9, 2 );
-
-/**
- * Adjust classes for Event <article>s.
- *
- * @param
- * @uses
- * @return
- */
-function eventbrite_post_classes( $classes ) {
-	if ( is_eventbrite_event() ) {
-		$classes[] = 'eventbrite-event';
-
-		global $post;
-		if ( isset( $post->logo_url ) ) {
-			$classes[] = 'has-post-thumbnail';
-		}
-	}
-
-	return $classes;
-}
-add_filter( 'post_class', 'eventbrite_post_classes' );
-
-/**
  * Paging navigation on event listings, using paginate_links().
  *
  * @param object $events
