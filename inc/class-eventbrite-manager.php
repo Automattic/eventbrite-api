@@ -161,9 +161,10 @@ class Eventbrite_Manager {
 	public function process_params( $params ) {
 		// Create array of parameters for API calls.
 		$this->api_params = array_intersect_key( $params, array(
+			'order'       => null,
+			'orderby'     => null,
+			'paged'       => null,
 			'post_status' => null,
-			'order' => null,
-			'orderby' => null,
 		) );
 
 		// Change WP_Query 'post_status' query arg to its equivalent Eventbrite 'status' query arg.
@@ -211,6 +212,15 @@ class Eventbrite_Manager {
 			$this->api_params['order'],
 			$this->api_params['orderby']
 		);
+
+		// Adjust for pagination if necessary.
+		if ( 5 < $this->api_params['paged'] ) {
+			/**
+			 * The API returns pages of 50, and we currently only support a fixed number of 10 events per WordPress page.
+			 */
+			$this->api_params['page'] = ceil( $this->api_params['paged'] / 5 );
+		}
+		unset( $this->api_params['paged'] );
 	}
 
 	/**

@@ -147,3 +147,39 @@ function eventbrite_post_classes( $classes ) {
 	return $classes;
 }
 add_filter( 'post_class', 'eventbrite_post_classes' );
+
+/**
+ * Paging navigation on event listings.
+ *
+ * @param
+ * @uses
+ * @return
+ */
+function eventbrite_paging_nav( $events ) {
+	// Don't print empty markup if there's only one page.
+	if ( $events->max_num_pages < 2 ) {
+		return;
+	}
+
+	// Borrow $wp_query for a moment. Ick.
+	$GLOBALS['wp_query'] = $events;
+	?>
+	<nav class="navigation paging-navigation" role="navigation">
+		<h1 class="screen-reader-text"><?php esc_html_e( 'Posts navigation', 'eventbrite' ); ?></h1>
+		<div class="nav-links">
+
+			<?php if ( get_next_posts_link() ) : ?>
+			<div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Future events', 'eventbrite' ) ); ?></div>
+			<?php endif; ?>
+
+			<?php if ( get_previous_posts_link() ) : ?>
+			<div class="nav-next"><?php previous_posts_link( __( 'Closer events <span class="meta-nav">&rarr;</span>', 'eventbrite' ) ); ?></div>
+			<?php endif; ?>
+
+		</div><!-- .nav-links -->
+	</nav><!-- .navigation -->
+	<?php
+	// Put back $wp_query where we found it.
+	wp_reset_query();
+}
+
