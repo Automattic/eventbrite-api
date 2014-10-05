@@ -8,6 +8,8 @@
 class Eventbrite_Manager {
 	/**
 	 * Stores our single instance.
+	 *
+	 * @var object
 	 */
 	private static $instance;
 
@@ -35,11 +37,19 @@ class Eventbrite_Manager {
 	/**
 	 * Make a call to the Eventbrite v3 REST API, or return an existing transient.
 	 *
-	 * @uses Eventbrite_Manager::$instance
-	 * @return object Eventbrite_Manager
+	 * @param string $endpoint
+	 * @param array $params
+	 * @param bool $force
+	 * @uses Eventbrite_Manager->validate_endpoint()
+	 * @uses Eventbrite_Manager->validate_request_params()
+	 * @uses Eventbrite_Manager->get_cache()
+	 * @uses Eventbrite_Manager->get_transient_name()
+	 * @uses Eventbrite_API::call()
+	 * @uses set_transient()
+	 * @return object Request results
 	 */
 	public function request( $endpoint, $params = array(), $force = false ) {
-		// Ensure it's an existing endpoint.
+		// Ensure it's a supported endpoint.
 		if ( ! $this->validate_endpoint( $endpoint ) ) {
 			return false;
 		}
@@ -60,7 +70,7 @@ class Eventbrite_Manager {
 		// Make a fresh request and cache it.
 		$request = Eventbrite_API::call( $endpoint, $params );
 		set_transient( $this->get_transient_name( $endpoint, $params ), $request, WEEK_IN_SECONDS );
-		
+
 		return $request;
 	}
 
@@ -86,9 +96,7 @@ class Eventbrite_Manager {
 		}
 
 		switch ( $endpoint ) {
-			// case 'value':
-			// 	# code...
-			// 	break;
+			// Only the user_owned_events endpoint is currently supported.
 			
 			default:
 				// The user_owned_events endpoint.
