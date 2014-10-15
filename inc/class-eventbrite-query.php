@@ -32,6 +32,8 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		// Assign hooks.
+		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
+		add_filter( 'post_link', array( $this, 'filter_event_permalink' ) );
 		add_filter( 'post_thumbnail_html', array( $this, 'filter_event_logo' ), 9, 2 );
 		add_filter( 'post_class', array( $this, 'filter_post_classes' ) );
 
@@ -87,6 +89,27 @@ class Eventbrite_Query extends WP_Query {
 	}
 
 	/**
+	 * Filter the permalink for events to point to our rewrites. // kwight: what about different permalink formats?
+	 *
+	 * @param
+	 * @uses
+	 * @return
+	 */
+	public function filter_event_permalink( $url ) { // eg. http://mysite.com/events/july-test-drive-11829569561
+		if ( is_eventbrite_event() ) {
+			global $post;
+			$url = sprintf( '%1$s/%2$s/%3$s',
+				esc_url( home_url() ),                             // protocol://domain
+				sanitize_title( get_queried_object()->post_name ), // page-with-eventbrite-template
+				//sanitize_title( $post->post_title ),               // event-title
+				absint( $post->ID )                                // event ID
+			);
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Replace featured images with the Eventbrite event logo.
 	 *
 	 * @param
@@ -130,5 +153,11 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		return $classes;
+	}
+
+	function add_query_vars( $query_vars ) {
+		$query_vars[] = 'eb_event_id';
+
+		return $query_vars;
 	}
 }
