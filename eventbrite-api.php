@@ -29,7 +29,7 @@ function eventbrite_api_init() {
 		require_once( 'inc/class-eventbrite-manager.php' );
 		require_once( 'inc/class-eventbrite-query.php' );
 		require_once( 'inc/class-eventbrite-post.php' );
-		require_once( 'inc/admin.php' );
+		require_once( 'inc/class-eventbrite-rewrite.php' );
 		require_once( 'inc/functions.php' );
 	}
 }
