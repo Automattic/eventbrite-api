@@ -52,12 +52,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		}
 
 		if ( 'GET' == $method ) {
-			if ( 'event_details' == $endpoint ) {
-				$id = ( empty( $query_params['p'] ) || ! is_int( $query_params['p'] ) ) ? 0 : $query_params['p'];
-				$endpoint_url .= absint( $id );
-			} else {
-				$endpoint_url = add_query_arg( $query_params, $endpoint_url );
-			}
+			$endpoint_url = add_query_arg( $query_params, $endpoint_url );
 		} else if ( 'POST' == $method ) {
 			$params['body'] = $query_params;
 		} else {
