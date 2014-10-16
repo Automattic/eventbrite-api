@@ -52,6 +52,9 @@ class Eventbrite_Query extends WP_Query {
 		// Get the events.
 		$this->api_results = eventbrite_get_events( $this->query_vars );
 
+		// Do any post-API query processing.
+		$this->post_api_filters();
+
 		// Set properties based on the results.
 		$this->set_properties();
 
@@ -60,14 +63,16 @@ class Eventbrite_Query extends WP_Query {
 	}
 
 	/**
-	 * Set properties based on the API call results.
+	 * Set properties based on the fully processed results.
 	 */
 	public function set_properties() {
 		if ( empty( $this->api_results->events ) ) {
-			$this->post_count = 0;
 			$this->posts = array();
 		} else {
-			// Determine posts according to pagination. Math hurts.
+			// Set found_posts based on all posts returned after Eventbrite_Query filtering.
+			$this->found_posts = ( isset( $this->query_vars['limit'] ) && ( $this->query_vars['limit'] < $this->api_results->pagination->object_count ) ) ? count( $this->api_results->events ) : $this->api_results->pagination->object_count;
+
+			// Determine posts according to any pagination querying. Math hurts.
 			$modulus = ( 2 <= $this->query_vars['paged'] && 0 == $this->query_vars['paged'] % 5 ) ? 5 : $this->query_vars['paged'] % 5;
 			$offset = ( 2 <= $modulus && 5 >= $modulus ) ? ( $modulus - 1 ) * 10 : 0;
 			$this->posts = array_slice( $this->api_results->events, $offset, 10 ); // kwight: support posts_per_page
