@@ -1,7 +1,7 @@
 <?php
 /**
  * Eventbrite Query class.
- * Modeled on WP_Query, allowing developers to work with familiar terms and loop conventions.
+ * Modeled on and extends WP_Query, allowing developers to work with familiar terms and loop conventions.
  *
  * @package Eventbrite_API
  */
@@ -21,7 +21,9 @@ class Eventbrite_Query extends WP_Query {
 	 * @access public
 	 *
 	 * @param string $query URL query string.
-	 * @return WP_Query
+	 * @uses get_query_var()
+	 * @uses add_filter()
+	 * @uses Eventbrite_Query::query()
 	 */
 	public function __construct( $query = '' ) {
 		// Set pagination if required.
@@ -43,13 +45,21 @@ class Eventbrite_Query extends WP_Query {
 	 * Retrieve the posts based on query variables.
 	 *
 	 * @access public
+	 *
+	 * @uses Eventbrite_Query::parse_query()
+	 * @uses Eventbrite_Query::api_results()
+	 * @uses eventbrite_get_events()
+	 * @uses Eventbrite_Query::$query_vars
+	 * @uses Eventbrite_Query::post_api_filters()
+	 * @uses Eventbrite_Query::set_properties()
+	 * @uses Eventbrite_Query::$posts
 	 * @return array List of posts.
 	 */
 	public function get_posts() {
 		// Set up query variables.
 		$this->parse_query();
 
-		// Get the events.
+		// Get the events from the API (or cache).
 		$this->api_results = eventbrite_get_events( $this->query_vars );
 
 		// Do any post-API query processing.
@@ -64,6 +74,16 @@ class Eventbrite_Query extends WP_Query {
 
 	/**
 	 * Set properties based on the fully processed results.
+	 *
+	 * @access public
+	 *
+	 * @uses Eventbrite_Query::$api_results
+	 * @uses Eventbrite_Query::$posts
+	 * @uses Eventbrite_Query::$found_posts
+	 * @uses Eventbrite_Query::$query_vars
+	 * @uses Eventbrite_Query::$post_count
+	 * @uses Eventbrite_Query::$post
+	 * @uses Eventbrite_Query::$max_num_pages
 	 */
 	public function set_properties() {
 		if ( empty( $this->api_results->events ) ) {
@@ -87,18 +107,41 @@ class Eventbrite_Query extends WP_Query {
 			$this->post = reset( $this->posts );
 		}
 
-		$this->found_posts   = $this->api_results->pagination->object_count;
 		$this->max_num_pages = ceil( $this->found_posts / 10 ); // kwight: support posts_per_page
+	}
+
+	/**
+	 * Process any remaining internal query parameters. These are parameters that are specific to Eventbrite_Query, not the API calls.
+	 *
+	 * @access public
+	 *
+	 * @uses Eventbrite_Query::$query_vars
+	 * @uses Eventbrite_Query::$api_results
+	 * @uses absint()
+	 */
+	public function post_api_filters() {
+		// Limit the number of results: 'limit'
+		if ( isset( $this->query_vars['limit'] ) ) {
+			$this->api_results->events = array_slice( $this->api_results->events, 0, absint( $this->query_vars['limit'] ) );
+		}
+
 	}
 
 	/**
 	 * Replace featured images with the Eventbrite event logo.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @access public
+	 *
+	 * @param string $html
+	 * @param int $post_id
+	 * @uses is_eventbrite_event()
+	 * @uses eventbrite_get_event()
+	 * @uses Eventbrite_Post::$logo_url
+	 * @uses esc_url()
+	 * @uses get_the_permalink()
+	 * @return string HTML <img> tag for the Eventbrite logo linked to the event single view.
 	 */
-	function filter_event_logo( $html, $post_id ) {
+	public function filter_event_logo( $html, $post_id ) {
 		// Are we dealing with an Eventbrite event?
 		if ( is_eventbrite_event() ) {
 			$html = '';
@@ -120,11 +163,15 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Adjust classes for Event <article>s.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @access public
+	 *
+	 * @param array $classes Unfiltered post classes
+	 * @uses is_eventbrite_event()
+	 * @uses $post
+	 * @uses Eventbrite_Post::$logo_url
+	 * @return array Filtered post classes
 	 */
-	function filter_post_classes( $classes ) {
+	public function filter_post_classes( $classes ) {
 		if ( is_eventbrite_event() ) {
 			$classes[] = 'eventbrite-event';
 
