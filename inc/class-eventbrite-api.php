@@ -35,6 +35,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 			return;
 
 		$this->set_endpoint( 'user_owned_events', self::API_BASE . 'users/' . $token->get_meta( 'user_id' ) . '/owned_events', 'GET' );
+		$this->set_endpoint( 'event_details', self::API_BASE . 'events/', 'GET' );
 	}
 
 	public static function call( $endpoint, $query_params = array(), $object_id = null ) {
