@@ -35,6 +35,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 			return;
 
 		$this->set_endpoint( 'user_owned_events', self::API_BASE . 'users/' . $token->get_meta( 'user_id' ) . '/owned_events', 'GET' );
+		$this->set_endpoint( 'event_details', self::API_BASE . 'events/', 'GET' );
 	}
 
 	public static function call( $endpoint, $query_params = array() ) {
@@ -47,7 +48,12 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		$params = array( 'method' => $method );
 
 		if ( 'GET' == $method ) {
-			$endpoint_url = add_query_arg( $query_params, $endpoint_url );
+			if ( 'event_details' == $endpoint ) {
+				$id = ( empty( $query_params['p'] ) || ! is_int( $query_params['p'] ) ) ? 0 : $query_params['p'];
+				$endpoint_url .= absint( $id );
+			} else {
+				$endpoint_url = add_query_arg( $query_params, $endpoint_url );
+			}
 		} else if ( 'POST' == $method ) {
 			$params['body'] = $query_params;
 		} else {
