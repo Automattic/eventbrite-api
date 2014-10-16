@@ -38,7 +38,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		$this->set_endpoint( 'event_details', self::API_BASE . 'events/', 'GET' );
 	}
 
-	public static function call( $endpoint, $query_params = array() ) {
+	public static function call( $endpoint, $query_params = array(), $object_id = null ) {
 		$token = self::$instance->get_token();
 		if ( empty( $token ) )
 			return new Keyring_Error( '400', 'No token present for the Eventbrite API.' );
@@ -46,6 +46,10 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		$endpoint_url = self::$instance->{$endpoint . '_url'};
 		$method = self::$instance->{$endpoint . '_method'};
 		$params = array( 'method' => $method );
+
+		if ( ! empty( $object_id ) && is_numeric( $object_id ) ) {
+			$endpoint_url = trailingslashit( $endpoint_url ) . absint( $object_id );
+		}
 
 		if ( 'GET' == $method ) {
 			if ( 'event_details' == $endpoint ) {
