@@ -48,7 +48,7 @@ class Eventbrite_Manager {
 	 * @uses set_transient()
 	 * @return object Request results
 	 */
-	public function request( $endpoint, $params = array(), $force = false ) {
+	public function request( $endpoint, $params = array(), $id = false, $force = false ) {
 		// Ensure it's a supported endpoint.
 		if ( ! $this->validate_endpoint( $endpoint ) ) {
 			return false;
@@ -57,6 +57,13 @@ class Eventbrite_Manager {
 		// Make sure the parameters are valid for the endpoint.
 		if ( ! $this->validate_request_params( $params, $endpoint ) ) {
 			return false;
+		}
+
+		// If an ID has been passed, validate and sanitize it.
+		if ( ! empty( $id ) && is_numeric( $id ) ) {
+			$id = absint( $id );
+		} else {
+			$id = false;
 		}
 
 		// Return a cached result if we have one.
@@ -68,7 +75,7 @@ class Eventbrite_Manager {
 		}
 
 		// Make a fresh request and cache it.
-		$request = Eventbrite_API::call( $endpoint, $params );
+		$request = Eventbrite_API::call( $endpoint, $params, $id );
 		set_transient( $this->get_transient_name( $endpoint, $params ), $request, WEEK_IN_SECONDS );
 
 		return $request;
@@ -145,6 +152,34 @@ class Eventbrite_Manager {
 		// If we have events, map them to the format expected by Eventbrite_Post
 		if ( ! empty( $results->events ) ) {
 			$results->events = array_map( array( $this, 'map_event_keys' ), $results->events );
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Get a single event by ID.
+	 *
+	 * @uses Eventbrite_Manager::$instance
+	 * @return object Eventbrite_Manager
+	 */
+	public function get_event( $id = 0, $force = false ) {
+		// Get the raw results. Although query parameters aren't needed for the API call, they're necessary for identifying transients.
+		$results = $this->request( 'event_details', array( 'p' => $id ), $id, $force );
+
+		// If we have our event, map it to the format expected by Eventbrite_Post, and create pagination info.
+		if ( empty( $results->error ) ) {
+			$results = (object) array(
+				'events' => array(
+					$this->map_event_keys( $results ),
+				),
+				'pagination' => (object) array(
+					'object_count' => 1,
+					'page_number'  => 1,
+					'page_size'    => 1,
+					'page_count'   => 1,
+				),
+			);
 		}
 
 		return $results;
@@ -255,7 +290,7 @@ class Eventbrite_Manager {
 		return array(
 			// 'event_search',
 			// 'event_categories',
-			// 'event_details',
+			'event_details',
 			// 'event_attendees',
 			// 'event_attendees_detail',
 			// 'event_orders',

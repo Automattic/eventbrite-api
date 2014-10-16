@@ -59,8 +59,12 @@ class Eventbrite_Query extends WP_Query {
 		// Set up query variables.
 		$this->parse_query();
 
-		// Get the events from the API (or cache).
-		$this->api_results = eventbrite_get_events( $this->query_vars );
+		// Get the event or events from the API (or cache).
+		if ( ! empty( $this->query_vars['p'] ) ) {
+			$this->api_results = eventbrite()->get_event( $this->query_vars['p'] );
+		} else {
+			$this->api_results = eventbrite()->get_user_owned_events( $this->query_vars );
+		}
 
 		// Do any post-API query processing.
 		$this->post_api_filters();
