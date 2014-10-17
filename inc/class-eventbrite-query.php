@@ -34,6 +34,7 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		// Assign hooks.
+		add_filter( 'get_post_metadata', array( $this, 'filter_post_metadata' ), 10, 3 );
 		add_filter( 'post_thumbnail_html', array( $this, 'filter_event_logo' ), 9, 2 );
 		add_filter( 'post_class', array( $this, 'filter_post_classes' ) );
 
@@ -129,6 +130,30 @@ class Eventbrite_Query extends WP_Query {
 			$this->api_results->events = array_slice( $this->api_results->events, 0, absint( $this->query_vars['limit'] ) );
 		}
 
+	}
+
+	/**
+	 * Filter post metadata so that has_post_thumbnail() returns true for events with a logo URL.
+	 *
+	 * @param null    $check
+	 * @param integer $object_id Event ID.
+	 * @param string  $meta_key Name of meta key being checked.
+	 * @uses is_eventbrite_event()
+	 * @uses Eventbrite_Post::get_instance()
+	 * @uses Eventbrite_Post::$logo_url
+	 * @return string URL of event logo passed from the API.
+	 */
+	public function filter_post_metadata( $check, $object_id, $meta_key ) {
+		// If we aren't dealing with an Eventbrite event or wanting the thumbnail ID, then it's business as usual.
+		if ( ! is_eventbrite_event() || '_thumbnail_id' !== $meta_key ) {
+			return null;
+		}
+
+		// Get the event in question.
+		$event = Eventbrite_Post::get_instance( $object_id );
+
+		// Return whatever we have for the logo URL, which is used for event Featured Images.
+		return $event->logo_url;
 	}
 
 	/**
