@@ -128,7 +128,7 @@ class Eventbrite_Event {
 	/**
 	 * Constructor.
 	 *
-	 * @param array $event event object.
+	 * @param object $event event object.
 	 */
 	public function __construct( $event ) {
 		foreach ( get_object_vars( $event ) as $key => $value )

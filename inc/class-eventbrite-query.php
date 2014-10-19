@@ -48,9 +48,10 @@ class Eventbrite_Query extends WP_Query {
 	 * @access public
 	 *
 	 * @uses Eventbrite_Query::parse_query()
-	 * @uses Eventbrite_Query::api_results()
-	 * @uses eventbrite_get_events()
 	 * @uses Eventbrite_Query::$query_vars
+	 * @uses Eventbrite_Query::api_results()
+	 * @uses Eventbrite_Manager::get_event()
+	 * @uses Eventbrite_Manager::get_user_owned_events()
 	 * @uses Eventbrite_Query::post_api_filters()
 	 * @uses Eventbrite_Query::set_properties()
 	 * @uses Eventbrite_Query::$posts
@@ -105,7 +106,7 @@ class Eventbrite_Query extends WP_Query {
 			// Turn the posts into Eventbrite_Event objects.
 			$this->posts = array_map( array( $this, 'create_eventbrite_event' ), $this->posts );
 
-			// The post count will always equal the number of posts while we only support a fixed number of 10 posts returned.
+			// The post count will always equal the number of posts while we only support a fixed number of 10 posts returned. kwight: support posts_per_page
 			$this->post_count = count( $this->posts );
 
 			// Set the first post.
@@ -118,9 +119,10 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Turn a given event into a proper Eventbrite_Event object.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @param null|object $event
+	 * @uses Eventbrite_Event
+	 * @uses Eventbrite_Event::get_instance()
+	 * @return object Eventbrite_Event object.
 	 */
 	public function create_eventbrite_event( $event = null ) {
 		// Bail if nothing is passed in.
@@ -167,6 +169,8 @@ class Eventbrite_Query extends WP_Query {
 
 	/**
 	 * Filter post metadata so that has_post_thumbnail() returns true for events with a logo URL.
+	 *
+	 * @access public
 	 *
 	 * @param null    $check
 	 * @param integer $object_id Event ID.
