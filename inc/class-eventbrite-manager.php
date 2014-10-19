@@ -163,9 +163,14 @@ class Eventbrite_Manager {
 	 * @uses Eventbrite_Manager::$instance
 	 * @return object Eventbrite_Manager
 	 */
-	public function get_event( $id = 0, $force = false ) {
+	public function get_event( $id = false, $force = false ) {
+		// Ensure ID is an integer of at least 10 digits.
+		if ( ! is_numeric( $id ) || 10 > strlen( $id ) ) {
+			return false;
+		}
+
 		// Get the raw results. Although query parameters aren't needed for the API call, they're necessary for identifying transients.
-		$results = $this->request( 'event_details', array( 'p' => $id ), $id, $force );
+		$results = $this->request( 'event_details', array( 'p' => absint( $id ) ), absint( $id ), $force );
 
 		// If we have our event, map it to the format expected by Eventbrite_Post, and create pagination info.
 		if ( empty( $results->error ) ) {
