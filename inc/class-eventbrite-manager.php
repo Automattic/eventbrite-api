@@ -149,7 +149,7 @@ class Eventbrite_Manager {
 		// Get the raw results.
 		$results = $this->request( 'user_owned_events', $this->api_params, $force );
 
-		// If we have events, map them to the format expected by Eventbrite_Post
+		// If we have events, map them to the format expected by Eventbrite_Event
 		if ( ! empty( $results->events ) ) {
 			$results->events = array_map( array( $this, 'map_event_keys' ), $results->events );
 		}
@@ -172,7 +172,7 @@ class Eventbrite_Manager {
 		// Get the raw results. Although query parameters aren't needed for the API call, they're necessary for identifying transients.
 		$results = $this->request( 'event_details', array( 'p' => absint( $id ) ), absint( $id ), $force );
 
-		// If we have our event, map it to the format expected by Eventbrite_Post, and create pagination info.
+		// If we have our event, map it to the format expected by Eventbrite_Event, and create pagination info.
 		if ( empty( $results->error ) ) {
 			$results = (object) array(
 				'events' => array(

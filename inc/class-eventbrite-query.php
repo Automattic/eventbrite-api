@@ -129,14 +129,14 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		if ( is_a( $event, 'Eventbrite_Event' ) ) {
-			// We already have an Eventbrite_Post object. Nothing to do here.
+			// We already have an Eventbrite_Event object. Nothing to do here.
 			$_event = $event;
 		} elseif ( is_object( $event ) ) {
 			// Looks like we have an object already, so make it an Eventbrite_Event object.
 			$_event = new Eventbrite_Event( $event );
 		} else {
 			// Just an ID was passed in. Let's go get the event.
-			$_event = Eventbrite_Post::get_instance( $event );
+			$_event = Eventbrite_Event::get_instance( $event );
 		}
 
 		// That was a bust. We've got nothing.
@@ -144,7 +144,7 @@ class Eventbrite_Query extends WP_Query {
 			return null;
 		}
 
-		// Return our Eventbrite_Post object.
+		// Return our Eventbrite_Event object.
 		return $_event;
 	}
 
@@ -172,8 +172,8 @@ class Eventbrite_Query extends WP_Query {
 	 * @param integer $object_id Event ID.
 	 * @param string  $meta_key Name of meta key being checked.
 	 * @uses is_eventbrite_event()
-	 * @uses Eventbrite_Post::get_instance()
-	 * @uses Eventbrite_Post::$logo_url
+	 * @uses Eventbrite_Event::get_instance()
+	 * @uses Eventbrite_Event::$logo_url
 	 * @return string URL of event logo passed from the API.
 	 */
 	public function filter_post_metadata( $check, $object_id, $meta_key ) {
@@ -183,7 +183,7 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		// Get the event in question.
-		$event = Eventbrite_Post::get_instance( $object_id );
+		$event = Eventbrite_Event::get_instance( $object_id );
 
 		// Return whatever we have for the logo URL, which is used for event Featured Images.
 		return $event->logo_url;
@@ -198,7 +198,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @param int $post_id
 	 * @uses is_eventbrite_event()
 	 * @uses eventbrite_get_event()
-	 * @uses Eventbrite_Post::$logo_url
+	 * @uses Eventbrite_Event::$logo_url
 	 * @uses esc_url()
 	 * @uses get_the_permalink()
 	 * @return string HTML <img> tag for the Eventbrite logo linked to the event single view.
@@ -208,7 +208,7 @@ class Eventbrite_Query extends WP_Query {
 		if ( is_eventbrite_event() ) {
 			$html = '';
 
-			$event = Eventbrite_Post::get_instance( $post_id );
+			$event = Eventbrite_Event::get_instance( $post_id );
 
 			if ( isset( $event->logo_url ) ) {
 				$html = '<img src="' . $event->logo_url . '" />';
@@ -230,7 +230,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @param array $classes Unfiltered post classes
 	 * @uses is_eventbrite_event()
 	 * @uses $post
-	 * @uses Eventbrite_Post::$logo_url
+	 * @uses Eventbrite_Event::$logo_url
 	 * @return array Filtered post classes
 	 */
 	public function filter_post_classes( $classes ) {

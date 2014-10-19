@@ -99,7 +99,7 @@ class Eventbrite_Event {
 	public $venue_id; // venue->id
 
 	/**
-	 * Retrieve Eventbrite_Post instance.
+	 * Retrieve Eventbrite_Event instance.
 	 *
 	 * @static
 	 * @access public
@@ -122,7 +122,7 @@ class Eventbrite_Event {
 		}
 
 		// We've got an event, let's dress it up.
-		return new Eventbrite_Post( $event );
+		return new Eventbrite_Event( $event );
 	}
 
 	/**

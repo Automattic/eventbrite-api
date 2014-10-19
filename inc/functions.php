@@ -6,7 +6,7 @@
  */
 
 /**
- * Get an array of Eventbrite events, in the format expected by Eventbrite_Post
+ * Get an array of Eventbrite events, in the format expected by Eventbrite_Event
  *
  * @param
  * @uses
@@ -53,7 +53,8 @@ function is_eventbrite_event( $post = null ) {
 		global $post;
 	}
 
-	if ( is_a( $post, 'Eventbrite_Post' ) ) {
+	// Check if the post is an Eventbrite_Event object.
+	if ( is_a( $post, 'Eventbrite_Event' ) ) {
 		return true;
 	}
 
