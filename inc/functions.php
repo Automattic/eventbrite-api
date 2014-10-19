@@ -31,38 +31,14 @@ function eventbrite_get_events( $params = array(), $force = false ) {
  *                            or 'display'. Default 'raw'.
  * @return WP_Post|null WP_Post on success or null on failure.
  */
-function eventbrite_get_event( $post = null ) {
-	if ( empty( $post ) ) {
+function eventbrite_get_event( $id = false, $force = false ) {
+	// Bail if nothing is passed in.
+	if ( empty( $id ) ) {
 		return null;
 	}
 
-	if ( is_a( $post, 'Eventbrite_Post' ) ) {
-		$_post = $post;
-	} elseif ( is_object( $post ) ) {
-		// if ( empty( $post->filter ) ) {
-		// 	$_post = sanitize_post( $post, 'raw' );
-		// 	$_post = new WP_Post( $_post );
-		// } elseif ( 'raw' == $post->filter ) {
-		// 	$_post = new WP_Post( $post );
-		// } else {
-			$_post = Eventbrite_Post::get_instance( $post->ID );
-		//}
-	} else {
-		$_post = Eventbrite_Post::get_instance( $post );
-	}
-
-	if ( ! $_post ) {
-		return null;
-	}
-
-	// $_post = $_post->filter( $filter );
-
-	// if ( $output == ARRAY_A )
-	// 	return $_post->to_array();
-	// elseif ( $output == ARRAY_N )
-	// 	return array_values( $_post->to_array() );
-
-	return $_post;
+	// Retrieve and return our event.
+	return eventbrite()->get_event( $id, $force );
 }
 
 /**
@@ -81,8 +57,10 @@ function is_eventbrite_event( $post = null ) {
 		return true;
 	}
 
-	if ( eventbrite_get_event( $post ) ) {
-		return true;
+	// Maybe we're working with an event ID.
+	if ( is_integer( $post ) && 10 < strlen( strval( $id ) ) ) {
+		$event = eventbrite_get_event( absint( $post ) );
+		return ( empty( $event->error ) ) ? true : false;
 	}
 
 	return false;

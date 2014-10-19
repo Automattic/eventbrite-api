@@ -102,8 +102,8 @@ class Eventbrite_Query extends WP_Query {
 			$offset = ( 2 <= $modulus && 5 >= $modulus ) ? ( $modulus - 1 ) * 10 : 0;
 			$this->posts = array_slice( $this->api_results->events, $offset, 10 ); // kwight: support posts_per_page
 
-			// Process the posts. kwight: what exactly do I need this for?
-			$this->posts = array_map( 'eventbrite_get_event', $this->posts );
+			// Turn the posts into Eventbrite_Event objects.
+			$this->posts = array_map( array( $this, 'create_eventbrite_event' ), $this->posts );
 
 			// The post count will always equal the number of posts while we only support a fixed number of 10 posts returned.
 			$this->post_count = count( $this->posts );
@@ -113,6 +113,39 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		$this->max_num_pages = ceil( $this->found_posts / 10 ); // kwight: support posts_per_page
+	}
+
+	/**
+	 * Turn a given event into a proper Eventbrite_Event object.
+	 *
+	 * @param
+	 * @uses
+	 * @return
+	 */
+	public function create_eventbrite_event( $event = null ) {
+		// Bail if nothing is passed in.
+		if ( empty( $event ) ) {
+			return null;
+		}
+
+		if ( is_a( $event, 'Eventbrite_Event' ) ) {
+			// We already have an Eventbrite_Post object. Nothing to do here.
+			$_event = $event;
+		} elseif ( is_object( $event ) ) {
+			// Looks like we have an object already, so make it an Eventbrite_Event object.
+			$_event = new Eventbrite_Event( $event );
+		} else {
+			// Just an ID was passed in. Let's go get the event.
+			$_event = Eventbrite_Post::get_instance( $event );
+		}
+
+		// That was a bust. We've got nothing.
+		if ( ! $_event ) {
+			return null;
+		}
+
+		// Return our Eventbrite_Post object.
+		return $_event;
 	}
 
 	/**
@@ -175,7 +208,7 @@ class Eventbrite_Query extends WP_Query {
 		if ( is_eventbrite_event() ) {
 			$html = '';
 
-			$event = eventbrite_get_event( $post_id );
+			$event = Eventbrite_Post::get_instance( $post_id );
 
 			if ( isset( $event->logo_url ) ) {
 				$html = '<img src="' . $event->logo_url . '" />';
