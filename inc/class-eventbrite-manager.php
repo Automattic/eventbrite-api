@@ -60,7 +60,7 @@ class Eventbrite_Manager {
 		}
 
 		// If an ID has been passed, validate and sanitize it.
-		if ( ! empty( $id ) && is_numeric( $id ) ) {
+		if ( ! empty( $id ) && is_numeric( $id ) && ( 0 < absint( $id ) ) ) {
 			$id = absint( $id );
 		} else {
 			$id = false;
