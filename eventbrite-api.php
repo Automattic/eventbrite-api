@@ -28,7 +28,6 @@ function eventbrite_api_init() {
 	if ( current_theme_supports( 'eventbrite' ) ) {
 		require_once( 'inc/class-eventbrite-manager.php' );
 		require_once( 'inc/class-eventbrite-query.php' );
-		require_once( 'inc/class-eventbrite-post.php' );
 		require_once( 'inc/class-eventbrite-rewrite.php' );
 		require_once( 'inc/class-eventbrite-event.php' );
 		require_once( 'inc/admin.php' );
