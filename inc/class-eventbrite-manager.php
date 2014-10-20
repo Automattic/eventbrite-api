@@ -37,18 +37,22 @@ class Eventbrite_Manager {
 	/**
 	 * Make a call to the Eventbrite v3 REST API, or return an existing transient.
 	 *
+	 * @access public
+	 *
 	 * @param string $endpoint
 	 * @param array $params
+	 * @param int|string|bool $id
 	 * @param bool $force
 	 * @uses Eventbrite_Manager->validate_endpoint()
 	 * @uses Eventbrite_Manager->validate_request_params()
+	 * @uses absint()
 	 * @uses Eventbrite_Manager->get_cache()
-	 * @uses Eventbrite_Manager->get_transient_name()
 	 * @uses Eventbrite_API::call()
 	 * @uses set_transient()
+	 * @uses Eventbrite_Manager->get_transient_name()
 	 * @return object Request results
 	 */
-	public function request( $endpoint, $params = array(), $force = false ) {
+	public function request( $endpoint, $params = array(), $id = false, $force = false ) {
 		// Ensure it's a supported endpoint.
 		if ( ! $this->validate_endpoint( $endpoint ) ) {
 			return false;
@@ -57,6 +61,13 @@ class Eventbrite_Manager {
 		// Make sure the parameters are valid for the endpoint.
 		if ( ! $this->validate_request_params( $params, $endpoint ) ) {
 			return false;
+		}
+
+		// If an ID has been passed, validate and sanitize it.
+		if ( ! empty( $id ) && is_numeric( $id ) && ( 0 < absint( $id ) ) ) {
+			$id = absint( $id );
+		} else {
+			$id = false;
 		}
 
 		// Return a cached result if we have one.
@@ -68,7 +79,7 @@ class Eventbrite_Manager {
 		}
 
 		// Make a fresh request and cache it.
-		$request = Eventbrite_API::call( $endpoint, $params );
+		$request = Eventbrite_API::call( $endpoint, $params, $id );
 		set_transient( $this->get_transient_name( $endpoint, $params ), $request, WEEK_IN_SECONDS );
 
 		return $request;
@@ -77,6 +88,10 @@ class Eventbrite_Manager {
 	/**
 	 * Verify the endpoint passed is valid.
 	 *
+	 * @access public
+	 *
+	 * @param string $endpoint
+	 * @uses Eventbrite_Manager::get_endpoints()
 	 * @return bool True if the endpoint is valid, false otherwise.
 	 */
 	public function validate_endpoint( $endpoint ) {
@@ -86,6 +101,10 @@ class Eventbrite_Manager {
 	/**
 	 * Validate the given parameters against its endpoint.
 	 *
+	 * @access public
+	 *
+	 * @param array $params
+	 * @param string $endpoint
 	 * @uses Eventbrite_Manager::$instance
 	 * @return object Eventbrite_Manager
 	 */
@@ -130,7 +149,14 @@ class Eventbrite_Manager {
 	/**
 	 * Get user-owned events.
 	 *
-	 * @uses Eventbrite_Manager::$instance
+	 * @access public
+	 *
+	 * @param array $params
+	 * @param bool $force
+	 * @uses Eventbrite_Manager::process_params
+	 * @uses Eventbrite_Manager::request
+	 * @uses Eventbrite_Manager::$api_params
+	 * @uses Eventbrite_Manager::map_event_keys
 	 * @return object Eventbrite_Manager
 	 */
 	public function get_user_owned_events( $params = array(), $force = false ) {
@@ -142,7 +168,7 @@ class Eventbrite_Manager {
 		// Get the raw results.
 		$results = $this->request( 'user_owned_events', $this->api_params, $force );
 
-		// If we have events, map them to the format expected by Eventbrite_Post
+		// If we have events, map them to the format expected by Eventbrite_Event
 		if ( ! empty( $results->events ) ) {
 			$results->events = array_map( array( $this, 'map_event_keys' ), $results->events );
 		}
@@ -151,12 +177,52 @@ class Eventbrite_Manager {
 	}
 
 	/**
-	 * Sort out parameters used in API calls from those used internally (WP_Query-style parameters).
-	 * Also reconciles any oddness between the two.
+	 * Get a single event by ID.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @access public
+	 *
+	 * @param int|string|bool $id
+	 * @param bool $force
+	 * @uses Eventbrite_Manager::request()
+	 * @uses absint()
+	 * @uses Eventbrite_Manager::map_event_keys()
+	 * @return object Eventbrite_Manager
+	 */
+	public function get_event( $id = false, $force = false ) {
+		// Ensure ID is an integer of at least 10 digits.
+		if ( ! is_numeric( $id ) || 10 > strlen( $id ) ) {
+			return false;
+		}
+
+		// Get the raw results. Although query parameters aren't needed for the API call, they're necessary for identifying transients.
+		$results = $this->request( 'event_details', array( 'p' => absint( $id ) ), absint( $id ), $force );
+
+		// If we have our event, map it to the format expected by Eventbrite_Event, and create pagination info.
+		if ( empty( $results->error ) ) {
+			$results = (object) array(
+				'events' => array(
+					$this->map_event_keys( $results ),
+				),
+				'pagination' => (object) array(
+					'object_count' => 1,
+					'page_number'  => 1,
+					'page_size'    => 1,
+					'page_count'   => 1,
+				),
+			);
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Sort out parameters used in API calls from those used internally (WP_Query-style parameters).
+	 * Also reconciles any oddness between the two (eg. orderby vs. order_by).
+	 *
+	 * @access public
+	 *
+	 * @param array $params
+	 * @uses Eventbrite_Manager::$api_params
 	 */
 	public function process_params( $params ) {
 		// Create array of parameters for API calls.
@@ -167,7 +233,7 @@ class Eventbrite_Manager {
 			'post_status' => null,
 		) );
 
-		// Change WP_Query 'post_status' query arg to its equivalent Eventbrite 'status' query arg.
+		// Change WP_Query 'post_status' query arg to its equivalent Eventbrite 'status' query arg. Default value is 'all'.
 		if ( ! empty( $this->api_params['post_status'] ) ) {
 			$valid = array(
 				'all',
@@ -215,9 +281,7 @@ class Eventbrite_Manager {
 
 		// Adjust for pagination if necessary.
 		if ( 5 < $this->api_params['paged'] ) {
-			/**
-			 * The API returns pages of 50, and we currently only support a fixed number of 10 events per WordPress page.
-			 */
+			// The API returns pages of 50, and we currently only support a fixed number of 10 events per WordPress page. kwight: support posts_per_page
 			$this->api_params['page'] = ceil( $this->api_params['paged'] / 5 );
 		}
 		unset( $this->api_params['paged'] );
@@ -227,8 +291,12 @@ class Eventbrite_Manager {
 	 * Get the transient for a certain endpoint and combination of parameters.
 	 * get_transient() returns false if not found.
 	 *
+	 * @access protected
+	 *
+	 * @param string $endpoint
+	 * @param array $params
 	 * @uses get_transient()
-	 * @uses Eventbrite_Manager->get_transient_name()
+	 * @uses Eventbrite_Manager::get_transient_name()
 	 * @return mixed Transient if found, false if not
 	 */
 	protected function get_cache( $endpoint, $params ) {
@@ -238,6 +306,10 @@ class Eventbrite_Manager {
 	/**
 	 * Determine a transient's name based on endpoint and parameters.
 	 *
+	 * @access protected
+	 *
+	 * @param string $endpoint
+	 * @param array $params
 	 * @return string
 	 */
 	protected function get_transient_name( $endpoint, $params ) {
@@ -247,15 +319,15 @@ class Eventbrite_Manager {
 	/**
 	 * Return an array of valid Eventbrite API endpoints.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @access public
+	 *
+	 * @return array All supported endpoints.
 	 */
 	public function get_endpoints() {
 		return array(
 			// 'event_search',
 			// 'event_categories',
-			// 'event_details',
+			'event_details',
 			// 'event_attendees',
 			// 'event_attendees_detail',
 			// 'event_orders',
@@ -279,11 +351,14 @@ class Eventbrite_Manager {
 	}
 
 	/**
-	 * Convert the Eventbrite API elements into elements used by Eventbrite_Post.
+	 * Convert the Eventbrite API properties into properties used by Eventbrite_Event.
 	 *
-	 * @return object Event with Eventbrite_Post keys.
+	 * @access public
+	 *
+	 * @param object $api_event
+	 * @return object Event with Eventbrite_Event keys.
 	 */
-	function map_event_keys( $api_event ) {
+	public function map_event_keys( $api_event ) {
 		$event = array();
 
 		$event['ID']           = ( isset( $api_event->id ) )                ? $api_event->id                : '';
