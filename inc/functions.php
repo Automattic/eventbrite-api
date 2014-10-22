@@ -97,3 +97,14 @@ function eventbrite_paging_nav( $events ) {
 		</div><!-- .pagination -->
 	</nav><!-- .navigation -->
 <?php }
+
+/**
+ * Get the arguments being passed to add_theme_support().
+ *
+ * @uses get_theme_support()
+ * @return object Eventbrite theme support arguments.
+ */
+function eventbrite_get_support_args() {
+	$support = get_theme_support( 'eventbrite' );
+	return (object) $support[0];
+}

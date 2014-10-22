@@ -40,8 +40,7 @@
 		$eb_rules = array();
 
 		// Get all pages that are using the Eventbrite page template.
-		$support = get_theme_support('eventbrite');
-		$template = ( isset( $support[0]['template'] ) ) ? $support[0]['template'] : 'eventbrite.php';
+		$template = ( isset( eventbrite_get_support_args()->index ) ) ? eventbrite_get_support_args()->index : 'eventbrite.php';
 		$pages = get_pages(array(
 			'meta_key' => '_wp_page_template',
 			'meta_value' => $template,
