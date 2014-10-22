@@ -37,6 +37,8 @@
 	 * @return
 	 */
 	public function add_rewrite_rules( $wp_rules ) {
+		$eb_rules = array();
+
 		// Get all pages that are using the Eventbrite page template.
 		$support = get_theme_support('eventbrite');
 		$template = ( isset( $support[0]['template'] ) ) ? $support[0]['template'] : 'eventbrite.php';
