@@ -34,7 +34,6 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		// Assign hooks.
-		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		add_filter( 'post_link', array( $this, 'filter_event_permalink' ) );
 		add_filter( 'get_post_metadata', array( $this, 'filter_post_metadata' ), 10, 3 );
 		add_filter( 'post_thumbnail_html', array( $this, 'filter_event_logo' ), 9, 2 );
@@ -271,11 +270,5 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		return $classes;
-	}
-
-	function add_query_vars( $query_vars ) {
-		$query_vars[] = 'eb_event_id';
-
-		return $query_vars;
 	}
 }

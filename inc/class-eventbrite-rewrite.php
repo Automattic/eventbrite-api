@@ -12,9 +12,22 @@
 	 */
  	public function __construct() {
  		// Register hooks.
+		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
 		add_action( 'template_include', array( $this, 'event_single_view' ) );
  	}
+
+	/**
+	 * Add Eventbrite-specific query vars so they are recognized by WP_Query.
+	 *
+	 * @param array $query_vars
+	 * @return array Query vars
+	 */
+	function add_query_vars( $query_vars ) {
+		$query_vars[] = 'eventbrite_id';
+
+		return $query_vars;
+	}
 
 	/**
 	 * Add rewrite rules for event single views.
