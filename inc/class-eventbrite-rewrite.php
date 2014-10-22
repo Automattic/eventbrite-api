@@ -46,7 +46,7 @@
 			'meta_value' => $template,
 		));
 
-		// If any pages are using the template, add rewrite rules for each of them.
+		// If any pages are using the template, add rewrite rules for each of them with an event ID for single views.
 		if ( $pages ) {
 			foreach ( $pages as $page ) {
 				$eb_rules_key = sprintf( '%s/(\d+)/?$', $page->post_name );
