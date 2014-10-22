@@ -182,6 +182,11 @@ class Eventbrite_Query extends WP_Query {
 	 * @uses absint()
 	 */
 	public function post_api_filters() {
+		// Filter by organizer: 'organizer'
+		if ( isset( $this->query_vars['organizer'] ) ) {
+			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_organizer' ) );
+		}
+
 		// Filter by venue: 'venue'
 		if ( isset( $this->query_vars['venue'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_venue' ) );
@@ -192,6 +197,17 @@ class Eventbrite_Query extends WP_Query {
 			$this->api_results->events = array_slice( $this->api_results->events, 0, absint( $this->query_vars['limit'] ) );
 		}
 
+	}
+
+	/**
+	 * Determine if an event is managed by a certain organizer.
+	 *
+	 * @param
+	 * @uses
+	 * @return
+	 */
+	public function filter_by_organizer( $event ) {
+		return $event->post_author == $this->query_vars['organizer'];
 	}
 
 	/**
