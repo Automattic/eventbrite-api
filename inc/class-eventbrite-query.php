@@ -217,8 +217,8 @@ class Eventbrite_Query extends WP_Query {
 	 * @uses
 	 * @return
 	 */
-	public function filter_by_venue( $event ) {error_log( print_r( $event, true ) );
-		return ( $event->venue == $this->query_vars['venue'] );
+	public function filter_by_venue( $event ) {
+		return $event->venue == $this->query_vars['venue'];
 	}
 
 	/**
