@@ -48,12 +48,8 @@
 		// If any pages are using the template, add rewrite rules for each of them.
 		if ( $pages ) {
 			foreach ( $pages as $page ) {
-				// global $post;  error_log( print_r( $post, true ) );
-				// $eb_rules_key = sprintf( '%s/([a-z0-9\-])/?$', $page->post_name );
-				// $eb_rules[$eb_rules_key] = sprintf( 'index.php?pagename=%s&paged=$matches[1]', $page->post_name );
-				$eb_rules = array();
-				$eb_rules_key = sprintf( '%s/?([a-z0-9\-])$/?$', $page->post_name );
-				$eb_rules[$eb_rules_key] = 'index.php?eb_event_id=$matches[1]';
+				$eb_rules_key = sprintf( '%s/(\d+)/?$', $page->post_name );
+				$eb_rules[$eb_rules_key] = 'index.php?eventbrite_id=$matches[1]';
 			}
 		}
 
@@ -70,6 +66,9 @@
 	 * @return
 	 */
 	public function event_single_view( $template ) {
+		if ( get_query_var( 'eventbrite_id' ) ) {
+			$template = esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->single );
+		}
 		return $template;
 	}
  }
