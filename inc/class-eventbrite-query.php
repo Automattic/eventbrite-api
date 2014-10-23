@@ -182,6 +182,11 @@ class Eventbrite_Query extends WP_Query {
 	 * @uses absint()
 	 */
 	public function post_api_filters() {
+		// Always filter out private events unless display_private => true
+		if ( empty( $this->query_vars['display_private'] ) || true !== $this->query_vars['display_private'] ) {
+			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_listing_privacy' ) );
+		}
+
 		// Filter by organizer: 'organizer'
 		if ( isset( $this->query_vars['organizer'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_organizer' ) );
@@ -197,6 +202,17 @@ class Eventbrite_Query extends WP_Query {
 			$this->api_results->events = array_slice( $this->api_results->events, 0, absint( $this->query_vars['limit'] ) );
 		}
 
+	}
+
+	/**
+	 * Determine if an event is listed as public.
+	 *
+	 * @param object Event
+	 * @return bool True if listed as public, false otherwise.
+	 */
+	public function filter_by_listing_privacy( $event ) {
+		// Allow only events listed as public (listed: true)
+		return true == $event->public;
 	}
 
 	/**
