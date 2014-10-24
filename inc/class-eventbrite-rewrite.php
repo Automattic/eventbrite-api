@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for handling Eventbrite rewrite rules and template redirection.
+ * Eventbrite_Rewrite class, for handling Eventbrite rewrite rules and template redirection.
  */
 
  class Eventbrite_Rewrite {
@@ -32,9 +32,10 @@
 	/**
 	 * Add rewrite rules for event single views.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @param array $wp_rules WordPress rewrite rules.
+	 * @uses eventbrite_get_support_args()
+	 * @uses get_pages()
+	 * @return array All rewrite rules (WordPress and Eventbrite rules combined).
 	 */
 	public function add_rewrite_rules( $wp_rules ) {
 		$eb_rules = array();
@@ -62,14 +63,20 @@
 	/**
 	 * Redirect to the event single view if necessary.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @param string $template
+	 * @uses get_query_var()
+	 * @uses esc_url()
+	 * @uses trailingslashit()
+	 * @uses get_stylesheet_directory()
+	 * @uses eventbrite_get_support_args()
+	 * @return string Template file name.
 	 */
 	public function event_single_view( $template ) {
+		// If we have an 'eventbrite_id' query var, we're dealing with an event single view.
 		if ( get_query_var( 'eventbrite_id' ) ) {
 			$template = esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->single );
 		}
+
 		return $template;
 	}
  }
