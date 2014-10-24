@@ -187,6 +187,11 @@ class Eventbrite_Query extends WP_Query {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_listing_privacy' ) );
 		}
 
+		// Filter out specified IDs: 'post__not_in'
+		if ( isset( $this->query_vars['post__not_in'] ) ) {
+			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_post_not_in' ) );
+		}
+
 		// Filter by organizer: 'organizer'
 		if ( isset( $this->query_vars['organizer'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_organizer' ) );
@@ -213,6 +218,17 @@ class Eventbrite_Query extends WP_Query {
 	public function filter_by_listing_privacy( $event ) {
 		// Allow only events listed as public (listed: true)
 		return true == $event->public;
+	}
+
+	/**
+	 * Determine by ID if an event is to be filtered out.
+	 *
+	 * @param object Event
+	 * @return bool True with no ID match, false if the ID is in the array of events to be removed.
+	 */
+	public function filter_by_post_not_in( $event ) {
+		// Allow events not found in the array.
+		return ! in_array( $event->ID, $this->query_vars['post__not_in'] );
 	}
 
 	/**
