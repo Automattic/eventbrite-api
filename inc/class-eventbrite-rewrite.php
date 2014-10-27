@@ -26,10 +26,12 @@
 	/**
 	 * Add Eventbrite-specific query vars so they are recognized by WP_Query.
 	 *
+	 * @access public
+	 *
 	 * @param array $query_vars
 	 * @return array Query vars
 	 */
-	function add_query_vars( $query_vars ) {
+	public function add_query_vars( $query_vars ) {
 		$query_vars[] = 'eventbrite_id';
 
 		return $query_vars;
