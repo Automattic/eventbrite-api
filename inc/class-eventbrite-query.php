@@ -127,10 +127,10 @@ class Eventbrite_Query extends WP_Query {
 	public function filter_event_permalink( $url ) { // eg. http://mysite.com/events/july-test-drive-11829569561
 		if ( is_eventbrite_event() ) {
 			global $post;
-			$url = sprintf( '%1$s/%2$s/%3$s',
+			$url = sprintf( '%1$s/%2$s/%3$s-%4$s',
 				esc_url( home_url() ),                             // protocol://domain
 				sanitize_title( get_queried_object()->post_name ), // page-with-eventbrite-template
-				//sanitize_title( $post->post_title ),               // event-title
+				sanitize_title( $post->post_title ),               // event-title
 				absint( $post->ID )                                // event ID
 			);
 		}

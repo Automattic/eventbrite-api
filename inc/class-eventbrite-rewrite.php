@@ -52,7 +52,7 @@
 		// If any pages are using the template, add rewrite rules for each of them with an event ID for single views.
 		if ( $pages ) {
 			foreach ( $pages as $page ) {
-				$eb_rules_key = sprintf( '(%s)/(\d+)/?$', $page->post_name );
+				$eb_rules_key = sprintf( '(%s)/[0-9a-z-]+(\d{11})/?$', $page->post_name );
 				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&eventbrite_id=$matches[2]';
 			}
 		}
