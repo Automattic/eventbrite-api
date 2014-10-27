@@ -5,6 +5,7 @@
  *
  * @package Eventbrite_API
  */
+
 class Eventbrite_Query extends WP_Query {
 	/**
 	 * Results from the API call. Includes up to 50 objects plus pagination info.
@@ -21,9 +22,9 @@ class Eventbrite_Query extends WP_Query {
 	 * @access public
 	 *
 	 * @param string $query URL query string.
-	 * @uses get_query_var()
-	 * @uses add_filter()
-	 * @uses Eventbrite_Query::query()
+	 * @uses  get_query_var()
+	 * @uses  add_filter()
+	 * @uses  Eventbrite_Query::query()
 	 */
 	public function __construct( $query = '' ) {
 		// Set pagination if required.
@@ -48,14 +49,14 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @uses Eventbrite_Query::parse_query()
-	 * @uses Eventbrite_Query::$query_vars
-	 * @uses Eventbrite_Query::api_results()
-	 * @uses Eventbrite_Manager::get_event()
-	 * @uses Eventbrite_Manager::get_user_owned_events()
-	 * @uses Eventbrite_Query::post_api_filters()
-	 * @uses Eventbrite_Query::set_properties()
-	 * @uses Eventbrite_Query::$posts
+	 * @uses   Eventbrite_Query::parse_query()
+	 * @uses   Eventbrite_Query::$query_vars
+	 * @uses   Eventbrite_Query::api_results()
+	 * @uses   Eventbrite_Manager::get_event()
+	 * @uses   Eventbrite_Manager::get_user_owned_events()
+	 * @uses   Eventbrite_Query::post_api_filters()
+	 * @uses   Eventbrite_Query::set_properties()
+	 * @uses   Eventbrite_Query::$posts
 	 * @return array List of posts.
 	 */
 	public function get_posts() {
@@ -120,9 +121,19 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Filter the permalink for events to point to our rewrites. // kwight: what about different permalink formats?
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @access public
+	 *
+	 * @param  string $url
+	 * @global $post
+	 * @uses   eventbrite_is_event()
+	 * @uses   esc_url()
+	 * @uses   home_url()
+	 * @uses   sanitize_title()
+	 * @uses   get_queried_object()
+	 * @uses   WP_Post::$post_title
+	 * @uses   absint()
+	 * @uses   WP_Post::$ID
+	 * @return string Permalink URL
 	 */
 	public function filter_event_permalink( $url ) { // eg. http://mysite.com/events/july-test-drive-11829569561
 		if ( is_eventbrite_event() ) {
@@ -138,12 +149,14 @@ class Eventbrite_Query extends WP_Query {
 		return $url;
 	}
 
-	/*
+	/**
 	 * Turn a given event into a proper Eventbrite_Event object.
 	 *
-	 * @param null|object $event
-	 * @uses Eventbrite_Event
-	 * @uses Eventbrite_Event::get_instance()
+	 * @access public
+	 *
+	 * @param  null|object $event
+	 * @uses   Eventbrite_Event
+	 * @uses   Eventbrite_Event::get_instance()
 	 * @return object Eventbrite_Event object.
 	 */
 	public function create_eventbrite_event( $event = null ) {
@@ -177,9 +190,9 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @uses Eventbrite_Query::$query_vars
-	 * @uses Eventbrite_Query::$api_results
-	 * @uses absint()
+	 * @uses   Eventbrite_Query::$query_vars
+	 * @uses   Eventbrite_Query::$api_results
+	 * @uses   absint()
 	 */
 	public function post_api_filters() {
 		// Always filter out private events unless display_private => true
@@ -212,7 +225,9 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Determine if an event is listed as public.
 	 *
-	 * @param object Event
+	 * @access public
+	 *
+	 * @param  object Event
 	 * @return bool True if listed as public, false otherwise.
 	 */
 	public function filter_by_listing_privacy( $event ) {
@@ -223,7 +238,10 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Determine by ID if an event is to be filtered out.
 	 *
-	 * @param object Event
+	 * @access public
+	 *
+	 * @param  object Event
+	 * @uses   Eventbrite_Query::$query_vars
 	 * @return bool True with no ID match, false if the ID is in the array of events to be removed.
 	 */
 	public function filter_by_post_not_in( $event ) {
@@ -234,9 +252,11 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Determine if an event is managed by a certain organizer.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @access public
+	 *
+	 * @param  object Event
+	 * @uses   Eventbrite_Query::$query_vars
+	 * @return bool True if properties match, false otherwise.
 	 */
 	public function filter_by_organizer( $event ) {
 		return $event->post_author == $this->query_vars['organizer'];
@@ -245,9 +265,11 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Determine if an event is occurring at a given venue.
 	 *
-	 * @param
-	 * @uses
-	 * @return
+	 * @access public
+	 *
+	 * @param  object Event
+	 * @uses   Eventbrite_Query::$query_vars
+	 * @return bool True if properties match, false otherwise.
 	 */
 	public function filter_by_venue( $event ) {
 		return $event->venue == $this->query_vars['venue'];
@@ -258,12 +280,12 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param null    $check
-	 * @param integer $object_id Event ID.
-	 * @param string  $meta_key Name of meta key being checked.
-	 * @uses is_eventbrite_event()
-	 * @uses Eventbrite_Event::get_instance()
-	 * @uses Eventbrite_Event::$logo_url
+	 * @param  null    $check
+	 * @param  integer $object_id Event ID.
+	 * @param  string  $meta_key Name of meta key being checked.
+	 * @uses   eventbrite_is_event()
+	 * @uses   Eventbrite_Event::get_instance()
+	 * @uses   Eventbrite_Event::$logo_url
 	 * @return string URL of event logo passed from the API.
 	 */
 	public function filter_post_metadata( $check, $object_id, $meta_key ) {
@@ -284,13 +306,13 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param string $html
-	 * @param int $post_id
-	 * @uses is_eventbrite_event()
-	 * @uses eventbrite_get_event()
-	 * @uses Eventbrite_Event::$logo_url
-	 * @uses esc_url()
-	 * @uses get_the_permalink()
+	 * @param  string $html
+	 * @param  int $post_id
+	 * @uses   eventbrite_is_event()
+	 * @uses   eventbrite_get_event()
+	 * @uses   Eventbrite_Event::$logo_url
+	 * @uses   esc_url()
+	 * @uses   get_the_permalink()
 	 * @return string HTML <img> tag for the Eventbrite logo linked to the event single view.
 	 */
 	public function filter_event_logo( $html, $post_id ) {
@@ -317,10 +339,10 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param array $classes Unfiltered post classes
-	 * @uses is_eventbrite_event()
-	 * @uses $post
-	 * @uses Eventbrite_Event::$logo_url
+	 * @param  array $classes Unfiltered post classes
+	 * @global $post
+	 * @uses   eventbrite_is_event()
+	 * @uses   Eventbrite_Event::$logo_url
 	 * @return array Filtered post classes
 	 */
 	public function filter_post_classes( $classes ) {

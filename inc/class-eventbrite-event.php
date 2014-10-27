@@ -5,6 +5,7 @@
  *
  * @package Eventbrite_API
  */
+
 class Eventbrite_Event {
 
 	/**
@@ -105,6 +106,7 @@ class Eventbrite_Event {
 	 * @access public
 	 *
 	 * @param int $event_id Event ID.
+	 * @uses eventbrite_get_event()
 	 * @return Eventbrite_Event|bool Eventbrite_Event object, false otherwise.
 	 */
 	public static function get_instance( $event_id ) {

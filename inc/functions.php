@@ -8,9 +8,10 @@
 /**
  * Get an array of Eventbrite events, in the format expected by Eventbrite_Event
  *
- * @param
- * @uses
- * @return
+ * @param  array $params
+ * @param  bool $force Force an API call, don't use cache
+ * @uses   Eventbrite_Manager::get_user_owned_events()
+ * @return object API results
  */
 function eventbrite_get_events( $params = array(), $force = false ) {
 	return eventbrite()->get_user_owned_events( $params, $force );
@@ -19,9 +20,10 @@ function eventbrite_get_events( $params = array(), $force = false ) {
 /**
  * Retrieves event data given an event ID.
  *
- * @param
- * @uses
- * @return
+ * @param  int $id
+ * @param  bool $force Force an API call, don't use cache
+ * @uses   Eventbrite_Manager::get_event()
+ * @return object Event
  */
 function eventbrite_get_event( $id = false, $force = false ) {
 	// Bail if nothing is passed in.
@@ -36,9 +38,11 @@ function eventbrite_get_event( $id = false, $force = false ) {
 /**
  * Determine if a given object, given ID, or the current post is an Eventbrite event.
  *
- * @param
- * @uses
- * @return
+ * @param  mixed $post
+ * @global $post
+ * @uses   eventbrite_get_event()
+ * @uses   absint()
+ * @return bool True if it's an Eventbrite event, false otherwise.
  */
 function is_eventbrite_event( $post = null ) {
 	// If no post is given, assume the current post.
@@ -65,10 +69,10 @@ function is_eventbrite_event( $post = null ) {
  * Paging navigation on event listings, using paginate_links().
  *
  * @param object $events
- * @uses get_query_var()
- * @uses esc_html_e()
- * @uses paginate_links()
- * @uses apply_filters()
+ * @uses  get_query_var()
+ * @uses  esc_html_e()
+ * @uses  paginate_links()
+ * @uses  apply_filters()
  */
 function eventbrite_paging_nav( $events ) {
 	// Bail if we only have one page and don't need pagination.
@@ -111,7 +115,7 @@ function eventbrite_post_nav( $event ) {
 /**
  * Get the arguments being passed to add_theme_support().
  *
- * @uses get_theme_support()
+ * @uses   get_theme_support()
  * @return object Eventbrite theme support arguments.
  */
 function eventbrite_get_support_args() {

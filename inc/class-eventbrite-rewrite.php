@@ -1,11 +1,15 @@
 <?php
 /**
  * Eventbrite_Rewrite class, for handling Eventbrite rewrite rules and template redirection.
+ *
+ * @package Eventbrite_API
  */
 
  class Eventbrite_Rewrite {
  	/**
 	 * Our constructor.
+	 *
+	 * @access public
 	 *
 	 * @uses add_filter()
 	 * @uses add_action()
@@ -34,9 +38,11 @@
 	/**
 	 * Add rewrite rules for event single views.
 	 *
-	 * @param array $wp_rules WordPress rewrite rules.
-	 * @uses eventbrite_get_support_args()
-	 * @uses get_pages()
+	 * @access public
+	 *
+	 * @param  array $wp_rules WordPress rewrite rules.
+	 * @uses   eventbrite_get_support_args()
+	 * @uses   get_pages()
 	 * @return array All rewrite rules (WordPress and Eventbrite rules combined).
 	 */
 	public function add_rewrite_rules( $wp_rules ) {
@@ -63,14 +69,16 @@
 	}
 
 	/**
-	 * Force our way into the theme's cache of page template listings.
+	 * Force our way into the theme's cache of page template listings. Gah.
 	 * Based on code by Harri Bell-Thomas: https://github.com/wpexplorer/page-templater
 	 *
-	 * @param array $params
-	 * @uses eventbrite_get_support_args()
-	 * @uses WP_Theme::get_page_templates()
-	 * @uses wp_cache_delete()
-	 * @uses wp_cache_add()
+	 * @access public
+	 *
+	 * @param  array $params
+	 * @uses   eventbrite_get_support_args()
+	 * @uses   WP_Theme::get_page_templates()
+	 * @uses   wp_cache_delete()
+	 * @uses   wp_cache_add()
 	 * @return array $params
 	 */
 	public function inject_page_template( $params ) {
@@ -100,15 +108,17 @@
 	/**
 	 * Check if we need to use Eventbrite page templates, either from the theme or our plugin.
 	 *
-	 * @param string $template
-	 * @uses get_query_var()
-	 * @uses eventbrite_get_support_args()
-	 * @uses esc_url()
-	 * @uses trailingslashit()
-	 * @uses get_stylesheet_directory()
-	 * @uses plugin_dir_path()
-	 * @uses get_post_meta()
-	 * @uses get_the_ID()
+	 * @access public
+	 *
+	 * @param  string $template
+	 * @uses   get_query_var()
+	 * @uses   eventbrite_get_support_args()
+	 * @uses   esc_url()
+	 * @uses   trailingslashit()
+	 * @uses   get_stylesheet_directory()
+	 * @uses   plugin_dir_path()
+	 * @uses   get_post_meta()
+	 * @uses   get_the_ID()
 	 * @return string Template file name.
 	 */
 	public function check_templates( $template ) {
