@@ -44,7 +44,7 @@ function eventbrite_get_event( $id = false, $force = false ) {
  * @uses   absint()
  * @return bool True if it's an Eventbrite event, false otherwise.
  */
-function is_eventbrite_event( $post = null ) {
+function eventbrite_is_event( $post = null ) {
 	// If no post is given, assume the current post.
 	if ( ! $post ) {
 		global $post;

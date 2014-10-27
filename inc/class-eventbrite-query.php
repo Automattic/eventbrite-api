@@ -136,7 +136,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @return string Permalink URL
 	 */
 	public function filter_event_permalink( $url ) { // eg. http://mysite.com/events/july-test-drive-11829569561
-		if ( is_eventbrite_event() ) {
+		if ( eventbrite_is_event() ) {
 			global $post;
 			$url = sprintf( '%1$s/%2$s/%3$s-%4$s',
 				esc_url( home_url() ),                             // protocol://domain
@@ -290,7 +290,7 @@ class Eventbrite_Query extends WP_Query {
 	 */
 	public function filter_post_metadata( $check, $object_id, $meta_key ) {
 		// If we aren't dealing with an Eventbrite event or wanting the thumbnail ID, then it's business as usual.
-		if ( ! is_eventbrite_event() || '_thumbnail_id' !== $meta_key ) {
+		if ( ! eventbrite_is_event() || '_thumbnail_id' !== $meta_key ) {
 			return null;
 		}
 
@@ -317,7 +317,7 @@ class Eventbrite_Query extends WP_Query {
 	 */
 	public function filter_event_logo( $html, $post_id ) {
 		// Are we dealing with an Eventbrite event?
-		if ( is_eventbrite_event() ) {
+		if ( eventbrite_is_event() ) {
 			$html = '';
 
 			$event = Eventbrite_Event::get_instance( $post_id );
@@ -346,7 +346,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @return array Filtered post classes
 	 */
 	public function filter_post_classes( $classes ) {
-		if ( is_eventbrite_event() ) {
+		if ( eventbrite_is_event() ) {
 			$classes[] = 'eventbrite-event';
 
 			global $post;
