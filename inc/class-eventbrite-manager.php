@@ -7,11 +7,11 @@
 
 class Eventbrite_Manager {
 	/**
-	 * Stores our single instance.
+	 * Class instance used by themes and plugins.
 	 *
 	 * @var object
 	 */
-	private static $instance;
+	public static $instance;
 
 	/**
 	 * Parameters used in calls to the Eventbrite API.
@@ -21,17 +21,17 @@ class Eventbrite_Manager {
 	public $api_params = array();
 
 	/**
-	 * Return our instance, creating a new one if necessary.
+	 * The class constructor.
 	 *
-	 * @uses Eventbrite_Manager::$instance
-	 * @return object Eventbrite_Manager
+	 * @access public
+	 *
+	 * @uses   Eventbrite_manager::$instance
+	 * @uses   add_action()
 	 */
-	public static function instance() {
-		if ( ! isset( self::$instance ) ) {
-			self::$instance = new Eventbrite_Manager;
-		}
+	public function __construct() {
+		// Assign our instance.
+		self::$instance = $this;
 
-		return self::$instance;
 	}
 
 	/**
@@ -380,12 +380,14 @@ class Eventbrite_Manager {
 	}
 }
 
+new Eventbrite_Manager;
+
 /**
  * Allow themes and plugins to access Eventbrite_Manager methods and properties.
  *
- * @uses Eventbrite_Manager::instance()
+ * @global Eventbrite_Manager::instance()
  * @return object Eventbrite_Manager
  */
 function eventbrite() {
-	return Eventbrite_Manager::instance();
+	return Eventbrite_Manager::$instance;
 }
