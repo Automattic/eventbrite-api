@@ -11,7 +11,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		parent::__construct();
 		self::$instance = $this;
 
-		$token = get_option( 'eventbrite_token' );
+		$token = get_option( 'eventbrite_api_token' );
 		if ( ! empty( $token ) ) {
 			$this->set_token( Keyring::init()->get_token_store()->get_token( array( 'type' => 'access', 'id' => $token ) ) );
 		}
@@ -21,7 +21,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 	}
 
 	public function get_token() {
-		$token = get_option( 'eventbrite_token' );
+		$token = get_option( 'eventbrite_api_token' );
 		if ( empty( $token ) )
 			return false;
 
@@ -68,7 +68,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 			return;
 		}
 
-		update_option( 'eventbrite_token', $id );
+		update_option( 'eventbrite_api_token', $id );
 	}
 
 	function keyring_connection_deleted( $service, $request ) {
@@ -76,7 +76,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 			return;
 		}
 
-		delete_option( 'eventbrite_token' );
+		delete_option( 'eventbrite_api_token' );
 	}
 
 }
