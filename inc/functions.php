@@ -148,3 +148,35 @@ function eventbrite_is_single( $query = null ) {
 	}
 }
 
+/**
+ * Insert the Eventbrite ticket form widget into an event single view.
+ *
+ * @param int $event_id
+ * @uses  add_query_arg()
+ * @uses  esc_url()
+ * @uses  esc_attr()
+ * @uses  apply_filters()
+ */
+function eventbrite_ticket_form_widget( $content ) {
+	// Bail if we're not on an event single view.
+	if ( ! eventbrite_is_single() ) {
+		return $content;
+	}
+
+	// Build the src attribute URL.
+	$args = array(
+			'eid' => get_the_ID(),
+			'ref' => 'etckt',
+	);
+	$src = add_query_arg( $args, '//eventbrite.com/tickets-external' );
+
+	// Assemble our ticket info HTML.
+	$ticket_html = sprintf( '<div class="eventbrite-widget"><iframe src="%1$s" height="%2$s" width="100%%" frameborder="0" vspace="0" hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe></div>',
+		esc_url( $src ),
+		esc_attr( apply_filters( 'eventbrite_ticket_widget_height', 215 ) )
+	);
+
+	// Return the combined markup.
+	return $content . $ticket_html;
+}
+add_filter( 'the_content', 'eventbrite_ticket_form_widget' );
