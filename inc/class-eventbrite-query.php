@@ -116,6 +116,16 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		$this->max_num_pages = ceil( $this->found_posts / 10 ); // kwight: support posts_per_page
+
+		// Adjust some WP_Query parsing.
+		if ( ! empty( $this->query_vars['p'] ) ) {
+			$this->is_single = true;
+		} else {
+			$this->is_category = true;
+			$this->is_archive = true;
+			$this->is_page = false;
+		}
+		$this->is_home = false;
 	}
 
 	/**

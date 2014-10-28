@@ -122,3 +122,29 @@ function eventbrite_get_support_args() {
 	$support = get_theme_support( 'eventbrite' );
 	return (object) $support[0];
 }
+
+/**
+ * Determine if a query is for an event single view.
+ *
+ * @param  mixed $query
+ * @uses   Eventbrite_Query::$is_single
+ * @uses   get_query_var()
+ * @return bool True if an event single view, false otherwise.
+ */
+function eventbrite_is_single( $query = null ) {
+	// If an Eventbrite_Query object is passed in, check the is_single property.
+	if ( is_a( $query, 'Eventbrite_Query' ) ) {
+		return $query->is_single;
+	}
+
+	// If the eventbrite_id query var has something, then it's an event single view.
+	elseif ( get_query_var( 'eventbrite_id' ) ) {
+		return true;
+	}
+
+	// Whatever it is, if anything, it's not an event single view.
+	else {
+		return false;
+	}
+}
+
