@@ -32,6 +32,8 @@ class Eventbrite_Manager {
 		// Assign our instance.
 		self::$instance = $this;
 
+		// Add hooks.
+		add_action( 'keyring_connection_deleted', array( $this, 'flush_transients' ), 10, 2 );
 	}
 
 	/**
@@ -80,7 +82,11 @@ class Eventbrite_Manager {
 
 		// Make a fresh request and cache it.
 		$request = Eventbrite_API::call( $endpoint, $params, $id );
-		set_transient( $this->get_transient_name( $endpoint, $params ), $request, WEEK_IN_SECONDS );
+		$transient_name = $this->get_transient_name( $endpoint, $params );
+		set_transient( $transient_name, $request, WEEK_IN_SECONDS );
+
+		// Register the transient in case we need to flush.
+		$this->register_transient( $transient_name );
 
 		return $request;
 	}
@@ -377,6 +383,58 @@ class Eventbrite_Manager {
 		$event['public']       = ( isset( $api_event->listed ) )            ? $api_event->listed            : '';
 
 		return (object) $event;
+	}
+
+	/**
+	 * Add a transient name to the list of registered transients, stored in the 'eventbrite_api_transients' option.
+	 *
+	 * @access protected
+	 *
+	 * @uses   get_option()
+	 * @uses   update_option()
+	 */
+	protected function register_transient( $transient_name ) {
+		// Get any existing list of transients.
+		$transients = get_option( 'eventbrite_api_transients', array() );
+
+		// Add the new transient if it doesn't already exist.
+		if ( ! in_array( $transient_name, $transients ) ) {
+			$transients[] = $transient_name;
+		}
+
+		// Save the updated list of transients.
+		update_option( 'eventbrite_api_transients', $transients );
+	}
+
+	/**
+	 * Flush all transients.
+	 *
+	 * @access public
+	 *
+	 * @uses   get_option()
+	 * @uses   delete_transient()
+	 */
+	public function flush_transients( $service, $request ) {
+		// Bail if it wasn't an Eventbrite connection that got deleted.
+		if ( 'eventbrite' != $service ) {
+			return;
+		}
+
+		// Get the list of registered transients.
+		$transients = get_option( 'eventbrite_api_transients', array() );
+
+		// Bail if we have no transients.
+		if ( ! $transients ) {
+			return;
+		}
+
+		// Loop through all registered transients, deleting each one.
+		foreach ($transients as $transient ) {
+			delete_transient( $transient );
+		}
+
+		// Reset the list of registered transients.
+		delete_option( 'eventbrite_api_transients' );
 	}
 }
 
