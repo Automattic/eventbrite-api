@@ -331,7 +331,7 @@ class Eventbrite_Manager {
 	 * @return array All supported endpoints.
 	 */
 	public function get_endpoints() {
-		return array(
+		return apply_filters( 'eventbrite_supported_endpoints', array(
 			// 'event_search',
 			// 'event_categories',
 			'event_details',
@@ -354,7 +354,7 @@ class Eventbrite_Manager {
 			// 'order_details',
 			// 'contact_lists',
 			// 'contact_list_details',
-		);
+		) );
 	}
 
 	/**
