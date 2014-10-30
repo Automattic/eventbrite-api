@@ -130,7 +130,7 @@ class Eventbrite_Manager {
 	 */
 	public function do_event_search( $params = array(), $force = false ) {
 		// Get the raw results.
-		$results = $this->request( 'event_search', $params, $force );
+		$results = $this->request( 'event_search', $params, false, $force );
 
 		// If we have events, map them to the format expected by Eventbrite_Event
 		if ( ! empty( $results->events ) ) {
@@ -156,7 +156,7 @@ class Eventbrite_Manager {
 		$params['status'] = 'live';
 
 		// Get the raw results.
-		$results = $this->request( 'user_owned_events', $params, $force );
+		$results = $this->request( 'user_owned_events', $params, false, $force );
 
 		// If we have events, map them to the format expected by Eventbrite_Event
 		if ( ! empty( $results->events ) ) {
