@@ -17,7 +17,7 @@ class Eventbrite_Query extends WP_Query {
 	/**
 	 * Constructor.
 	 *
-	 * Sets up the WordPress query, if parameter is not empty.
+	 * Sets up the Eventbrite query.
 	 *
 	 * @access public
 	 *
