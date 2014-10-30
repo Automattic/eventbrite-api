@@ -14,13 +14,6 @@ class Eventbrite_Manager {
 	public static $instance;
 
 	/**
-	 * Parameters used in calls to the Eventbrite API.
-	 *
-	 * @var array
-	 */
-	public $api_params = array();
-
-	/**
 	 * The class constructor.
 	 *
 	 * @access public
@@ -120,32 +113,9 @@ class Eventbrite_Manager {
 			return false;
 		}
 
-		switch ( $endpoint ) {
-			// Only the user_owned_events endpoint is currently supported.
-			
-			default:
-				// The user_owned_events endpoint.
-				$valid_params = array(
-					'status' => array(
-						'all',
-						'draft',
-						'live',
-						// 'cancelled', October 3, 2014: Listed in docs as valid, but returns an error.
-						'started',
-						'ended',
-					),
-					'orderby' => array(
-						'start_asc',
-						'start_desc',
-						'created_asc',
-						'created_desc',
-					),
-				);
-				break;
-		}
-
 		// kwight: sort this out
 		return true;
+	}
 
 	/**
 	 * Search for public live events.
@@ -177,20 +147,16 @@ class Eventbrite_Manager {
 	 *
 	 * @param array $params
 	 * @param bool $force
-	 * @uses Eventbrite_Manager::process_params
 	 * @uses Eventbrite_Manager::request
-	 * @uses Eventbrite_Manager::$api_params
 	 * @uses Eventbrite_Manager::map_event_keys
 	 * @return object Eventbrite_Manager
 	 */
 	public function get_user_owned_events( $params = array(), $force = false ) {
-		// Sort out internal and external parameters.
-		if ( ! empty( $params ) ) {
-			$this->process_params( $params );
-		}
+		// Query for 'live' events by default (rather than 'all', which includes events in the past).
+		$params['status'] = 'live';
 
 		// Get the raw results.
-		$results = $this->request( 'user_owned_events', $this->api_params, $force );
+		$results = $this->request( 'user_owned_events', $params, $force );
 
 		// If we have events, map them to the format expected by Eventbrite_Event
 		if ( ! empty( $results->events ) ) {
@@ -237,78 +203,6 @@ class Eventbrite_Manager {
 		}
 
 		return $results;
-	}
-
-	/**
-	 * Sort out parameters used in API calls from those used internally (WP_Query-style parameters).
-	 * Also reconciles any oddness between the two (eg. orderby vs. order_by).
-	 *
-	 * @access public
-	 *
-	 * @param array $params
-	 * @uses Eventbrite_Manager::$api_params
-	 */
-	public function process_params( $params ) {
-		// Create array of parameters for API calls.
-		$this->api_params = array_intersect_key( $params, array(
-			'order'       => null,
-			'orderby'     => null,
-			'paged'       => null,
-			'post_status' => null,
-		) );
-
-		// Change WP_Query 'post_status' query arg to its equivalent Eventbrite 'status' query arg. Default value is 'all'.
-		if ( ! empty( $this->api_params['post_status'] ) ) {
-			$valid = array(
-				'all',
-				// 'cancelled', October 3, 2014: Listed in docs as valid, but returns an error.
-				'draft',
-				'ended',
-				'live',
-				'started',
-			);
-			$this->api_params['status'] = ( in_array( $this->api_params['post_status'], $valid ) ) ? $this->api_params['post_status'] : 'all' ;
-		}
-
-		// Validate the 'order' arg.
-		if ( empty( $this->api_params['order'] ) || ! in_array( $this->api_params['order'], array( 'ASC', 'DESC' ) ) ) {
-			$this->api_params['order'] = 'asc';
-		} else {
-			// Default value in WP_Query is 'DESC', while the Eventbrite API default is 'asc'. Flip whatever we've got.
-			if ( 'ASC' == $this->api_params['order'] ) {
-				$this->api_params['order'] = 'desc';
-			} else {
-				$this->api_params['order'] = 'asc';
-			}
-		}
-
-		// Validate the 'orderby' arg.
-		if ( ! empty( $this->api_params['orderby'] ) ) {
-			$valid = array(
-				'created',
-				'start',
-			);
-			$this->api_params['orderby'] = ( in_array( $this->api_params['orderby'], $valid ) ) ? $this->api_params['orderby'] : 'start' ;
-		} else {
-			$this->api_params['orderby'] = 'start';
-		}
-
-		// Determine Eventbrite 'order_by' query arg based on WP_Query 'order' and 'orderby' values.
-		$this->api_params['order_by'] = $this->api_params['orderby'] . '_' . $this->api_params['order'];
-
-		// Remove extraneous keys.
-		unset(
-			$this->api_params['post_status'],
-			$this->api_params['order'],
-			$this->api_params['orderby']
-		);
-
-		// Adjust for pagination if necessary.
-		if ( 5 < $this->api_params['paged'] ) {
-			// The API returns pages of 50, and we currently only support a fixed number of 10 events per WordPress page. kwight: support posts_per_page
-			$this->api_params['page'] = ceil( $this->api_params['paged'] / 5 );
-		}
-		unset( $this->api_params['paged'] );
 	}
 
 	/**
@@ -392,7 +286,6 @@ class Eventbrite_Manager {
 		$event['post_date']    = ( isset( $api_event->created ) )           ? $api_event->created           : '';
 		$event['url']          = ( isset( $api_event->url ) )               ? $api_event->url               : '';
 		$event['logo_url']     = ( isset( $api_event->logo_url ) )          ? $api_event->logo_url          : '';
-		$event['post_status']  = ( isset( $api_event->status ) )            ? $api_event->status            : '';
 		$event['start']        = ( isset( $api_event->start->utc ) )        ? $api_event->start->utc        : '';
 		$event['end']          = ( isset( $api_event->end->utc ) )          ? $api_event->end->utc          : '';
 		$event['post_author']  = ( isset( $api_event->organizer->name ) )   ? $api_event->organizer->name   : '';

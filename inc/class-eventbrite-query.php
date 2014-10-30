@@ -215,11 +215,6 @@ class Eventbrite_Query extends WP_Query {
 	 * @uses   absint()
 	 */
 	public function post_api_filters() {
-		// Always filter out private events unless display_private => true
-		if ( empty( $this->query_vars['display_private'] ) || true !== $this->query_vars['display_private'] ) {
-			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_listing_privacy' ) );
-		}
-
 		// Filter out specified IDs: 'post__not_in'
 		if ( isset( $this->query_vars['post__not_in'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_post_not_in' ) );

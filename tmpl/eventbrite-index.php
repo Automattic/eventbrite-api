@@ -18,12 +18,9 @@ get_header(); ?>
 			$events = new Eventbrite_Query( apply_filters( 'eventbrite_query_args', array(
 				// 'display_private' => false, // boolean
 				// 'limit' => null,            // integer
-				// 'order' => 'DESC',          // string: 'ASC', 'DESC'
-				// 'orderby' => 'start',       // string: 'start', 'created'
 				// 'organizer' => null,        // string
 				// 'p' => null,                // integer
 				// 'post__not_in' => null,     // array of integers
-				// 'post_status' => 'all',     // string: 'all', 'draft', 'ended', 'live', 'started'
 				// 'venue' => null,            // string
  			) ) );
 

@@ -51,13 +51,6 @@ class Eventbrite_Event {
 	public $logo_url; // logo_url
 
 	/**
-	 * The event's status.
-	 *
-	 * @var string
-	 */
-	public $post_status; // status
-
-	/**
 	 * The event's UTC start time.
 	 *
 	 * @var string
