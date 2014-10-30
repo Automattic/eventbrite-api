@@ -35,6 +35,8 @@ class Eventbrite_Query extends WP_Query {
 		add_filter( 'get_post_metadata', array( $this, 'filter_post_metadata' ), 10, 3 );
 		add_filter( 'post_thumbnail_html', array( $this, 'filter_event_logo' ), 9, 2 );
 		add_filter( 'post_class', array( $this, 'filter_post_classes' ) );
+		add_filter( 'author_link', array( $this, 'filter_author_url' ) );
+		add_filter( 'the_author', array( $this, 'filter_author_name' ) );
 
 		// Put our query in motion.
 		$this->query( $query );
@@ -240,7 +242,7 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		// Filter by organizer: 'organizer'
-		if ( isset( $this->query_vars['organizer'] ) ) {
+		if ( isset( $this->query_vars['organizer_id'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_organizer' ) );
 		}
 
@@ -279,7 +281,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @return bool True if properties match, false otherwise.
 	 */
 	public function filter_by_organizer( $event ) {
-		return $event->post_author == $this->query_vars['organizer'];
+		return $event->organizer_id == $this->query_vars['organizer_id'];
 	}
 
 	/**
@@ -376,5 +378,55 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Change the author archive URL to that of the organizer.
+	 *
+	 * @access public
+	 *
+	 * @param  string $name Author name
+	 * @global $post
+	 * @uses   eventbrite_is_event()
+	 * @uses   Eventbrite_Event::$organizer_name
+	 * @return string Organizer name
+	 */
+	public function filter_author_url( $url ) {
+		// See if we're working with an Eventbrite event.
+		if ( eventbrite_is_event() ) {
+			global $post;
+
+			// Get the current page the link was clicked on.
+			$url = get_permalink( get_queried_object_id() );
+
+			// If the event has an organizer set, append it to the URL. http://(page permalink)/organizer-(organizer name)-(organizer ID)/
+			if ( ! empty( $post->organizer_name ) ) {
+				$url .= 'organizer/' . sanitize_title( $post->organizer_name ) . '-' . absint( $post->organizer_id );
+			}
+		}
+
+		return trailingslashit( $url );
+	}
+
+	/**
+	 * Change the author name to that of the event's organizer.
+	 *
+	 * @access public
+	 *
+	 * @param  string $name Author name
+	 * @global $post
+	 * @uses   eventbrite_is_event()
+	 * @uses   Eventbrite_Event::$organizer_name
+	 * @return string Organizer name
+	 */
+	public function filter_author_name( $name ) {
+		if ( eventbrite_is_event() ) {
+			global $post;
+			if ( ! empty( $post->organizer_name ) ) {
+				$name = $post->organizer_name;
+			}
+		}
+
+		return $name;
 	}
 }
