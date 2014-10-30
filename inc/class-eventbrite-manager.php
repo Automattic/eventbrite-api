@@ -353,7 +353,7 @@ class Eventbrite_Manager {
 new Eventbrite_Manager;
 
 /**
- * Allow themes and plugins to access Eventbrite_Manager methods and properties.
+ * Allow themes and plugins a simple function to access Eventbrite_Manager methods and properties.
  *
  * @global Eventbrite_Manager::instance()
  * @return object Eventbrite_Manager
