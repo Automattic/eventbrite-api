@@ -27,12 +27,8 @@ class Eventbrite_Query extends WP_Query {
 	 * @uses  Eventbrite_Query::query()
 	 */
 	public function __construct( $query = '' ) {
-		// Set pagination if required.
-		$paged = get_query_var( 'paged' );
-
-		if ( 0 != $paged ) {
-			$query['paged'] = $paged;
-		}
+		// Process any query args from the URL.
+		$query = $this->process_query_args( $query );
 
 		// Assign hooks.
 		add_filter( 'post_link', array( $this, 'filter_event_permalink' ) );
@@ -42,6 +38,29 @@ class Eventbrite_Query extends WP_Query {
 
 		// Put our query in motion.
 		$this->query( $query );
+	}
+
+	/**
+	 * Handle any query args that come from the requested URL.
+	 *
+	 * @param
+	 * @uses
+	 * @return
+	 */
+	public function process_query_args( $query ) {
+		// Handle requests for paged events.
+		$paged = get_query_var( 'paged' );
+		if ( 2 >= $paged ) {
+			$query['paged'] = $paged;
+		}
+
+		// Filter by organizer ID if an "author archive" (organizer events) was requested.
+		$organizer_id = get_query_var( 'organizer_id' );
+		if ( ! empty( $organizer_id ) ) {
+			$query['organizer_id'] = $organizer_id;
+		}
+
+		return $query;
 	}
 
 	/**
