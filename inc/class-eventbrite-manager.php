@@ -132,8 +132,14 @@ class Eventbrite_Manager {
 		// Get the raw results.
 		$results = $this->request( 'event_search', $params, false, $force );
 
-		// If we have events, map them to the format expected by Eventbrite_Event
+		// If we have events, there's some work to do.
 		if ( ! empty( $results->events ) ) {
+			// Add the missing 'listed' property. Because this endpoint only returns public events, the API doesn't include it – but we need it.
+			foreach ( $results->events as $event ) {
+				$event->listed = true;
+			}
+
+			// Map events to the format expected by Eventbrite_Event.
 			$results->events = array_map( array( $this, 'map_event_keys' ), $results->events );
 		}
 
