@@ -147,13 +147,31 @@ class Eventbrite_Manager {
 		// kwight: sort this out
 		return true;
 
-		foreach ( $params as $param => $value ) {
-			
+	/**
+	 * Search for public live events.
+	 *
+	 * @access public
+	 *
+	 * @param array $params
+	 * @param bool $force
+	 * @uses Eventbrite_Manager::request
+	 * @uses Eventbrite_Manager::map_event_keys
+	 * @return object Eventbrite_Manager
+	 */
+	public function do_event_search( $params = array(), $force = false ) {
+		// Get the raw results.
+		$results = $this->request( 'event_search', $params, $force );
+
+		// If we have events, map them to the format expected by Eventbrite_Event
+		if ( ! empty( $results->events ) ) {
+			$results->events = array_map( array( $this, 'map_event_keys' ), $results->events );
 		}
+
+		return $results;
 	}
 
 	/**
-	 * Get user-owned events.
+	 * Get user-owned private and public events.
 	 *
 	 * @access public
 	 *
@@ -332,7 +350,7 @@ class Eventbrite_Manager {
 	 */
 	public function get_endpoints() {
 		return apply_filters( 'eventbrite_supported_endpoints', array(
-			// 'event_search',
+			'event_search',
 			// 'event_categories',
 			'event_details',
 			// 'event_attendees',

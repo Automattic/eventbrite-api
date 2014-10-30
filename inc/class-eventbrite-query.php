@@ -63,11 +63,21 @@ class Eventbrite_Query extends WP_Query {
 		// Set up query variables.
 		$this->parse_query();
 
-		// Get the event or events from the API (or cache).
+		// Determine which endpoint is needed. Do we want just a single event?
 		if ( ! empty( $this->query_vars['p'] ) ) {
 			$this->api_results = eventbrite()->get_event( $this->query_vars['p'] );
-		} else {
-			$this->api_results = eventbrite()->get_user_owned_events( $this->query_vars );
+		}
+
+		// If private events are wanted, the user_owned_events endpoint must be used.
+		elseif ( isset( $this->query_vars['display_private'] ) && true === $this->query_vars['display_private'] ) {
+			$this->api_results = eventbrite()->get_user_owned_events();
+		}
+
+		// It's a run-of-the-mill query (only the user's public live events), meaning event_search is best.
+		else {
+			$this->api_results = eventbrite()->do_event_search( array(
+				'user.id' => Eventbrite_API::$instance->get_token()->get_meta( 'user_id' ),
+			) );
 		}
 
 		// Do any post-API query processing.
