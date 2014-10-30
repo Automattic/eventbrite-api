@@ -234,20 +234,6 @@ class Eventbrite_Query extends WP_Query {
 		if ( isset( $this->query_vars['limit'] ) ) {
 			$this->api_results->events = array_slice( $this->api_results->events, 0, absint( $this->query_vars['limit'] ) );
 		}
-
-	}
-
-	/**
-	 * Determine if an event is listed as public.
-	 *
-	 * @access public
-	 *
-	 * @param  object Event
-	 * @return bool True if listed as public, false otherwise.
-	 */
-	public function filter_by_listing_privacy( $event ) {
-		// Allow only events listed as public (listed: true)
-		return true == $event->public;
 	}
 
 	/**
