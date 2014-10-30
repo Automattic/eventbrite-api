@@ -286,20 +286,20 @@ class Eventbrite_Manager {
 	public function map_event_keys( $api_event ) {
 		$event = array();
 
-		$event['ID']            = ( isset( $api_event->id ) )                ? $api_event->id                : '';
-		$event['post_title']    = ( isset( $api_event->name->text ) )        ? $api_event->name->text        : '';
-		$event['post_content']  = ( isset( $api_event->description->html ) ) ? $api_event->description->html : '';
-		$event['post_date']     = ( isset( $api_event->start->local ) )      ? $api_event->start->local      : '';
-		$event['post_date_gmt'] = ( isset( $api_event->start->utc ) )        ? $api_event->start->utc        : '';
-		$event['url']           = ( isset( $api_event->url ) )               ? $api_event->url               : '';
-		$event['logo_url']      = ( isset( $api_event->logo_url ) )          ? $api_event->logo_url          : '';
-		$event['start']         = ( isset( $api_event->start->utc ) )        ? $api_event->start->utc        : '';
-		$event['end']           = ( isset( $api_event->end->utc ) )          ? $api_event->end->utc          : '';
-		$event['organizer_name']   = ( isset( $api_event->organizer->name ) )   ? $api_event->organizer->name   : '';
-		$event['organizer_id']  = ( isset( $api_event->organizer->id ) )     ? $api_event->organizer->id     : '';
-		$event['venue_name']         = ( isset( $api_event->venue->name ) )       ? $api_event->venue->name       : '';
-		$event['venue_id']      = ( isset( $api_event->venue->id ) )         ? $api_event->venue->id         : '';
-		$event['public']        = ( isset( $api_event->listed ) )            ? $api_event->listed            : '';
+		$event['ID']             = ( isset( $api_event->id ) )                ? $api_event->id                : '';
+		$event['post_title']     = ( isset( $api_event->name->text ) )        ? $api_event->name->text        : '';
+		$event['post_content']   = ( isset( $api_event->description->html ) ) ? $api_event->description->html : '';
+		$event['post_date']      = ( isset( $api_event->start->local ) )      ? $api_event->start->local      : '';
+		$event['post_date_gmt']  = ( isset( $api_event->start->utc ) )        ? $api_event->start->utc        : '';
+		$event['url']            = ( isset( $api_event->url ) )               ? $api_event->url               : '';
+		$event['logo_url']       = ( isset( $api_event->logo_url ) )          ? $api_event->logo_url          : '';
+		$event['start']          = ( isset( $api_event->start->utc ) )        ? $api_event->start->utc        : '';
+		$event['end']            = ( isset( $api_event->end->utc ) )          ? $api_event->end->utc          : '';
+		$event['organizer_name'] = ( isset( $api_event->organizer->name ) )   ? $api_event->organizer->name   : '';
+		$event['organizer_id']   = ( isset( $api_event->organizer->id ) )     ? $api_event->organizer->id     : '';
+		$event['venue_name']     = ( isset( $api_event->venue->name ) )       ? $api_event->venue->name       : '';
+		$event['venue_id']       = ( isset( $api_event->venue->id ) )         ? $api_event->venue->id         : '';
+		$event['public']         = ( isset( $api_event->listed ) )            ? $api_event->listed            : '';
 
 		return (object) $event;
 	}
