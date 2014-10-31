@@ -287,7 +287,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @return bool True if properties match, false otherwise.
 	 */
 	public function filter_by_organizer( $event ) {
-		return $event->organizer_id == $this->query_vars['organizer_id'];
+		return ( isset( $event->organizer->id ) ) ? $event->organizer->id == $this->query_vars['organizer_id'] : false;
 	}
 
 	/**
