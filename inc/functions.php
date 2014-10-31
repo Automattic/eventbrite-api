@@ -248,20 +248,15 @@ function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 }
 
 /**
- * Insert the Eventbrite ticket form widget into an event single view.
+ * Insert the Eventbrite ticket form widget.
  *
- * @param int $event_id
+ * @uses  get_the_ID()
  * @uses  add_query_arg()
  * @uses  esc_url()
  * @uses  esc_attr()
  * @uses  apply_filters()
  */
-function eventbrite_ticket_form_widget( $content ) {
-	// Bail if we're not on an event single view.
-	if ( ! eventbrite_is_single() ) {
-		return $content;
-	}
-
+function eventbrite_ticket_form_widget() {
 	// Build the src attribute URL.
 	$args = array(
 			'eid' => get_the_ID(),
@@ -275,7 +270,6 @@ function eventbrite_ticket_form_widget( $content ) {
 		esc_attr( apply_filters( 'eventbrite_ticket_widget_height', 215 ) )
 	);
 
-	// Return the combined markup.
-	return $content . $ticket_html;
+	// Output the markup.
+	echo $ticket_html;
 }
-add_filter( 'the_content', 'eventbrite_ticket_form_widget' );
