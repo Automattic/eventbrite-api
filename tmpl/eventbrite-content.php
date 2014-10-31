@@ -1,6 +1,6 @@
 <?php
 /**
- * @package _s
+ * The equivalent of a content-eventbrite.php template file in a theme.
  */
 ?>
 
