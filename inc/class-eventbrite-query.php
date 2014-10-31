@@ -343,14 +343,23 @@ class Eventbrite_Query extends WP_Query {
 		if ( eventbrite_is_event() ) {
 			$html = '';
 
+			// Get our event.
 			$event = Eventbrite_Event::get_instance( $post_id );
 
+			// Does the event have a logo set?
 			if ( isset( $event->logo_url ) ) {
-				$html = '<img src="' . $event->logo_url . '" />';
-				$html = sprintf( '<a class="post-thumbnail" href="%1$s"><img src="%2$s" class="wp-post-image"></a>',
-					esc_url( get_the_permalink() ),
-					esc_url( $event->logo_url )
-				);
+				// No need for a permalink on event single views.
+				if ( eventbrite_is_single() ) {
+					$html = '<img src="' . esc_url( $event->logo_url ) . '" class="wp-post-image">';
+				}
+
+				// Add a permalink to events on the listings template.
+				else {
+					$html = sprintf( '<a class="post-thumbnail" href="%1$s"><img src="%2$s" class="wp-post-image"></a>',
+						esc_url( get_the_permalink() ),
+						esc_url( $event->logo_url )
+					);
+				}
 			}
 		}
 
