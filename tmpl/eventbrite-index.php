@@ -34,7 +34,7 @@ get_header(); ?>
 								<?php the_title( sprintf( '<h1 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h1>' ); ?>
 
 								<div class="entry-meta">
-									<?php eventbrite_event_info(); ?>
+									<?php eventbrite_event_meta(); ?>
 								</div><!-- .entry-meta -->
 							</header><!-- .entry-header -->
 

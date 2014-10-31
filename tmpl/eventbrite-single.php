@@ -21,7 +21,7 @@ get_header(); ?>
 								<h1 class="entry-title"><?php the_title(); ?></h1>
 
 								<div class="entry-meta">
-									<?php eventbrite_event_info(); ?>
+									<?php eventbrite_event_meta(); ?>
 								</div><!-- .entry-meta -->
 							</header><!-- .entry-header -->
 

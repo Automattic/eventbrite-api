@@ -148,6 +148,102 @@ function eventbrite_is_single( $query = null ) {
 	}
 }
 
+if ( ! function_exists( 'eventbrite_event_meta' ) ) :
+/**
+ * Output event information such as date, time, venue, and organizer
+ *
+ * @uses   eventbrite_event_time()
+ * @uses   eventbrite_event_venue()
+ * @uses   esc_url()
+ * @uses   eventbrite_venue_get_archive_link()
+ * @uses   esc_html()
+ * @uses   eventbrite_event_organizer()
+ * @uses   get_author_posts_url()
+ * @uses   get_the_author_meta()
+ * @uses   get_the_author()
+ * @uses   eventbrite_is_single()
+ * @uses   get_the_permalink()
+ * @uses   esc_html__()
+ * @uses   apply_filters()
+ * @return string Event meta
+ */
+function eventbrite_event_meta() {
+	// Start our HTML output with the event time.
+	$html = '<span class="event-time">' . eventbrite_event_time() . '</span>';
+
+	// Add a venue name if available.
+	if ( ! empty( eventbrite_event_venue()->name ) ) {
+		$html .= sprintf( '<span class="event-venue"><a class="url fn n" href="%s">%s</a></span>',
+			esc_url( eventbrite_venue_get_archive_link() ),
+			esc_html( eventbrite_event_venue()->name )
+		);
+	}
+
+	// Add the organizer's name if available.
+	if ( ! empty( eventbrite_event_organizer()->name ) ) {
+		// Assemble the "author archive" link and name. Author-related functions are filtered to use the event's organizer.
+		$organizer = sprintf(
+			_x( 'Organized by %s', 'Event organizer', 'eventbrite_api' ),
+			'<a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a>'
+		);
+		$html .= '<span class="event-organizer">' . $organizer . '</span>';
+	}
+
+	// Only add the event details (event single view) link on index views.
+	if ( ! eventbrite_is_single() ) {
+		$html .= sprintf( '<span class="event-details"><a href="%s">%s</a></span>',
+			esc_url( get_the_permalink() ),
+			esc_html__( 'Event details', 'eventbrite_api' )
+		);
+	}
+
+	echo apply_filters( 'eventbrite_event_meta', $html );
+}
+endif;
+
+/**
+ * Return an event's time.
+ *
+ * @uses   eventbrite_is_multiday_event()
+ * @uses   mysql2date()
+ * @uses   eventbrite_event_end()
+ * @uses   esc_html()
+ * @uses   eventbrite_event_start()
+ * @return string Event time.
+ */
+function eventbrite_event_time() {
+	// Determine if the end time needs the date included (in the case of multi-day events).
+	$end_time = ( eventbrite_is_multiday_event() )
+		? mysql2date( 'F j Y, g:i A', eventbrite_event_end()->local )
+		: mysql2date( 'g:i A', eventbrite_event_end()->local );
+
+	// Assemble the full event time string.
+	$event_time = sprintf(
+		_x( '%1$s - %2$s', 'Event date and time. %1$s = start time, %2$s = end time', 'eventbrite_api' ),
+		esc_html( mysql2date( 'F j Y, g:i A', eventbrite_event_start()->local ) ),
+		esc_html( $end_time )
+	);
+
+	return $event_time;
+}
+
+/**
+ * Determine if an event spans multiple calendar days.
+ *
+ * @uses   mysql2date()
+ * @uses   eventbrite_event_start()
+ * @uses   eventbrite_event_end()
+ * @return bool True if start and end date are the same, false otherwise.
+ */
+function eventbrite_is_multiday_event() {
+	// Set date variables for comparison.
+	$start_date = mysql2date( 'Ymd', eventbrite_event_start()->utc );
+	$end_date = mysql2date( 'Ymd', eventbrite_event_end()->utc );
+
+	// Return true if they're different, false otherwise.
+	return ( $start_date !== $end_date ) ? true : false;
+}
+
 /**
  * Give access to the current event's venue properties: address, resource_uri, id, name, latitude, longitude
  *
@@ -209,11 +305,14 @@ function eventbrite_entry_footer() {
 endif;
 
 /**
- * Output a link to edit the current event on eventbrite.com.
+ * Output a permalink to a venue's "archive" page.
  *
- * @param
- * @uses
- * @return
+ * @uses   get_permalink()
+ * @uses   get_queried_object_id()
+ * @uses   eventbrite_event_venue()
+ * @uses   sanitize_title()
+ * @uses   absint()
+ * @return string URL
  */
 function eventbrite_venue_get_archive_link() {
 	// Get the permalink of the current template page.
