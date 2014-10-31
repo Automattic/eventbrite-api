@@ -126,11 +126,11 @@ function eventbrite_post_nav( $event ) {
  * Get the arguments being passed to add_theme_support().
  *
  * @uses   get_theme_support()
- * @return object Eventbrite theme support arguments.
+ * @return mixed Eventbrite theme support arguments, or false if no theme support.
  */
 function eventbrite_get_support_args() {
 	$support = get_theme_support( 'eventbrite' );
-	return (object) $support[0];
+	return ( isset( $support[0] ) ) ? (object) $support[0] : false;
 }
 
 /**
