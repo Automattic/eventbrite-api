@@ -104,6 +104,7 @@ class Eventbrite_Query extends WP_Query {
 		else {
 			$this->api_results = eventbrite()->do_event_search( array(
 				'user.id' => Eventbrite_API::$instance->get_token()->get_meta( 'user_id' ),
+				'sort_by' => 'date',
 			) );
 		}
 
