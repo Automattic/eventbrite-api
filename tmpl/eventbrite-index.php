@@ -26,12 +26,16 @@ get_header(); ?>
 
 				if ( $events->have_posts() ) :
 					while ( $events->have_posts() ) : $events->the_post();
-						/*
-						 * Include the post format-specific template for the content. If you want to
-						 * use this in a child theme, then include a file called called content-___.php
-						 * (where ___ is the post format) and that will be used instead.
-						 */
-						get_template_part( 'content', 'eventbrite' );
+
+						// If the active theme has an Eventbrite content template part, use it.
+						if ( eventbrite_has_event_template_part() ) {
+							get_template_part( 'content', 'eventbrite' );
+						}
+
+						// Looks like we'll need to use our own.
+						else {
+							include( 'eventbrite-content.php' );
+						}
 
 					endwhile;
 
