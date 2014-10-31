@@ -167,6 +167,25 @@ endif;
  * @uses
  * @return
  */
+function eventbrite_venue_get_archive_link() {
+	// Get the permalink of the current template page.
+	$url = get_permalink( get_queried_object_id() );
+
+	// If the event has a venue set, append it to the URL. http://(page permalink)/venue/(venue name)-(venue ID)/
+	if ( ! empty( eventbrite_event_venue()->name ) ) {
+		$url .= 'venue/' . sanitize_title( eventbrite_event_venue()->name ) . '-' . absint( eventbrite_event_venue()->id );
+	}
+
+	return $url;
+}
+
+/**
+ * Output a link to edit the current event on eventbrite.com.
+ *
+ * @param
+ * @uses
+ * @return
+ */
 function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 	// Assemble the edit URL.
 	$url = add_query_arg( array( 'eid' => get_the_ID() ), 'https://eventbrite.com/edit' );

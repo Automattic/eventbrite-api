@@ -62,6 +62,12 @@ class Eventbrite_Query extends WP_Query {
 			$query['organizer_id'] = $organizer_id;
 		}
 
+		// Filter by venue ID if a venue archive (all events at a certain venue) was requested.
+		$venue_id = get_query_var( 'venue_id' );
+		if ( ! empty( $venue_id ) ) {
+			$query['venue_id'] = $venue_id;
+		}
+
 		return $query;
 	}
 
@@ -247,7 +253,7 @@ class Eventbrite_Query extends WP_Query {
 		}
 
 		// Filter by venue: 'venue'
-		if ( isset( $this->query_vars['venue'] ) ) {
+		if ( isset( $this->query_vars['venue_id'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_venue' ) );
 		}
 
@@ -294,7 +300,7 @@ class Eventbrite_Query extends WP_Query {
 	 * @return bool True if properties match, false otherwise.
 	 */
 	public function filter_by_venue( $event ) {
-		return $event->venue == $this->query_vars['venue'];
+		return ( isset( $event->venue->id ) ) ? $event->venue->id == $this->query_vars['venue_id'] : false;
 	}
 
 	/**

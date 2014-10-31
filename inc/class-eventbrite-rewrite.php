@@ -32,7 +32,7 @@
 	 * @return array Query vars
 	 */
 	public function add_query_vars( $query_vars ) {
-		$query_vars = array_merge( $query_vars, array( 'eventbrite_id', 'organizer_id' ) );
+		$query_vars = array_merge( $query_vars, array( 'eventbrite_id', 'organizer_id', 'venue_id' ) );
 
 		return $query_vars;
 	}
@@ -63,6 +63,10 @@
 				// Add a rule for "author archives" (meaning all events by an organizer).
 				$eb_rules_key = sprintf( '(%s)/organizer/[0-9a-z-]+-(\d+)/?$', $page->post_name );
 				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&organizer_id=$matches[2]';
+
+				// Add a rule for venue archives (meaning all events at a given venue).
+				$eb_rules_key = sprintf( '(%s)/venue/[0-9a-z-]+-(\d+)/?$', $page->post_name );
+				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&venue_id=$matches[2]';
 
 				// Add a rule for event single views. Event IDs are 11 digits long (for the foreseeable future).
 				$eb_rules_key = sprintf( '(%s)/[0-9a-z-]+-(\d{11})/?$', $page->post_name );
