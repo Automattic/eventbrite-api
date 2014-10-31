@@ -148,6 +148,54 @@ function eventbrite_is_single( $query = null ) {
 	}
 }
 
+/**
+ * Give access to the current event's venue properties: address, resource_uri, id, name, latitude, longitude
+ *
+ * @global $post
+ * @uses   apply_filters()
+ * @return object Venue info
+ */
+function eventbrite_event_venue() {
+	global $post;
+	return apply_filters( 'eventbrite_event_venue', $post->venue );
+}
+
+/**
+ * Give access to the current event's organizer properties: description, logo, resouce_uri, id, name, url, num_past_events, num_future_events
+ *
+ * @global $post
+ * @uses   apply_filters()
+ * @return object Organizer info
+ */
+function eventbrite_event_organizer() {
+	global $post;
+	return apply_filters( 'eventbrite_event_organizer', $post->organizer );
+}
+
+/**
+ * Give access to the current event's start time: timezone, local, utc
+ *
+ * @global $post
+ * @uses   apply_filters()
+ * @return object Start time properties
+ */
+function eventbrite_event_start() {
+	global $post;
+	return apply_filters( 'eventbrite_event_start', $post->start );
+}
+
+/**
+ * Give access to the current event's end time: timezone, local, utc
+ *
+ * @global $post
+ * @uses   apply_filters()
+ * @return object End time properties
+ */
+function eventbrite_event_end() {
+	global $post;
+	return apply_filters( 'eventbrite_event_end', $post->end );
+}
+
 if ( ! function_exists( 'eventbrite_entry_footer' ) ) :
 /**
  * Output entry footer info. Just Edit link for now, but could include Event Type, Topic, and Sub-Topic.

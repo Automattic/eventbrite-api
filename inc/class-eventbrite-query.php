@@ -409,14 +409,12 @@ class Eventbrite_Query extends WP_Query {
 	public function filter_author_url( $url ) {
 		// See if we're working with an Eventbrite event.
 		if ( eventbrite_is_event() ) {
-			global $post;
-
 			// Get the current page the link was clicked on.
 			$url = get_permalink( get_queried_object_id() );
 
-			// If the event has an organizer set, append it to the URL. http://(page permalink)/organizer-(organizer name)-(organizer ID)/
-			if ( ! empty( $post->organizer_name ) ) {
-				$url .= 'organizer/' . sanitize_title( $post->organizer_name ) . '-' . absint( $post->organizer_id );
+			// If the event has an organizer set, append it to the URL. http://(page permalink)/organizer/(organizer name)-(organizer ID)/
+			if ( ! empty( eventbrite_event_organizer()->name ) ) {
+				$url .= 'organizer/' . sanitize_title( eventbrite_event_organizer()->name ) . '-' . absint( eventbrite_event_organizer()->id );
 			}
 		}
 
@@ -436,9 +434,8 @@ class Eventbrite_Query extends WP_Query {
 	 */
 	public function filter_author_name( $name ) {
 		if ( eventbrite_is_event() ) {
-			global $post;
-			if ( ! empty( $post->organizer_name ) ) {
-				$name = $post->organizer_name;
+			if ( ! empty( eventbrite_event_organizer()->name ) ) {
+				$name = eventbrite_event_organizer()->name;
 			}
 		}
 
