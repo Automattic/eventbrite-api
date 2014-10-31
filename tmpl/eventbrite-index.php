@@ -25,19 +25,29 @@ get_header(); ?>
 				) ) );
 
 				if ( $events->have_posts() ) :
-					while ( $events->have_posts() ) : $events->the_post();
+					while ( $events->have_posts() ) : $events->the_post(); ?>
 
-						// If the active theme has an Eventbrite content template part, use it.
-						if ( eventbrite_has_event_template_part() ) {
-							get_template_part( 'content', 'eventbrite' );
-						}
+						<article id="event-<?php the_ID(); ?>" <?php post_class(); ?>>
+							<header class="entry-header">
+								<?php the_post_thumbnail(); ?>
 
-						// Looks like we'll need to use our own.
-						else {
-							include( 'eventbrite-content.php' );
-						}
+								<?php the_title( sprintf( '<h1 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h1>' ); ?>
 
-					endwhile;
+								<div class="entry-meta">
+									<?php eventbrite_event_info(); ?>
+								</div><!-- .entry-meta -->
+							</header><!-- .entry-header -->
+
+							<div class="entry-content">
+								<?php eventbrite_ticket_form_widget(); ?>
+							</div><!-- .entry-content -->
+
+							<footer class="entry-footer">
+								<?php eventbrite_entry_footer(); ?>
+							</footer><!-- .entry-footer -->
+						</article><!-- #post-## -->
+
+					<?php endwhile;
 
 					// Previous/next post navigation.
 					eventbrite_paging_nav( $events );

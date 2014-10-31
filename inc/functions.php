@@ -66,16 +66,6 @@ function eventbrite_is_event( $post = null ) {
 }
 
 /**
- * Check to see if the active theme has an Eventbrite event template part (content-eventbrite.php).
- *
- * @uses   locate_template()
- * @return bool True if the template file was found, false otherwise.
- */
-function eventbrite_has_event_template_part() {
-	return ( locate_template( 'content-eventbrite.php' ) ) ? true : false;
-}
-
-/**
  * Paging navigation on event listings, using paginate_links().
  *
  * @param object $events
