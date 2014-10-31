@@ -60,7 +60,7 @@
 		// If any pages are using the template, add rewrite rules for each of them.
 		if ( $pages ) {
 			foreach ( $pages as $page ) {
-				// Add a rule for "author archives" (meaning all events by an organizer).
+				// Add a rule for "author" archives (meaning all events by an organizer).
 				$eb_rules_key = sprintf( '(%s)/organizer/[0-9a-z-]+-(\d+)/?$', $page->post_name );
 				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&organizer_id=$matches[2]';
 

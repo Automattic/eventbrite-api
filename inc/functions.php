@@ -329,9 +329,13 @@ function eventbrite_venue_get_archive_link() {
 /**
  * Output a link to edit the current event on eventbrite.com.
  *
- * @param
- * @uses
- * @return
+ * @param  string $text
+ * @param  string $before
+ * @param  string $after
+ * @uses   add_query_arg()
+ * @uses   get_the_ID()
+ * @uses   esc_url()
+ * @uses   esc_html()
  */
 function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 	// Assemble the edit URL.
