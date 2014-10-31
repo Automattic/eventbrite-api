@@ -148,6 +148,38 @@ function eventbrite_is_single( $query = null ) {
 	}
 }
 
+if ( ! function_exists( 'eventbrite_entry_footer' ) ) :
+/**
+ * Output entry footer info. Just Edit link for now, but could include Event Type, Topic, and Sub-Topic.
+ *
+ * @uses edit_post_link()
+ */
+function eventbrite_entry_footer() {
+	// Edit link is filtered to point to the event's edit page on eventbrite.com.
+	eventbrite_edit_post_link( __( 'Edit', 'eventbrite_api' ), '<span class="edit-link">', '</span>' );
+}
+endif;
+
+/**
+ * Output a link to edit the current event on eventbrite.com.
+ *
+ * @param
+ * @uses
+ * @return
+ */
+function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
+	// Assemble the edit URL.
+	$url = add_query_arg( array( 'eid' => get_the_ID() ), 'https://eventbrite.com/edit' );
+
+	// Output the formatted link.
+	printf( '%s<a href="%s">%s</a>%s',
+		$before,
+		esc_url( $url ),
+		esc_html( $text ),
+		$after
+	);
+}
+
 /**
  * Insert the Eventbrite ticket form widget into an event single view.
  *
