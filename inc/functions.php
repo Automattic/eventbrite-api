@@ -358,7 +358,10 @@ function eventbrite_venue_get_archive_link() {
  */
 function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 	// Assemble the edit URL.
-	$url = add_query_arg( array( 'eid' => get_the_ID() ), 'https://eventbrite.com/edit' );
+	$url = add_query_arg( array(
+			'eid' => get_the_ID(),
+			'ref' => 'wporgedit',
+		), 'https://eventbrite.com/edit' );
 
 	// Output the formatted link.
 	printf( '%s<a href="%s">%s</a>%s',
