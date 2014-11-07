@@ -167,37 +167,56 @@ if ( ! function_exists( 'eventbrite_event_meta' ) ) :
  * @uses   apply_filters()
  * @return string Event meta
  */
-function eventbrite_event_meta() {
+function eventbrite_event_meta( $separator = '' ) {
+	// Determine our separator.
+	if ( ! $separator ) {
+		$separator = apply_filters( 'eventbrite_meta_separator', ' &middot; ' );
+	}
+
 	// Start our HTML output with the event time.
-	$html = '<span class="event-time">' . eventbrite_event_time() . '</span>';
+	$time = '<span class="event-time">' . eventbrite_event_time() . '</span>';
 
 	// Add a venue name if available.
+	$venue = '';
 	if ( ! empty( eventbrite_event_venue()->name ) ) {
-		$html .= sprintf( '<span class="event-venue"><a class="url fn n" href="%s">%s</a></span>',
+		$venue = sprintf( '%s<span class="event-venue"><a class="url fn n" href="%s">%s</a></span>',
+			esc_html( $separator ),
 			esc_url( eventbrite_venue_get_archive_link() ),
 			esc_html( eventbrite_event_venue()->name )
 		);
 	}
 
 	// Add the organizer's name if available.
+	$organizer = '';
 	if ( ! empty( eventbrite_event_organizer()->name ) ) {
 		// Assemble the "author archive" link and name. Author-related functions are filtered to use the event's organizer.
-		$organizer = sprintf(
-			_x( 'Organized by %s', 'Event organizer', 'eventbrite_api' ),
-			'<a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a>'
+		$organizer = sprintf( '%s<span class="event-organizer">%s</span>',
+			esc_html( $separator ),
+			sprintf( _x( 'Organized by %s', 'Event organizer', 'eventbrite_api' ),
+				'<a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a>'
+			)
 		);
-		$html .= '<span class="event-organizer">' . $organizer . '</span>';
 	}
 
 	// Only add the event details (event single view) link on index views.
+	$details = '';
 	if ( ! eventbrite_is_single() ) {
-		$html .= sprintf( '<span class="event-details"><a href="%s">%s</a></span>',
+		$details = sprintf( '%s<span class="event-details"><a href="%s">%s</a></span>',
+			esc_html( $separator ),
 			esc_url( get_the_permalink() ),
 			esc_html__( 'Event details', 'eventbrite_api' )
 		);
 	}
 
-	echo apply_filters( 'eventbrite_event_meta', $html );
+	// Assemble our HTML. Yugly.
+	$html = sprintf( _x( '%1$s%2$s%3$s%4$s', '%1$s: time, %2$s: venue, %3$s: organizer, %4$s: event details (only on index views)', 'eventbrite-api' ),
+		$time,
+		$venue,
+		$organizer,
+		$details
+	);
+
+	echo apply_filters( 'eventbrite_event_meta', $html, $time, $venue, $organizer, $details );
 }
 endif;
 
