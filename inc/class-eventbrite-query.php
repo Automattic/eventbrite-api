@@ -59,13 +59,13 @@ class Eventbrite_Query extends WP_Query {
 		// Filter by organizer ID if an "author archive" (organizer events) was requested.
 		$organizer_id = get_query_var( 'organizer_id' );
 		if ( ! empty( $organizer_id ) ) {
-			$query['organizer_id'] = $organizer_id;
+			$query['organizer_id'] = (int) $organizer_id;
 		}
 
 		// Filter by venue ID if a venue archive (all events at a certain venue) was requested.
 		$venue_id = get_query_var( 'venue_id' );
 		if ( ! empty( $venue_id ) ) {
-			$query['venue_id'] = $venue_id;
+			$query['venue_id'] = (int) $venue_id;
 		}
 
 		return $query;
@@ -244,22 +244,22 @@ class Eventbrite_Query extends WP_Query {
 	 */
 	public function post_api_filters() {
 		// Filter out specified IDs: 'post__not_in'
-		if ( isset( $this->query_vars['post__not_in'] ) ) {
+		if ( isset( $this->query_vars['post__not_in'] ) && is_array( $this->query_vars['post__not_in'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_post_not_in' ) );
 		}
 
-		// Filter by organizer: 'organizer'
-		if ( isset( $this->query_vars['organizer_id'] ) ) {
+		// Filter by organizer: 'organizer_id'
+		if ( isset( $this->query_vars['organizer_id'] ) && is_integer( $this->query_vars['organizer_id'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_organizer' ) );
 		}
 
-		// Filter by venue: 'venue'
-		if ( isset( $this->query_vars['venue_id'] ) ) {
+		// Filter by venue: 'venue_id'
+		if ( isset( $this->query_vars['venue_id'] ) && is_integer( $this->query_vars['venue_id'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_venue' ) );
 		}
 
 		// Limit the number of results: 'limit'
-		if ( isset( $this->query_vars['limit'] ) ) {
+		if ( isset( $this->query_vars['limit'] ) && is_integer( $this->query_vars['limit'] ) ) {
 			$this->api_results->events = array_slice( $this->api_results->events, 0, absint( $this->query_vars['limit'] ) );
 		}
 	}
