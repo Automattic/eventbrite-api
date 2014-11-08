@@ -98,14 +98,15 @@ class Eventbrite_Manager {
 	}
 
 	/**
-	 * Validate the given parameters against its endpoint.
+	 * Validate the given parameters against its endpoint. Values are also validated where the API only accepts
+	 * specific values.
 	 *
 	 * @access public
 	 *
 	 * @param array $params
 	 * @param string $endpoint
-	 * @uses Eventbrite_Manager::$instance
-	 * @return object Eventbrite_Manager
+	 * @uses Eventbrite_Manager::get_endpoint_params()
+	 * @return bool True if all params were able to be validated, false otherwise
 	 */
 	public function validate_request_params( $params, $endpoint ) {
 		// Check that an array was passed.
@@ -113,7 +114,23 @@ class Eventbrite_Manager {
 			return false;
 		}
 
-		// kwight: sort this out
+		// Giving no parameters at all for queries is fine.
+		if ( empty( $params ) ) {
+			return true;
+		}
+
+		// Get valid request params.
+		$valid = $this->get_endpoint_params();
+
+		// Compare each passed parameter and value against our valid ones, and fail if a match can't be found.
+		foreach ( $params as $key => $value ) {
+			if ( ! array_key_exists( $key, $valid[$endpoint] ) ||
+				( ! empty( $valid[$endpoint][$key] ) && ! in_array( $value, $valid[$endpoint][$key] ) ) ) {
+				return false;
+			}
+		}
+
+		// Looks good.
 		return true;
 	}
 
@@ -159,7 +176,9 @@ class Eventbrite_Manager {
 	 */
 	public function get_user_owned_events( $params = array(), $force = false ) {
 		// Query for 'live' events by default (rather than 'all', which includes events in the past).
-		$params['status'] = 'live';
+		if ( ! isset( $params['status'] ) ) {
+			$params['status'] = 'live';
+		}
 
 		// Get the raw results.
 		$results = $this->request( 'user_owned_events', $params, false, $force );
@@ -273,6 +292,99 @@ class Eventbrite_Manager {
 			// 'contact_lists',
 			// 'contact_list_details',
 		) );
+	}
+
+	/**
+	 * Return an array of valid request parameters by endpoint.
+	 *
+	 * @access public
+	 *
+	 * @return array All valid request parameters for supported endpoints.
+	 */
+	public function get_endpoint_params() {
+		$params = array(
+			// http://developer.eventbrite.com/docs/event-search/
+			'event_search' => array(
+				'q'                         => array(),
+				'since_id'                  => array(),
+				'sort_by'                   => array(
+					'id',
+					'date',
+					'name',
+					'city',
+				),
+				'popular'                   => array(
+					true,
+					false,
+				),
+				'location.address'          => array(),
+				'location.latitude'         => array(),
+				'location.longitude'        => array(),
+				'location.within'           => array(),
+				'venue.city'                => array(),
+				'venue.region'              => array(),
+				'venue.country'             => array(),
+				'organizer.id'              => array(),
+				'user.id'                   => array(),
+				'tracking_code'             => array(),
+				'categories'                => array(),
+				'formats'                   => array(),
+				'start_date.range_start'    => array(),
+				'start_date.range_end'      => array(),
+				'start_date.keyword'        => array(
+					'today',
+					'tomorrow',
+					'this_week',
+					'this_weekend',
+					'next_week',
+					'this_month',
+				),
+				'date_created.range_start'  => array(),
+				'date_created.range_end'    => array(),
+				'date_created.keyword'      => array(
+					'today',
+					'tomorrow',
+					'this_week',
+					'this_weekend',
+					'next_week',
+					'this_month',
+				),
+				'date_modified.range_start' => array(),
+				'date_modified.range_end'   => array(),
+				'date_modified.keyword'     => array(
+					'today',
+					'tomorrow',
+					'this_week',
+					'this_weekend',
+					'next_week',
+					'this_month',
+				),
+			),
+			// http://developer.eventbrite.com/docs/event-details/
+			'event_details' => array(
+				// Not a true param for this endpoint; the ID gets passed as its own argument in the API call.
+				'p' => array(),
+			),
+			// http://developer.eventbrite.com/docs/user-owned-events/
+			'user_owned_events' => array(
+				'status'   => array(
+					'all',
+					'cancelled',
+					'draft',
+					'ended',
+					'live',
+					'started',
+				),
+				'order_by' => array(
+					'start_asc',
+					'start_desc',
+					'created_asc',
+					'created_desc',
+				),
+			),
+		);
+
+		return $params;
 	}
 
 	/**
