@@ -170,9 +170,9 @@ if ( ! function_exists( 'eventbrite_event_meta' ) ) :
  * @uses   apply_filters()
  * @return string Event meta
  */
-function eventbrite_event_meta( $separator = '' ) {
+function eventbrite_event_meta( $separator ) {
 	// Determine our separator.
-	if ( ! $separator ) {
+	if ( empty( $separator ) ) {
 		$separator = apply_filters( 'eventbrite_meta_separator', ' &middot; ' );
 	}
 
