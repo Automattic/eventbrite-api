@@ -26,7 +26,7 @@ function eventbrite_get_events( $params = array(), $force = false ) {
  * @return object Event
  */
 function eventbrite_get_event( $id = false, $force = false ) {
-	// Bail if nothing is passed in.
+	// Bail if no ID is passed in.
 	if ( empty( $id ) ) {
 		return null;
 	}
