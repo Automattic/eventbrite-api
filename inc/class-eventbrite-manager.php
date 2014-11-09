@@ -363,6 +363,7 @@ class Eventbrite_Manager {
 		$event['organizer']     = ( isset( $api_event->organizer ) )         ? $api_event->organizer         : '';
 		$event['venue']         = ( isset( $api_event->venue ) )             ? $api_event->venue             : '';
 		$event['public']        = ( isset( $api_event->listed ) )            ? $api_event->listed            : '';
+		$event['tickets']       = ( isset( $api_event->ticket_classes ) )    ? $api_event->ticket_classes    : '';
 
 		return (object) $event;
 	}

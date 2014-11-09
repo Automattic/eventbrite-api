@@ -373,18 +373,62 @@ function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
  */
 function eventbrite_ticket_form_widget() {
 	// Build the src attribute URL.
-	$args = array(
+	$src = add_query_arg( array(
 			'eid' => get_the_ID(),
 			'ref' => 'etckt',
-	);
-	$src = add_query_arg( $args, '//eventbrite.com/tickets-external' );
+	), '//eventbrite.com/tickets-external' );
 
 	// Assemble our ticket info HTML.
 	$ticket_html = sprintf( '<div class="eventbrite-widget"><iframe src="%1$s" height="%2$s" width="100%%" frameborder="0" vspace="0" hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe></div>',
 		esc_url( $src ),
-		esc_attr( apply_filters( 'eventbrite_ticket_widget_height', 215 ) )
+		esc_attr( eventbrite_get_ticket_form_widget_height() )
 	);
 
 	// Output the markup.
 	echo $ticket_html;
+}
+
+/**
+ * Calculate the height of the ticket form widget iframe. Not perfect, but avoids having to do it with JS.
+ *
+ * @global  $post
+ * @uses    mysql2date()
+ * @uses    apply_filters()
+ * @return  int Height of iframe
+ */
+function eventbrite_get_ticket_form_widget_height() {
+	// Set the minimum height (essentially iframe chrome).
+	$height = 56;
+
+	// Get tickets for the current event.
+	global $post;
+	$tickets = $post->tickets;
+
+	// Move along if the event has no ticket information.
+	if ( ! $tickets ) {
+		return $height + 45;
+	}
+
+	// Add height for various ticket table elements.
+	$height += 123;
+
+	// Check each ticket.
+	foreach ( $tickets as $ticket ) {
+		// Add height for each visible ticket type.
+		if ( ! $ticket->hidden ) {
+			$height += 45;
+		}
+
+		// Check if any visible sales are still open.
+		if ( ( time() < mysql2date( 'U', $ticket->sales_end ) ) && ! $ticket->hidden ) {
+			$sales_open = true;
+		}
+	}
+
+	// Remove call-to-action spacing if no tickets are still on sale.
+	if ( ! isset( $sales_open ) ) {
+		$height -= 74;
+	}
+
+	return (int) apply_filters( 'eventbrite_ticket_form_widget_height', $height, $post );
 }
