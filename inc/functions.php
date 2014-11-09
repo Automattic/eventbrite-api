@@ -36,6 +36,19 @@ function eventbrite_get_event( $id = false, $force = false ) {
 }
 
 /**
+ * Search Eventbrite public events by any user.
+ * Note that not limiting the scope of the search somehow will likely result in timeout errors.
+ *
+ * @param  array $params
+ * @param  bool $force Force an API call, don't use cache
+ * @uses   Eventbrite_Manager::get_user_owned_events()
+ * @return object API results
+ */
+function eventbrite_search( $params = array(), $force = false ) {
+	return eventbrite()->do_event_search( $params, $force );
+}
+
+/**
  * Determine if a given object, given ID, or the current post is an Eventbrite event.
  *
  * @param  mixed $post
