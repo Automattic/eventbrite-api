@@ -248,40 +248,6 @@ class Eventbrite_Manager {
 	}
 
 	/**
-	 * Return an array of valid Eventbrite API endpoints.
-	 *
-	 * @access public
-	 *
-	 * @return array All supported endpoints.
-	 */
-	public function get_endpoints() {
-		return apply_filters( 'eventbrite_supported_endpoints', array(
-			'event_search',
-			// 'event_categories',
-			'event_details',
-			// 'event_attendees',
-			// 'event_attendees_detail',
-			// 'event_orders',
-			// 'event_discounts',
-			// 'event_access_codes',
-			// 'event_transfers',
-			// 'event_teams',
-			// 'event_teams_details',
-			// 'event_teams_attendees',
-			// 'user_details',
-			// 'user_orders',
-			'user_owned_events',
-			// 'user_owned_events_orders',
-			// 'user_owned_events_attendees',
-			// 'user_venues',
-			// 'user_organizers',
-			// 'order_details',
-			// 'contact_lists',
-			// 'contact_list_details',
-		) );
-	}
-
-	/**
 	 * Return an array of valid request parameters by endpoint.
 	 *
 	 * @access public
