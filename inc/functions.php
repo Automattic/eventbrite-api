@@ -170,11 +170,9 @@ if ( ! function_exists( 'eventbrite_event_meta' ) ) :
  * @uses   apply_filters()
  * @return string Event meta
  */
-function eventbrite_event_meta( $separator ) {
+function eventbrite_event_meta() {
 	// Determine our separator.
-	if ( empty( $separator ) ) {
-		$separator = apply_filters( 'eventbrite_meta_separator', ' &middot; ' );
-	}
+	$separator = apply_filters( 'eventbrite_meta_separator', ' &middot; ' );
 
 	// Start our HTML output with the event time.
 	$time = '<span class="event-time">' . eventbrite_event_time() . '</span>';
