@@ -314,18 +314,6 @@ function eventbrite_event_end() {
 	return apply_filters( 'eventbrite_event_end', $post->end );
 }
 
-if ( ! function_exists( 'eventbrite_entry_footer' ) ) :
-/**
- * Output entry footer info. Just Edit link for now, but could include Event Type, Topic, and Sub-Topic.
- *
- * @uses edit_post_link()
- */
-function eventbrite_entry_footer() {
-	// Edit link is filtered to point to the event's edit page on eventbrite.com.
-	eventbrite_edit_post_link( __( 'Edit', 'eventbrite_api' ), '<span class="edit-link">', '</span>' );
-}
-endif;
-
 /**
  * Output a permalink to a venue's "archive" page.
  *
