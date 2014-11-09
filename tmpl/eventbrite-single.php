@@ -38,9 +38,6 @@ get_header(); ?>
 
 					<?php endwhile;
 
-					// Previous/next post navigation.
-					eventbrite_post_nav( $event );
-
 				else :
 					// If no content, include the "No posts found" template.
 					get_template_part( 'content', 'none' );

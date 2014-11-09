@@ -103,16 +103,6 @@ function eventbrite_paging_nav( $events ) {
 <?php }
 
 /**
- * Previous/Next post navigation on single views.
- *
- * @param
- * @uses
- * @return
- */
-function eventbrite_post_nav( $event ) {
-}
-
-/**
  * Get the arguments being passed to add_theme_support().
  *
  * @uses   get_theme_support()
