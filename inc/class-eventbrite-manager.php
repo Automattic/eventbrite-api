@@ -48,13 +48,8 @@ class Eventbrite_Manager {
 	 * @return object Request results
 	 */
 	public function request( $endpoint, $params = array(), $id = false, $force = false ) {
-		// Ensure it's a supported endpoint.
-		if ( ! $this->validate_endpoint( $endpoint ) ) {
-			return false;
-		}
-
-		// Make sure the parameters are valid for the endpoint.
-		if ( ! $this->validate_request_params( $params, $endpoint ) ) {
+		// Make sure the endpoint and parameters are valid.
+		if ( ! $this->validate_endpoint_params( $endpoint, $params ) ) {
 			return false;
 		}
 
@@ -85,19 +80,6 @@ class Eventbrite_Manager {
 	}
 
 	/**
-	 * Verify the endpoint passed is valid.
-	 *
-	 * @access public
-	 *
-	 * @param string $endpoint
-	 * @uses Eventbrite_Manager::get_endpoints()
-	 * @return bool True if the endpoint is valid, false otherwise.
-	 */
-	public function validate_endpoint( $endpoint ) {
-		return in_array( $endpoint, $this->get_endpoints() );
-	}
-
-	/**
 	 * Validate the given parameters against its endpoint. Values are also validated where the API only accepts
 	 * specific values.
 	 *
@@ -108,8 +90,16 @@ class Eventbrite_Manager {
 	 * @uses Eventbrite_Manager::get_endpoint_params()
 	 * @return bool True if all params were able to be validated, false otherwise
 	 */
-	public function validate_request_params( $params, $endpoint ) {
-		// Check that an array was passed.
+	public function validate_endpoint_params( $endpoint, $params ) {
+		// Get valid request params.
+		$valid = $this->get_endpoint_params();
+
+		// Validate the endpoint.
+		if ( ! array_key_exists( $endpoint, $valid ) ) {
+			return false;
+		}
+
+		// Check that an array was passed for params.
 		if ( ! is_array( $params ) ) {
 			return false;
 		}
@@ -118,9 +108,6 @@ class Eventbrite_Manager {
 		if ( empty( $params ) ) {
 			return true;
 		}
-
-		// Get valid request params.
-		$valid = $this->get_endpoint_params();
 
 		// Compare each passed parameter and value against our valid ones, and fail if a match can't be found.
 		foreach ( $params as $key => $value ) {
