@@ -111,8 +111,7 @@ class Eventbrite_Manager {
 
 		// Compare each passed parameter and value against our valid ones, and fail if a match can't be found.
 		foreach ( $params as $key => $value ) {
-			if ( ! array_key_exists( $key, $valid[$endpoint] ) ||
-				( ! empty( $valid[$endpoint][$key] ) && ! in_array( $value, $valid[$endpoint][$key] ) ) ) {
+			if ( empty( $valid[$endpoint][$key] ) || ! in_array( $value, $valid[$endpoint][$key] ) ) {
 				return false;
 			}
 		}
