@@ -109,6 +109,12 @@ class Eventbrite_Manager {
 			return true;
 		}
 
+		// The 'page' parameter is valid for any endpoint, as long as it's a positive integer.
+		if ( isset( $params['page'] ) && ( 1 > (int) $params['page'] ) ) {
+			return false;
+		}
+		unset( $params['page'] );
+
 		// Compare each passed parameter and value against our valid ones, and fail if a match can't be found.
 		foreach ( $params as $key => $value ) {
 			// Check the parameter is valid for that endpoint.

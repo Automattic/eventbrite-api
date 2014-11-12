@@ -52,7 +52,7 @@ class Eventbrite_Query extends WP_Query {
 	public function process_query_args( $query ) {
 		// Handle requests for paged events.
 		$paged = get_query_var( 'paged' );
-		if ( 2 >= $paged ) {
+		if ( 2 <= $paged ) {
 			$query['paged'] = $paged;
 		}
 
@@ -90,6 +90,9 @@ class Eventbrite_Query extends WP_Query {
 		// Set up query variables.
 		$this->parse_query();
 
+		// Set any required parameters for the API request based on the query vars.
+		$params = $this->set_api_params();
+
 		// Determine which endpoint is needed. Do we want just a single event?
 		if ( ! empty( $this->query_vars['p'] ) ) {
 			$this->api_results = eventbrite()->get_event( $this->query_vars['p'] );
@@ -97,15 +100,12 @@ class Eventbrite_Query extends WP_Query {
 
 		// If private events are wanted, the user_owned_events endpoint must be used.
 		elseif ( isset( $this->query_vars['display_private'] ) && true === $this->query_vars['display_private'] ) {
-			$this->api_results = eventbrite()->get_user_owned_events();
+			$this->api_results = eventbrite()->get_user_owned_events( $params );
 		}
 
 		// It's a run-of-the-mill query (only the user's public live events), meaning event_search is best.
 		else {
-			$this->api_results = eventbrite()->do_event_search( array(
-				'user.id' => Eventbrite_API::$instance->get_token()->get_meta( 'user_id' ),
-				'sort_by' => 'date',
-			) );
+			$this->api_results = eventbrite()->do_event_search( $params );
 		}
 
 		// Do any post-API query processing.
@@ -116,6 +116,32 @@ class Eventbrite_Query extends WP_Query {
 
 		// Return what we have for posts.
 		return $this->posts;
+	}
+
+	/**
+	 * Determine parameters for an API call.
+	 *
+	 * @uses Eventbrite_Query::$query_vars
+	 * @return array API call parameters
+	 */
+	public function set_api_params() {
+		$params = array();
+
+		// Add 'page' parameter if we need events above the first 50.
+		if ( 5 < $this->query_vars['paged'] ) {
+			/**
+			 * The API returns pages of 50, and we currently only support a fixed number of 10 events per WordPress page.
+			 */
+			$params['page'] = ceil( $this->query_vars['paged'] / 5 );
+		}
+
+		// We need the Eventbrite user ID if we're getting only public events.
+		if ( isset( $this->query_vars['display_private'] ) && true !== $this->query_vars['display_private'] ) {
+			$params['user.id'] = Eventbrite_API::$instance->get_token()->get_meta( 'user_id' );
+			$params['sort_by'] = 'date';
+		}
+
+		return $params;
 	}
 
 	/**
