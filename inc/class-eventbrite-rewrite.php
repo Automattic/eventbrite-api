@@ -60,13 +60,17 @@
 		// If any pages are using the template, add rewrite rules for each of them.
 		if ( $pages ) {
 			foreach ( $pages as $page ) {
-				// Add a rule for "author" archives (meaning all events by an organizer).
+				// Add rules for "author" archives (meaning all events by an organizer).
 				$eb_rules_key = sprintf( '(%s)/organizer/[0-9a-z-]+-(\d+)/?$', $page->post_name );
 				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&organizer_id=$matches[2]';
+				$eb_rules_key = sprintf( '(%s)/organizer/[0-9a-z-]+-(\d+)/page/([0-9]{1,})/?$', $page->post_name );
+				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&organizer_id=$matches[2]&paged=$matches[3]';
 
-				// Add a rule for venue archives (meaning all events at a given venue).
+				// Add rules for venue archives (meaning all events at a given venue).
 				$eb_rules_key = sprintf( '(%s)/venue/[0-9a-z-]+-(\d+)/?$', $page->post_name );
 				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&venue_id=$matches[2]';
+				$eb_rules_key = sprintf( '(%s)/venue/[0-9a-z-]+-(\d+)/page/([0-9]{1,})/?$', $page->post_name );
+				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&venue_id=$matches[2]&paged=$matches[3]';
 
 				// Add a rule for event single views. Event IDs are 11 digits long (for the foreseeable future).
 				$eb_rules_key = sprintf( '(%s)/[0-9a-z-]+-(\d{11})/?$', $page->post_name );
