@@ -83,14 +83,14 @@ class Eventbrite_Manager {
 	 * Validate the given parameters against its endpoint. Values are also validated where the API only accepts
 	 * specific values.
 	 *
-	 * @access public
+	 * @access protected
 	 *
 	 * @param array $params
 	 * @param string $endpoint
 	 * @uses Eventbrite_Manager::get_endpoint_params()
 	 * @return bool True if all params were able to be validated, false otherwise
 	 */
-	public function validate_endpoint_params( $endpoint, $params ) {
+	protected function validate_endpoint_params( $endpoint, $params ) {
 		// Get valid request params.
 		$valid = $this->get_endpoint_params();
 
@@ -261,11 +261,11 @@ class Eventbrite_Manager {
 	/**
 	 * Return an array of valid request parameters by endpoint.
 	 *
-	 * @access public
+	 * @access protected
 	 *
 	 * @return array All valid request parameters for supported endpoints.
 	 */
-	public function get_endpoint_params() {
+	protected function get_endpoint_params() {
 		$params = array(
 			// http://developer.eventbrite.com/docs/event-search/
 			'event_search' => array(
@@ -354,12 +354,12 @@ class Eventbrite_Manager {
 	/**
 	 * Convert the Eventbrite API properties into properties used by Eventbrite_Event.
 	 *
-	 * @access public
+	 * @access protected
 	 *
 	 * @param object $api_event
 	 * @return object Event with Eventbrite_Event keys.
 	 */
-	public function map_event_keys( $api_event ) {
+	protected function map_event_keys( $api_event ) {
 		$event = array();
 
 		$event['ID']            = ( isset( $api_event->id ) )                ? $api_event->id                : '';

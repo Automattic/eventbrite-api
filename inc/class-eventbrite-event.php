@@ -123,6 +123,8 @@ class Eventbrite_Event {
 	/**
 	 * Constructor.
 	 *
+	 * @access public
+	 *
 	 * @param object $event event object.
 	 */
 	public function __construct( $event ) {
