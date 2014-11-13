@@ -213,15 +213,20 @@ function eventbrite_event_meta() {
 		);
 	}
 
-	// Only add the event details (event single view) link on index views.
-	$details = '';
-	if ( ! eventbrite_is_single() ) {
-		$details = sprintf( '%s<span class="event-details"><a href="%s">%s</a></span>',
-			esc_html( $separator ),
-			esc_url( get_the_permalink() ),
-			esc_html__( 'Event details', 'eventbrite_api' )
-		);
+	// Add a contextual link to event details.
+	if ( eventbrite_is_single() ) {
+		// Link to event info on eventbrite.com.
+		$url = add_query_arg( array( 'ref' => 'wporglink' ), eventbrite_event_eb_url() );
+	} else {
+		// Link to the event single view.
+		$url = get_the_permalink();
 	}
+
+	$details = sprintf( '%s<span class="event-details"><a href="%s">%s</a></span>',
+		esc_html( $separator ),
+		esc_url( $url ),
+		esc_html__( 'More details', 'eventbrite_api' )
+	);
 
 	// Assemble our HTML. Yugly.
 	$html = sprintf( _x( '%1$s%2$s%3$s%4$s', '%1$s: time, %2$s: venue, %3$s: organizer, %4$s: event details (only on index views)', 'eventbrite-api' ),
@@ -279,6 +284,20 @@ function eventbrite_is_multiday_event() {
 
 	// Return true if they're different, false otherwise.
 	return ( $start_date !== $end_date ) ? true : false;
+}
+endif;
+
+if ( ! function_exists( 'eventbrite_event_eb_url' ) ) :
+/**
+ * Give the URL to an event's public viewing page on eventbrite.com.
+ *
+ * @global $post
+ * @uses   apply_filters()
+ * @return string URL on eventbrite.com
+ */
+function eventbrite_event_eb_url() {
+	global $post;
+	return apply_filters( 'eventbrite_event_eb_url', $post->url );
 }
 endif;
 
