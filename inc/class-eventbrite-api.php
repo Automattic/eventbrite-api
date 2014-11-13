@@ -35,7 +35,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		}
 		$this->define_endpoints();
 		add_action( 'keyring_connection_verified', array( $this, 'keyring_connection_verified' ), 10, 3 );
-		add_action( 'keyring_connection_deleted', array( $this, 'keyring_connection_deleted' ), 10, 2 );
+		add_action( 'keyring_connection_deleted', array( $this, 'keyring_connection_deleted' ) );
 	}
 
 	/**
@@ -131,7 +131,13 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		update_option( 'eventbrite_api_token', $id );
 	}
 
-	function keyring_connection_deleted( $service, $request ) {
+	/**
+	 * Remove the stored token when the Keyring connection is lost.
+	 *
+	 * @param string $service
+	 * @uses  delete_option()
+	 */
+	function keyring_connection_deleted( $service ) {
 		if ( 'eventbrite' != $service ) {
 			return;
 		}
