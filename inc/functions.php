@@ -5,6 +5,7 @@
  * @package Eventbrite_API
  */
 
+if ( ! function_exists( 'eventbrite_get_events' ) ) :
 /**
  * Get an array of Eventbrite events, in the format expected by Eventbrite_Event
  *
@@ -16,7 +17,9 @@
 function eventbrite_get_events( $params = array(), $force = false ) {
 	return eventbrite()->get_user_owned_events( $params, $force );
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_get_event' ) ) :
 /**
  * Retrieves event data given an event ID.
  *
@@ -34,7 +37,9 @@ function eventbrite_get_event( $id = false, $force = false ) {
 	// Retrieve and return our event.
 	return eventbrite()->get_event( $id, $force );
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_search' ) ) :
 /**
  * Search Eventbrite public events by any user.
  * Note that not limiting the scope of the search somehow will likely result in timeout errors.
@@ -47,7 +52,9 @@ function eventbrite_get_event( $id = false, $force = false ) {
 function eventbrite_search( $params = array(), $force = false ) {
 	return eventbrite()->do_event_search( $params, $force );
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_is_event' ) ) :
 /**
  * Determine if a given object, given ID, or the current post is an Eventbrite event.
  *
@@ -77,7 +84,9 @@ function eventbrite_is_event( $post = null ) {
 	// No dice.
 	return false;
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_paging_nav' ) ) :
 /**
  * Paging navigation on event listings, using paginate_links().
  *
@@ -114,7 +123,9 @@ function eventbrite_paging_nav( $events ) {
 		</div><!-- .pagination -->
 	</nav><!-- .navigation -->
 <?php }
+endif;
 
+if ( ! function_exists( 'eventbrite_get_support_args' ) ) :
 /**
  * Get the arguments being passed to add_theme_support().
  *
@@ -125,7 +136,9 @@ function eventbrite_get_support_args() {
 	$support = get_theme_support( 'eventbrite' );
 	return ( isset( $support[0] ) ) ? (object) $support[0] : false;
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_is_single' ) ) :
 /**
  * Determine if a query is for an event single view.
  *
@@ -150,6 +163,7 @@ function eventbrite_is_single( $query = null ) {
 		return false;
 	}
 }
+endif;
 
 if ( ! function_exists( 'eventbrite_event_meta' ) ) :
 /**
@@ -221,6 +235,7 @@ function eventbrite_event_meta() {
 }
 endif;
 
+if ( ! function_exists( 'eventbrite_event_time' ) ) :
 /**
  * Return an event's time.
  *
@@ -246,7 +261,9 @@ function eventbrite_event_time() {
 
 	return $event_time;
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_is_multiday_event' ) ) :
 /**
  * Determine if an event spans multiple calendar days.
  *
@@ -263,7 +280,9 @@ function eventbrite_is_multiday_event() {
 	// Return true if they're different, false otherwise.
 	return ( $start_date !== $end_date ) ? true : false;
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_event_venue' ) ) :
 /**
  * Give access to the current event's venue properties: address, resource_uri, id, name, latitude, longitude
  *
@@ -275,7 +294,9 @@ function eventbrite_event_venue() {
 	global $post;
 	return apply_filters( 'eventbrite_event_venue', $post->venue );
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_event_organizer' ) ) :
 /**
  * Give access to the current event's organizer properties: description, logo, resouce_uri, id, name, url, num_past_events, num_future_events
  *
@@ -287,7 +308,9 @@ function eventbrite_event_organizer() {
 	global $post;
 	return apply_filters( 'eventbrite_event_organizer', $post->organizer );
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_event_start' ) ) :
 /**
  * Give access to the current event's start time: timezone, local, utc
  *
@@ -299,7 +322,9 @@ function eventbrite_event_start() {
 	global $post;
 	return apply_filters( 'eventbrite_event_start', $post->start );
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_event_end' ) ) :
 /**
  * Give access to the current event's end time: timezone, local, utc
  *
@@ -311,7 +336,9 @@ function eventbrite_event_end() {
 	global $post;
 	return apply_filters( 'eventbrite_event_end', $post->end );
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_venue_get_archive_link' ) ) :
 /**
  * Output a permalink to a venue's "archive" page.
  *
@@ -333,7 +360,9 @@ function eventbrite_venue_get_archive_link() {
 
 	return $url;
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_edit_post_link' ) ) :
 /**
  * Output a link to edit the current event on eventbrite.com.
  *
@@ -360,7 +389,9 @@ function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 		$after
 	);
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_ticket_form_widget' ) ) :
 /**
  * Insert the Eventbrite ticket form widget.
  *
@@ -386,7 +417,9 @@ function eventbrite_ticket_form_widget() {
 	// Output the markup.
 	echo $ticket_html;
 }
+endif;
 
+if ( ! function_exists( 'eventbrite_get_ticket_form_widget_height' ) ) :
 /**
  * Calculate the height of the ticket form widget iframe. Not perfect, but avoids having to do it with JS.
  *
@@ -431,3 +464,4 @@ function eventbrite_get_ticket_form_widget_height() {
 
 	return (int) apply_filters( 'eventbrite_ticket_form_widget_height', $height, $post );
 }
+endif;

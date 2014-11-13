@@ -19,15 +19,20 @@ function eventbrite_api_load_keyring_service() {
 add_action( 'keyring_load_services', 'eventbrite_api_load_keyring_service', 11 );
 
 /**
- * Load classes and helper functions.
- *
- * @uses current_theme_supports()
+ * Load classes.
  */
 function eventbrite_api_init() {
 	require_once( 'inc/class-eventbrite-manager.php' );
 	require_once( 'inc/class-eventbrite-query.php' );
 	require_once( 'inc/class-eventbrite-rewrite.php' );
 	require_once( 'inc/class-eventbrite-event.php' );
-	require_once( 'inc/functions.php' );
 }
 add_action( 'init', 'eventbrite_api_init' );
+
+/**
+ * Load helper functions and template tags. Pluggable, so they're loaded on after_setup_theme.
+ */
+function eventbrite_api_helpers() {
+	require_once( 'inc/functions.php' );
+}
+add_action( 'after_setup_theme', 'eventbrite_api_helpers' );
