@@ -1,12 +1,30 @@
 <?php
+/**
+ * Eventbrite_API class, which interacts with the Keyring service to make the actual API requests to Eventbrite.
+ *
+ * @package Eventbrite_API
+ */
 
-if ( ! class_exists( 'Keyring_Service_Eventbrite' ) )
+// This plugin requires the Keyring plugin and its Eventbrite service.
+if ( ! class_exists( 'Keyring_Service_Eventbrite' ) ) {
 	exit;
+}
 
 class Eventbrite_API extends Keyring_Service_Eventbrite {
 
 	static $instance;
 
+	/**
+	 * Constructor.
+	 *
+	 * @uses Keyring_Service_Eventbrite::__construct()
+	 * @uses Eventbrite_API::$instance
+	 * @uses get_option()
+	 * @uses Eventbrite_API::set_token()
+	 * @uses Keyring::init()
+	 * @uses Eventbrite_API::define_endpoints()
+	 * @uses add_action()
+	 */
 	function __construct() {
 		parent::__construct();
 		self::$instance = $this;
@@ -20,6 +38,16 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		add_action( 'keyring_connection_deleted', array( $this, 'keyring_connection_deleted' ), 10, 2 );
 	}
 
+	/**
+	 * Get the user's API token.
+	 *
+	 * @access public
+	 *
+	 * @uses   get_option()
+	 * @uses   Eventbrite_API::set_token()
+	 * @uses   Keyring::init()
+	 * @return string The user's token
+	 */
 	public function get_token() {
 		$token = get_option( 'eventbrite_api_token' );
 		if ( empty( $token ) )
@@ -29,6 +57,14 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		return $this->token;
 	}
 
+	/**
+	 * Define API endpoints.
+	 *
+	 * @access private
+	 *
+	 * @uses Eventbrite_API::$instance
+	 * @uses Eventbrite_API::set_endpoint()
+	 */
 	private function define_endpoints() {
 		$token = self::$instance->get_token();
 		if ( empty( $token ) )
@@ -39,6 +75,21 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		$this->set_endpoint( 'event_search', self::API_BASE . 'events/search/', 'GET' );
 	}
 
+	/**
+	 * Make an API call.
+	 *
+	 * @access public
+	 *
+	 * @param  string $endpoint
+	 * @param  array $query_params
+	 * @param  integer $object_id
+	 * @uses   Eventbrite_API::get_token()
+	 * @uses   Eventbrite_API::$instance
+	 * @uses   trailingslashit()
+	 * @uses   absint()
+	 * @uses   add_query_arg()
+	 * @return object API response if successful, error (Keyring_Error or WP_Error) otherwise
+	 */
 	public static function call( $endpoint, $query_params = array(), $object_id = null ) {
 		$token = self::$instance->get_token();
 		if ( empty( $token ) )
@@ -64,6 +115,14 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		return $response;
 	}
 
+	/**
+	 * Save the token for our Keyring connection.
+	 *
+	 * @param string $service
+	 * @param int $id
+	 * @param object $request_token
+	 * @uses  update_option()
+	 */
 	function keyring_connection_verified( $service, $id, $request_token ) {
 		if ( 'eventbrite' != $service || 'eventbrite' != $request_token->name ) {
 			return;
