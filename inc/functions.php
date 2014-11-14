@@ -484,3 +484,13 @@ function eventbrite_get_ticket_form_widget_height() {
 	return (int) apply_filters( 'eventbrite_ticket_form_widget_height', $height, $post );
 }
 endif;
+
+/**
+ * Check if everything we need is working: Keyring is installed, activated, and has a valid user connection to Eventbrite.
+ *
+ * @uses   Eventbrite_API::$instance->get_token()
+ * @return bool True if a valid user token exists, false otherwise.
+ */
+function eventbrite_has_active_connection() {
+	return ( Eventbrite_Requirements::has_active_connection() ) ? true : false;
+}

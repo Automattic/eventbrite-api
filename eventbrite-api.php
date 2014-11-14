@@ -22,17 +22,16 @@ add_action( 'keyring_load_services', 'eventbrite_api_load_keyring_service', 11 )
  * Load classes.
  */
 function eventbrite_api_init() {
-	require_once( 'inc/class-eventbrite-manager.php' );
-	require_once( 'inc/class-eventbrite-query.php' );
-	require_once( 'inc/class-eventbrite-rewrite.php' );
-	require_once( 'inc/class-eventbrite-event.php' );
+	// Load Eventbrite_Requirements.
+	require_once( 'inc/class-eventbrite-requirements.php' );
+
+	// No point loading unless we have an active Eventbrite connection.
+	if ( Eventbrite_Requirements::has_active_connection() ) {
+		require_once( 'inc/class-eventbrite-manager.php' );
+		require_once( 'inc/class-eventbrite-query.php' );
+		require_once( 'inc/class-eventbrite-rewrite.php' );
+		require_once( 'inc/class-eventbrite-event.php' );
+		require_once( 'inc/functions.php' );
+	}
 }
 add_action( 'init', 'eventbrite_api_init' );
-
-/**
- * Load helper functions and template tags. Pluggable, so they're loaded on after_setup_theme.
- */
-function eventbrite_api_helpers() {
-	require_once( 'inc/functions.php' );
-}
-add_action( 'after_setup_theme', 'eventbrite_api_helpers' );
