@@ -21,6 +21,7 @@
 		add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'inject_page_template' ) );
 		add_filter( 'wp_insert_post_data', array( $this, 'inject_page_template' ) );
 		add_action( 'template_include', array( $this, 'check_templates' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
  	}
 
 	/**
@@ -131,7 +132,9 @@
 	 * @uses   esc_url()
 	 * @uses   trailingslashit()
 	 * @uses   get_stylesheet_directory()
+	 * @uses   Eventbrite_Rewrite::default_theme_activated()
 	 * @uses   plugin_dir_path()
+	 * @uses   get_template()
 	 * @uses   get_post_meta()
 	 * @uses   get_the_ID()
 	 * @return string Template file name.
@@ -139,20 +142,81 @@
 	public function check_templates( $template ) {
 		// If we have an 'eventbrite_id' query var, we're dealing with an event single view.
 		if ( get_query_var( 'eventbrite_id' ) ) {
-			$template = ( isset( eventbrite_get_support_args()->single ) )
-				// The theme defined a single event template, let's use that.
-				? esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->single )
-				// No template specified by the theme, so use the one included with the plugin.
-				: plugin_dir_path( __DIR__ ) . 'tmpl/eventbrite-single.php';
+			// The theme defined a single event template, let's use that.
+			if ( isset( eventbrite_get_support_args()->single ) ) {
+				$template = esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->single );
+			}
+
+			// A default theme is being used; we've got special templates for those.
+			elseif ( $this->default_theme_activated() ) {
+				$template = plugin_dir_path( __DIR__ ) . 'tmpl/compat/' . get_template() . '/eventbrite-single.php';
+			}
+
+			// No template specified by the theme, and it's not a default theme, so use the one included with the plugin.
+			else {
+				$template = plugin_dir_path( __DIR__ ) . 'tmpl/eventbrite-single.php';
+			}
 		}
 
 		// Check if we have a page using the plugin's event listing template. An events template defined in the theme will kick in normally.
 		elseif ( 'eventbrite-index.php' == get_post_meta( get_the_ID(), '_wp_page_template', true ) ) {
-			$template = plugin_dir_path( __DIR__ ) . 'tmpl/eventbrite-index.php';
+			// We're using a default theme. We've got special template files for those.
+			if ( $this->default_theme_activated() ) {
+				$template = plugin_dir_path( __DIR__ ) . 'tmpl/compat/' . get_template() . '/eventbrite-index.php';
+			}
+
+			// Nothing in the theme, and it's not a default theme; just use our regular template.
+			else {
+				$template = plugin_dir_path( __DIR__ ) . 'tmpl/eventbrite-index.php';
+			}
 		}
 
-		// We have nothing Eventbrite-related, so go with the Template Hierarchy.
+		// We have nothing Eventbrite-related, so go with the Template Hierarchy results.
 		return $template;
+	}
+
+	/**
+	 * Enqueue any styles required for default themes.
+	 *
+	 * @access public
+	 *
+	 * @uses Eventbrite_Rewrite::default_theme_activated()
+	 * @uses get_template()
+	 * @uses plugin_dir_path()
+	 * @uses wp_enqueue_style()
+	 * @uses plugins_url()
+	 */
+	public function enqueue_styles() {
+		// Bail if we're not using a default theme.
+		if ( ! $this->default_theme_activated() ) {
+			return;
+		}
+
+		// If there's a stylesheet for this default theme, enqueue it.
+		$style_rel_path = 'tmpl/compat/' . get_template() . '/eventbrite-style.css';
+		if ( file_exists( plugin_dir_path( dirname( __FILE__ ) ) . $style_rel_path ) ) {
+			wp_enqueue_style(
+				'eventbrite-styles',
+				plugins_url( $style_rel_path, dirname( __FILE__ ) )
+			);
+		}
+	}
+
+	/**
+	 * Check if a default theme is active.
+	 *
+	 * @access protected
+	 *
+	 * @uses   get_template()
+	 * @return bool True if a default theme is active, false otherwise.
+	 */
+	protected function default_theme_activated() {
+		// Our supported default themes.
+		$default_themes = array(
+			'twentyfifteen',
+		);
+
+		return in_array( get_template(), $default_themes );
 	}
  }
 

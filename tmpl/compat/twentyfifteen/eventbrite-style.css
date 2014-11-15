@@ -1,0 +1,18 @@
+/**
+ * Eventbrite styles for Twenty Fifteen.
+ *
+ * @package Eventbrite_API
+ */
+
+.eventbrite-event .entry-title {
+	margin-bottom: 0.25em;
+}
+.eventbrite-event .entry-meta {
+	color: #707070;
+	color: rgba(51, 51, 51, 0.7);
+	font-family: "Noto Sans", sans-serif;
+	font-size: 16px;
+	font-size: 1.6rem;
+	line-height: 1.5;
+	margin-bottom: 2em;
+}
