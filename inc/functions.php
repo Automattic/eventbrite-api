@@ -116,7 +116,7 @@ function eventbrite_paging_nav( $events ) {
 	}
 
 	// Output our markup. ?>
-	<nav class="navigation paging-navigation" role="navigation">
+	<nav class="navigation paging-navigation pagination" role="navigation">
 		<h1 class="screen-reader-text"><?php esc_html_e( 'Events navigation', 'eventbrite' ); ?></h1>
 		<div class="nav-links">
 			<?php echo paginate_links( apply_filters( 'eventbrite_paginate_links_args', $args, $events ) ); ?>
