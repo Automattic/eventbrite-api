@@ -6,7 +6,7 @@
  */
 
  class Eventbrite_Rewrite {
- 	/**
+	/**
 	 * Our constructor.
 	 *
 	 * @access public
@@ -14,7 +14,7 @@
 	 * @uses add_filter()
 	 * @uses add_action()
 	 */
- 	public function __construct() {
+	public function __construct() {
  		// Register hooks.
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
@@ -22,6 +22,7 @@
 		add_filter( 'wp_insert_post_data', array( $this, 'inject_page_template' ) );
 		add_action( 'template_include', array( $this, 'check_templates' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'body_class', array( $this, 'add_body_classes' ) );
  	}
 
 	/**
@@ -201,6 +202,42 @@
 			);
 		}
 	}
+
+/**
+ * Add body classes when our Eventbrite templates are in use.
+ *
+ * @access public
+ *
+ * @param
+ * @uses
+ * @return
+ */
+public function add_body_classes( $classes ) {
+	// Check if we're loading an Eventbrite single view.
+	if ( eventbrite_is_single() ) {
+		$classes[] = 'eventbrite-single';
+	}
+
+	// Check for an Eventbrite index view, either from our plugin or the theme.
+	else {
+		// Get any template for the current page being displayed.
+		$template = get_post_meta( get_the_ID(), '_wp_page_template', true );
+
+		// Determine possible templates from the plugin and theme.
+		$eventbrite_templates = array( 'eventbrite-index.php' );
+		if ( ! empty( eventbrite_get_support_args()->index ) ) {
+			$eventbrite_templates[] = eventbrite_get_support_args()->index;
+		}
+		$eventbrite_templates = apply_filters( 'eventbrite_templates', $eventbrite_templates, $template );
+
+		// If there's a match, add the index body class.
+		if ( in_array( $template, $eventbrite_templates ) ) {
+			$classes[] = 'eventbrite-index';
+		}
+	}
+
+	return $classes;
+}
 
 	/**
 	 * Check if a default theme is active.
