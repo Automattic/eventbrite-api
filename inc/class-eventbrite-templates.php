@@ -22,7 +22,7 @@
 		add_filter( 'wp_insert_post_data', array( $this, 'inject_page_template' ) );
 		add_action( 'template_include', array( $this, 'check_templates' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_action( 'body_class', array( $this, 'add_body_classes' ) );
+		add_action( 'body_class', array( $this, 'adjust_body_classes' ) );
  	}
 
 	/**
@@ -204,7 +204,7 @@
 	}
 
 /**
- * Add body classes when our Eventbrite templates are in use.
+ * Adjust body classes when our Eventbrite templates are in use.
  *
  * @access public
  *
@@ -212,10 +212,13 @@
  * @uses
  * @return
  */
-public function add_body_classes( $classes ) {
+public function adjust_body_classes( $classes ) {
 	// Check if we're loading an Eventbrite single view.
 	if ( eventbrite_is_single() ) {
-		$classes[] = 'eventbrite-single';
+		$classes[] = 'single';
+		$classes[] = 'single-event';
+		$key = array_search( 'page', $classes );
+		unset( $classes[ $key ] );
 	}
 
 	// Check for an Eventbrite index view, either from our plugin or the theme.
@@ -230,9 +233,14 @@ public function add_body_classes( $classes ) {
 		}
 		$eventbrite_templates = apply_filters( 'eventbrite_templates', $eventbrite_templates, $template );
 
-		// If there's a match, add the index body class.
+		// If there's a match, adjust body classes.
 		if ( in_array( $template, $eventbrite_templates ) ) {
-			$classes[] = 'eventbrite-index';
+			$classes[] = 'archive';
+			$classes[] = 'archive-eventbrite';
+			foreach ( array( 'page', 'singular' ) as $value ) {
+				$key = array_search( $value, $classes );
+				unset( $classes[ $key ] );
+			}
 		}
 	}
 
