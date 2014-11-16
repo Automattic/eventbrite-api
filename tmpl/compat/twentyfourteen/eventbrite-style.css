@@ -5,9 +5,9 @@
  */
 
 .eventbrite-event .event-time:before,
-.eventbrite-event .event-organizer:before,
-.eventbrite-event .event-venue:before,
-.eventbrite-event .event-details:before {
+.eventbrite-event .event-organizer-text:before,
+.eventbrite-event .event-venue-text:before,
+.eventbrite-event .event-details-text:before {
 	-webkit-font-smoothing: antialiased;
 	display: inline-block;
 	font: normal 16px/1 Genericons;
@@ -19,16 +19,16 @@
 	content: "\f303";
 }
 
-.eventbrite-event .event-organizer:before {
+.eventbrite-event .event-organizer-text:before {
 	content: "\f304";
 }
 
-.eventbrite-event .event-venue:before {
+.eventbrite-event .event-venue-text:before {
 	content: "\f417";
 }
 
-.eventbrite-event .event-details:before {
-	content: "\f512";
+.eventbrite-event .event-details-text:before {
+	content: "\f455";
 }
 
 .eventbrite-event .meta-separator {

@@ -8,7 +8,8 @@
 	margin-bottom: 0.25em;
 }
 
-.eventbrite-event .entry-meta {
+.eventbrite-event .entry-meta,
+.eventbrite-event .entry-meta a {
 	color: #707070;
 	color: rgba(51, 51, 51, 0.7);
 	font-family: "Noto Sans", sans-serif;
@@ -18,16 +19,131 @@
 	margin-bottom: 2em;
 }
 
+.eventbrite-event .entry-meta a:hover,
+.eventbrite-event .entry-meta a:focus {
+	color: #333;
+}
+
+.eventbrite-event .event-time:before,
+.eventbrite-event .event-organizer-text:before,
+.eventbrite-event .event-venue-text:before,
+.eventbrite-event .event-details-text:before {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	font-family: "Genericons";
+	font-size: 16px;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	line-height: 1;
+	margin-right: 2px;
+	position: relative;
+	speak: none;
+	text-align: center;
+	text-decoration: inherit;
+	text-transform: none;
+	vertical-align: top;
+}
+
+.eventbrite-event .event-time:before {
+	content: "\f307";
+}
+
+.eventbrite-event .event-organizer-text:before {
+	content: "\f304";
+}
+
+.eventbrite-event .event-venue-text:before {
+	content: "\f417";
+}
+
+.eventbrite-event .event-details-text:before {
+	content: "\f455";
+}
+
+.eventbrite-event .meta-separator {
+	display: none;
+}
+
+.eventbrite-event .event-time,
+.eventbrite-event .event-organizer,
+.eventbrite-event .event-venue,
+.eventbrite-event .event-details {
+	margin-right: 1em;
+}
+
 @media screen and (min-width: 46.25em) {
-	.eventbrite-event .entry-meta {
+	.eventbrite-event .entry-meta,
+	.eventbrite-event .entry-meta a {
 		font-size: 14px;
 		font-size: 1.4rem;
+	}
+
+	.eventbrite-event .event-time:before,
+	.eventbrite-event .event-organizer-text:before,
+	.eventbrite-event .event-venue-text:before,
+	.eventbrite-event .event-details-text:before {
+		top: 3px;
 	}
 }
 
 @media screen and (min-width: 55em) {
-	.eventbrite-event .entry-meta {
+	.eventbrite-event .entry-meta,
+	.eventbrite-event .entry-meta a {
 		font-size: 16px;
 		font-size: 1.6rem;
+	}
+
+	.eventbrite-event .event-time:before,
+	.eventbrite-event .event-organizer-text:before,
+	.eventbrite-event .event-venue-text:before,
+	.eventbrite-event .event-details-text:before {
+		top: 4px;
+	}
+}
+
+@media screen and (min-width: 59.6875em) {
+	.eventbrite-event .entry-meta,
+	.eventbrite-event .entry-meta a {
+		font-size: 12px;
+		font-size: 1.2rem;
+	}
+
+	.eventbrite-event .event-time:before,
+	.eventbrite-event .event-organizer-text:before,
+	.eventbrite-event .event-venue-text:before,
+	.eventbrite-event .event-details-text:before {
+		top: 0;
+	}
+}
+
+@media screen and (min-width: 68.75em) {
+	.eventbrite-event .entry-meta,
+	.eventbrite-event .entry-meta a {
+		font-size: 14px;
+		font-size: 1.4rem;
+	}
+
+	.eventbrite-event .event-time:before,
+	.eventbrite-event .event-organizer-text:before,
+	.eventbrite-event .event-venue-text:before,
+	.eventbrite-event .event-details-text:before {
+		top: 3px;
+	}
+}
+
+@media screen and (min-width: 77.5em) {
+	.eventbrite-event .entry-meta,
+	.eventbrite-event .entry-meta a {
+		font-size: 16px;
+		font-size: 1.6rem;
+	}
+
+	.eventbrite-event .event-time:before,
+	.eventbrite-event .event-organizer-text:before,
+	.eventbrite-event .event-venue-text:before,
+	.eventbrite-event .event-details-text:before {
+		top: 4px;
 	}
 }
