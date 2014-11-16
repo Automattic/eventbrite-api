@@ -40,7 +40,7 @@
 	}
 
 	/**
-	 * Add rewrite rules for event single views.
+	 * Add rewrite rules for Eventbrite views.
 	 *
 	 * @access public
 	 *
