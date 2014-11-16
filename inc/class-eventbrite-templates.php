@@ -250,6 +250,7 @@ public function add_body_classes( $classes ) {
 	protected function default_theme_activated() {
 		// Our supported default themes.
 		$default_themes = array(
+			'twentythirteen',
 			'twentyfourteen',
 			'twentyfifteen',
 		);

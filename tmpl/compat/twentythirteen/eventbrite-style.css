@@ -1,0 +1,36 @@
+/**
+ * Eventbrite styles for Twenty Fourteen.
+ *
+ * @package Eventbrite_API
+ */
+
+.eventbrite-event .event-time:before,
+.eventbrite-event .event-organizer-text:before,
+.eventbrite-event .event-venue-text:before,
+.eventbrite-event .event-details-text:before {
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	font: normal 16px/1 Genericons;
+	text-decoration: inherit;
+	vertical-align: text-bottom;
+}
+
+.eventbrite-event .event-time:before {
+	content: "\f303";
+}
+
+.eventbrite-event .event-organizer-text:before {
+	content: "\f304";
+}
+
+.eventbrite-event .event-venue-text:before {
+	content: "\f417";
+}
+
+.eventbrite-event .event-details-text:before {
+	content: "\f512";
+}
+
+.eventbrite-event .meta-separator {
+	display: none;
+}
