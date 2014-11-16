@@ -15,7 +15,9 @@ get_header(); ?>
 					while ( $event->have_posts() ) : $event->the_post(); ?>
 
 						<article id="event-<?php the_ID(); ?>" <?php post_class(); ?>>
-							<?php the_post_thumbnail(); ?>
+							<div class="post-thumbnail">
+								<?php the_post_thumbnail(); ?>
+							</div>
 
 							<header class="entry-header">
 
