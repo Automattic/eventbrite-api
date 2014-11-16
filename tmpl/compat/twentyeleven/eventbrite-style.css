@@ -1,0 +1,29 @@
+/**
+ * Eventbrite styles for Twenty Eleven.
+ *
+ * @package Eventbrite_API
+ */
+
+.single-event .screen-reader-text,
+.archive-eventbrite .screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	height: 1px;
+	overflow: hidden;
+	position: absolute !important;
+	width: 1px;
+}
+
+.archive-eventbrite .nav-links {
+	text-align: center;
+}
+
+.archive-eventbrite .nav-links .current {
+	color: #666;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 2.2em;
+}
+
+.archive-eventbrite .nav-links .page-numbers {
+	padding: 0 7px;
+}
