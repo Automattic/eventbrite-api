@@ -1,11 +1,11 @@
 <?php
 /**
- * Eventbrite_Rewrite class, for handling Eventbrite rewrite rules and template redirection.
+ * Eventbrite_Templates class, for handling Eventbrite template redirection, file includes, and rewrite rules.
  *
  * @package Eventbrite_API
  */
 
- class Eventbrite_Rewrite {
+ class Eventbrite_Templates {
 	/**
 	 * Our constructor.
 	 *
@@ -133,7 +133,7 @@
 	 * @uses   esc_url()
 	 * @uses   trailingslashit()
 	 * @uses   get_stylesheet_directory()
-	 * @uses   Eventbrite_Rewrite::default_theme_activated()
+	 * @uses   Eventbrite_Templates::default_theme_activated()
 	 * @uses   plugin_dir_path()
 	 * @uses   get_template()
 	 * @uses   get_post_meta()
@@ -181,7 +181,7 @@
 	 *
 	 * @access public
 	 *
-	 * @uses Eventbrite_Rewrite::default_theme_activated()
+	 * @uses Eventbrite_Templates::default_theme_activated()
 	 * @uses get_template()
 	 * @uses plugin_dir_path()
 	 * @uses wp_enqueue_style()
@@ -257,4 +257,4 @@ public function add_body_classes( $classes ) {
 	}
  }
 
- new Eventbrite_Rewrite();
+ new Eventbrite_Templates();
