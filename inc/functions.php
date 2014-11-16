@@ -194,7 +194,7 @@ function eventbrite_event_meta() {
 	// Add a venue name if available.
 	$venue = '';
 	if ( ! empty( eventbrite_event_venue()->name ) ) {
-		$venue = sprintf( '%s<span class="event-venue"><a class="url fn n" href="%s">%s</a></span>',
+		$venue = sprintf( '%s<span class="event-venue"><a class="event-venue-link url fn n" href="%s"><span class="event-venue-text">%s</span></a></span>',
 			wp_kses( $separator, array(
 				'span' => array(
 					'class' => array(),
@@ -205,19 +205,17 @@ function eventbrite_event_meta() {
 		);
 	}
 
-	// Add the organizer's name if available.
+	// Add the organizer's name if available. Author-related functions are filtered to use the event's organizer.
 	$organizer = '';
 	if ( ! empty( eventbrite_event_organizer()->name ) ) {
-		// Assemble the "author archive" link and name. Author-related functions are filtered to use the event's organizer.
-		$organizer = sprintf( '%s<span class="event-organizer">%s</span>',
+		$organizer = sprintf( '%s<span class="event-organizer"><a class="event-organizer-link url fn n" href="%s"><span class="event-organizer-text">%s</span></a></span>',
 			wp_kses( $separator, array(
 				'span' => array(
 					'class' => array(),
 				),
 			) ),
-			sprintf( _x( 'Organized by %s', 'Event organizer', 'eventbrite_api' ),
-				'<a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a>'
-			)
+			esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+			esc_html( get_the_author() )
 		);
 	}
 
@@ -230,7 +228,7 @@ function eventbrite_event_meta() {
 		$url = get_the_permalink();
 	}
 
-	$details = sprintf( '%s<span class="event-details"><a href="%s">%s</a></span>',
+	$details = sprintf( '%s<span class="event-details"><a class="event-details-link" href="%s"><span class="event-details-text">%s</span></a></span>',
 		wp_kses( $separator, array(
 			'span' => array(
 				'class' => array(),
