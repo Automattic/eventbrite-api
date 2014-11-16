@@ -1,0 +1,22 @@
+/**
+ * Eventbrite styles for Twenty Fourteen.
+ *
+ * @package Eventbrite_API
+ */
+
+.eventbrite-event .entry-meta {
+	margin-top: 24px;
+	margin-top: 1.714285714rem;
+	font-size: 13px;
+	font-size: 0.928571429rem;
+	line-height: 1.846153846;
+	color: #757575;
+}
+
+.eventbrite-event .entry-meta a {
+	color: #757575;
+}
+
+.eventbrite-event iframe {
+	margin-bottom: 0;
+}
