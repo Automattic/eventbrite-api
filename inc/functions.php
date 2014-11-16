@@ -186,7 +186,7 @@ if ( ! function_exists( 'eventbrite_event_meta' ) ) :
  */
 function eventbrite_event_meta() {
 	// Determine our separator.
-	$separator = apply_filters( 'eventbrite_meta_separator', ' &middot; ' );
+	$separator = apply_filters( 'eventbrite_meta_separator', '<span class="meta-separator"> &middot; </span>' );
 
 	// Start our HTML output with the event time.
 	$time = '<span class="event-time">' . eventbrite_event_time() . '</span>';
@@ -195,7 +195,11 @@ function eventbrite_event_meta() {
 	$venue = '';
 	if ( ! empty( eventbrite_event_venue()->name ) ) {
 		$venue = sprintf( '%s<span class="event-venue"><a class="url fn n" href="%s">%s</a></span>',
-			esc_html( $separator ),
+			wp_kses( $separator, array(
+				'span' => array(
+					'class' => array(),
+				),
+			) ),
 			esc_url( eventbrite_venue_get_archive_link() ),
 			esc_html( eventbrite_event_venue()->name )
 		);
@@ -206,7 +210,11 @@ function eventbrite_event_meta() {
 	if ( ! empty( eventbrite_event_organizer()->name ) ) {
 		// Assemble the "author archive" link and name. Author-related functions are filtered to use the event's organizer.
 		$organizer = sprintf( '%s<span class="event-organizer">%s</span>',
-			esc_html( $separator ),
+			wp_kses( $separator, array(
+				'span' => array(
+					'class' => array(),
+				),
+			) ),
 			sprintf( _x( 'Organized by %s', 'Event organizer', 'eventbrite_api' ),
 				'<a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a>'
 			)
@@ -223,7 +231,11 @@ function eventbrite_event_meta() {
 	}
 
 	$details = sprintf( '%s<span class="event-details"><a href="%s">%s</a></span>',
-		esc_html( $separator ),
+		wp_kses( $separator, array(
+			'span' => array(
+				'class' => array(),
+			),
+		) ),
 		esc_url( $url ),
 		esc_html__( 'More details', 'eventbrite_api' )
 	);
