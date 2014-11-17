@@ -96,7 +96,12 @@ if ( ! function_exists( 'eventbrite_paging_nav' ) ) :
  * @uses  paginate_links()
  * @uses  apply_filters()
  */
-function eventbrite_paging_nav( $events ) {
+function eventbrite_paging_nav( $events = null ) {
+	// Bail if we don't have a valid Eventbrite_Query object.
+	if ( ! is_a( $events, 'Eventbrite_Query' ) ) {
+		return;
+	}
+
 	// Bail if we only have one page and don't need pagination.
 	if ( $events->max_num_pages < 2 ) {
 		return;
