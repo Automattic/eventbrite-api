@@ -32,7 +32,6 @@ class Eventbrite_Requirements {
 	/**
 	 * Check if we have a valid user connection to Eventbrite.
 	 *
-	 * @param
 	 * @uses   Eventbrite_API::$instance->get_token()
 	 * @return bool True if a valid user token exists, false otherwise.
 	 */
