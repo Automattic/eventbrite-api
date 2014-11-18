@@ -22,7 +22,7 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
 
 ## Classes
 
-![Eventbrite API Classes Overview](https://raw.githubusercontent.com/Automattic/eventbrite-api/master/eventbrite_api_overview.png)
+![Eventbrite API Classes Overview](https://raw.githubusercontent.com/Automattic/eventbrite-api/master/eventbrite-api-overview.png)
 
 
 **`Eventbrite_API`**
