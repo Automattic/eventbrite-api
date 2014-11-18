@@ -332,7 +332,7 @@ endif;
 
 if ( ! function_exists( 'eventbrite_event_organizer' ) ) :
 /**
- * Give access to the current event's organizer properties: description, logo, resouce_uri, id, name, url, num_past_events, num_future_events
+ * Give access to the current event's organizer properties: description, logo, resource_uri, id, name, url, num_past_events, num_future_events
  *
  * @global $post
  * @uses   apply_filters()
