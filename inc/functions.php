@@ -449,7 +449,7 @@ function eventbrite_ticket_form_widget() {
 	);
 
 	// Output the markup.
-	echo $ticket_html;
+	echo apply_filters( 'eventbrite_ticket_form_widget', $ticket_html, $src );
 }
 endif;
 
