@@ -17,9 +17,6 @@ class Eventbrite_Requirements {
 	 * The class constructor.
 	 *
 	 * @access public
-	 *
-	 * @uses   Eventbrite_manager::$instance
-	 * @uses   add_action()
 	 */
 	public function __construct() {
 		// Assign our instance.
@@ -32,13 +29,17 @@ class Eventbrite_Requirements {
 	/**
 	 * Check if we have a valid user connection to Eventbrite.
 	 *
-	 * @uses   Eventbrite_API::$instance->get_token()
 	 * @return bool True if a valid user token exists, false otherwise.
 	 */
 	public static function has_active_connection() {
 		return ( class_exists( 'Eventbrite_API', false ) && Eventbrite_API::$instance->get_token() );
 	}
 
+	/**
+	 * Display admin notices to help users solve requirements for getting events.
+	 *
+	 * @access public
+	 */
 	public function display_admin_notice() {
 		// Don't display notices to users that can't do anything about it.
 		if ( ! current_user_can( 'install_plugins' ) ) {

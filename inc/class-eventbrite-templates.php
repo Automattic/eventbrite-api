@@ -10,9 +10,6 @@
 	 * Our constructor.
 	 *
 	 * @access public
-	 *
-	 * @uses add_filter()
-	 * @uses add_action()
 	 */
 	public function __construct() {
  		// Register hooks.
@@ -45,8 +42,6 @@
 	 * @access public
 	 *
 	 * @param  array $wp_rules WordPress rewrite rules.
-	 * @uses   eventbrite_get_support_args()
-	 * @uses   get_pages()
 	 * @return array All rewrite rules (WordPress and Eventbrite rules combined).
 	 */
 	public function add_rewrite_rules( $wp_rules ) {
@@ -92,10 +87,6 @@
 	 * @access public
 	 *
 	 * @param  array $params
-	 * @uses   eventbrite_get_support_args()
-	 * @uses   WP_Theme::get_page_templates()
-	 * @uses   wp_cache_delete()
-	 * @uses   wp_cache_add()
 	 * @return array $params
 	 */
 	public function inject_page_template( $params ) {
@@ -128,16 +119,6 @@
 	 * @access public
 	 *
 	 * @param  string $template
-	 * @uses   get_query_var()
-	 * @uses   eventbrite_get_support_args()
-	 * @uses   esc_url()
-	 * @uses   trailingslashit()
-	 * @uses   get_stylesheet_directory()
-	 * @uses   Eventbrite_Templates::default_theme_activated()
-	 * @uses   plugin_dir_path()
-	 * @uses   get_template()
-	 * @uses   get_post_meta()
-	 * @uses   get_the_ID()
 	 * @return string Template file name.
 	 */
 	public function check_templates( $template ) {
@@ -180,12 +161,6 @@
 	 * Enqueue any styles required for default themes.
 	 *
 	 * @access public
-	 *
-	 * @uses Eventbrite_Templates::default_theme_activated()
-	 * @uses get_template()
-	 * @uses plugin_dir_path()
-	 * @uses wp_enqueue_style()
-	 * @uses plugins_url()
 	 */
 	public function enqueue_styles() {
 		// Bail if we're not using a default theme.
@@ -203,56 +178,54 @@
 		}
 	}
 
-/**
- * Adjust body classes when our Eventbrite templates are in use.
- *
- * @access public
- *
- * @param
- * @uses
- * @return
- */
-public function adjust_body_classes( $classes ) {
-	// Check if we're loading an Eventbrite single view.
-	if ( eventbrite_is_single() ) {
-		$classes[] = 'single';
-		$classes[] = 'single-event';
-		$key = array_search( 'page', $classes );
-		unset( $classes[ $key ] );
-	}
-
-	// Check for an Eventbrite index view, either from our plugin or the theme.
-	else {
-		// Get any template for the current page being displayed.
-		$template = get_post_meta( get_the_ID(), '_wp_page_template', true );
-
-		// Determine possible templates from the plugin and theme.
-		$eventbrite_templates = array( 'eventbrite-index.php' );
-		if ( ! empty( eventbrite_get_support_args()->index ) ) {
-			$eventbrite_templates[] = eventbrite_get_support_args()->index;
+	/**
+	 * Adjust body classes when our Eventbrite templates are in use.
+	 *
+	 * @access public
+	 *
+	 * @param  array $classes Unfiltered body classes
+	 * @return array Filtered body classes
+	 */
+	public function adjust_body_classes( $classes ) {
+		// Check if we're loading an Eventbrite single view.
+		if ( eventbrite_is_single() ) {
+			$classes[] = 'single';
+			$classes[] = 'single-event';
+			$key = array_search( 'page', $classes );
+			unset( $classes[ $key ] );
 		}
-		$eventbrite_templates = apply_filters( 'eventbrite_templates', $eventbrite_templates, $template );
 
-		// If there's a match, adjust body classes.
-		if ( in_array( $template, $eventbrite_templates ) ) {
-			$classes[] = 'archive';
-			$classes[] = 'archive-eventbrite';
-			foreach ( array( 'page', 'singular' ) as $value ) {
-				$key = array_search( $value, $classes );
-				unset( $classes[ $key ] );
+		// Check for an Eventbrite index view, either from our plugin or the theme.
+		else {
+			// Get any template for the current page being displayed.
+			$template = get_post_meta( get_the_ID(), '_wp_page_template', true );
+
+			// Determine possible templates from the plugin and theme.
+			$eventbrite_templates = array( 'eventbrite-index.php' );
+			if ( ! empty( eventbrite_get_support_args()->index ) ) {
+				$eventbrite_templates[] = eventbrite_get_support_args()->index;
+			}
+			$eventbrite_templates = apply_filters( 'eventbrite_templates', $eventbrite_templates, $template );
+
+			// If there's a match, adjust body classes.
+			if ( in_array( $template, $eventbrite_templates ) ) {
+				$classes[] = 'archive';
+				$classes[] = 'archive-eventbrite';
+				foreach ( array( 'page', 'singular' ) as $value ) {
+					$key = array_search( $value, $classes );
+					unset( $classes[ $key ] );
+				}
 			}
 		}
-	}
 
-	return $classes;
-}
+		return $classes;
+	}
 
 	/**
 	 * Check if a default theme is active.
 	 *
 	 * @access protected
 	 *
-	 * @uses   get_template()
 	 * @return bool True if a default theme is active, false otherwise.
 	 */
 	protected function default_theme_activated() {

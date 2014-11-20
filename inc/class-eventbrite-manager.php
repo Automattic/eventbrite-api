@@ -17,9 +17,6 @@ class Eventbrite_Manager {
 	 * The class constructor.
 	 *
 	 * @access public
-	 *
-	 * @uses   Eventbrite_manager::$instance
-	 * @uses   add_action()
 	 */
 	public function __construct() {
 		// Assign our instance.
@@ -38,13 +35,6 @@ class Eventbrite_Manager {
 	 * @param array $params
 	 * @param int|string|bool $id
 	 * @param bool $force
-	 * @uses Eventbrite_Manager->validate_endpoint()
-	 * @uses Eventbrite_Manager->validate_request_params()
-	 * @uses absint()
-	 * @uses Eventbrite_Manager->get_cache()
-	 * @uses Eventbrite_API::call()
-	 * @uses set_transient()
-	 * @uses Eventbrite_Manager->get_transient_name()
 	 * @return object Request results
 	 */
 	public function request( $endpoint, $params = array(), $id = false, $force = false ) {
@@ -87,7 +77,6 @@ class Eventbrite_Manager {
 	 *
 	 * @param array $params
 	 * @param string $endpoint
-	 * @uses Eventbrite_Manager::get_endpoint_params()
 	 * @return bool True if all params were able to be validated, false otherwise
 	 */
 	protected function validate_endpoint_params( $endpoint, $params ) {
@@ -139,8 +128,6 @@ class Eventbrite_Manager {
 	 *
 	 * @param array $params
 	 * @param bool $force
-	 * @uses Eventbrite_Manager::request
-	 * @uses Eventbrite_Manager::map_event_keys
 	 * @return object Eventbrite_Manager
 	 */
 	public function do_event_search( $params = array(), $force = false ) {
@@ -168,8 +155,6 @@ class Eventbrite_Manager {
 	 *
 	 * @param array $params
 	 * @param bool $force
-	 * @uses Eventbrite_Manager::request
-	 * @uses Eventbrite_Manager::map_event_keys
 	 * @return object Eventbrite_Manager
 	 */
 	public function get_user_owned_events( $params = array(), $force = false ) {
@@ -196,9 +181,6 @@ class Eventbrite_Manager {
 	 *
 	 * @param int|string|bool $id
 	 * @param bool $force
-	 * @uses Eventbrite_Manager::request()
-	 * @uses absint()
-	 * @uses Eventbrite_Manager::map_event_keys()
 	 * @return object Eventbrite_Manager
 	 */
 	public function get_event( $id = false, $force = false ) {
@@ -236,8 +218,6 @@ class Eventbrite_Manager {
 	 *
 	 * @param string $endpoint
 	 * @param array $params
-	 * @uses get_transient()
-	 * @uses Eventbrite_Manager::get_transient_name()
 	 * @return mixed Transient if found, false if not
 	 */
 	protected function get_cache( $endpoint, $params ) {
@@ -383,9 +363,6 @@ class Eventbrite_Manager {
 	 * Add a transient name to the list of registered transients, stored in the 'eventbrite_api_transients' option.
 	 *
 	 * @access protected
-	 *
-	 * @uses   get_option()
-	 * @uses   update_option()
 	 */
 	protected function register_transient( $transient_name ) {
 		// Get any existing list of transients.
@@ -404,9 +381,6 @@ class Eventbrite_Manager {
 	 * Flush all transients.
 	 *
 	 * @access public
-	 *
-	 * @uses   get_option()
-	 * @uses   delete_transient()
 	 */
 	public function flush_transients( $service, $request ) {
 		// Bail if it wasn't an Eventbrite connection that got deleted.

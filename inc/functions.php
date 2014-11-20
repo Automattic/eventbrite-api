@@ -11,7 +11,6 @@ if ( ! function_exists( 'eventbrite_get_events' ) ) :
  *
  * @param  array $params
  * @param  bool $force Force an API call, don't use cache
- * @uses   Eventbrite_Manager::get_user_owned_events()
  * @return object API results
  */
 function eventbrite_get_events( $params = array(), $force = false ) {
@@ -25,7 +24,6 @@ if ( ! function_exists( 'eventbrite_get_event' ) ) :
  *
  * @param  int $id
  * @param  bool $force Force an API call, don't use cache
- * @uses   Eventbrite_Manager::get_event()
  * @return object Event
  */
 function eventbrite_get_event( $id = false, $force = false ) {
@@ -46,7 +44,6 @@ if ( ! function_exists( 'eventbrite_search' ) ) :
  *
  * @param  array $params
  * @param  bool $force Force an API call, don't use cache
- * @uses   Eventbrite_Manager::get_user_owned_events()
  * @return object API results
  */
 function eventbrite_search( $params = array(), $force = false ) {
@@ -60,8 +57,6 @@ if ( ! function_exists( 'eventbrite_is_event' ) ) :
  *
  * @param  mixed $post
  * @global $post
- * @uses   eventbrite_get_event()
- * @uses   absint()
  * @return bool True if it's an Eventbrite event, false otherwise.
  */
 function eventbrite_is_event( $post = null ) {
@@ -91,10 +86,6 @@ if ( ! function_exists( 'eventbrite_paging_nav' ) ) :
  * Paging navigation on event listings, using paginate_links().
  *
  * @param object $events
- * @uses  get_query_var()
- * @uses  esc_html_e()
- * @uses  paginate_links()
- * @uses  apply_filters()
  */
 function eventbrite_paging_nav( $events = null ) {
 	// Bail if we don't have a valid Eventbrite_Query object.
@@ -134,7 +125,6 @@ if ( ! function_exists( 'eventbrite_get_support_args' ) ) :
 /**
  * Get the arguments being passed to add_theme_support().
  *
- * @uses   get_theme_support()
  * @return mixed Eventbrite theme support arguments, or false if no theme support.
  */
 function eventbrite_get_support_args() {
@@ -148,8 +138,6 @@ if ( ! function_exists( 'eventbrite_is_single' ) ) :
  * Determine if a query is for an event single view.
  *
  * @param  mixed $query
- * @uses   Eventbrite_Query::$is_single
- * @uses   get_query_var()
  * @return bool True if an event single view, false otherwise.
  */
 function eventbrite_is_single( $query = null ) {
@@ -173,21 +161,6 @@ endif;
 if ( ! function_exists( 'eventbrite_event_meta' ) ) :
 /**
  * Output event information such as date, time, venue, and organizer
- *
- * @uses   eventbrite_event_time()
- * @uses   eventbrite_event_venue()
- * @uses   esc_url()
- * @uses   eventbrite_venue_get_archive_link()
- * @uses   esc_html()
- * @uses   eventbrite_event_organizer()
- * @uses   get_author_posts_url()
- * @uses   get_the_author_meta()
- * @uses   get_the_author()
- * @uses   eventbrite_is_single()
- * @uses   get_the_permalink()
- * @uses   esc_html__()
- * @uses   apply_filters()
- * @return string Event meta
  */
 function eventbrite_event_meta() {
 	// Determine our separator.
@@ -259,11 +232,6 @@ if ( ! function_exists( 'eventbrite_event_time' ) ) :
 /**
  * Return an event's time.
  *
- * @uses   eventbrite_is_multiday_event()
- * @uses   mysql2date()
- * @uses   eventbrite_event_end()
- * @uses   esc_html()
- * @uses   eventbrite_event_start()
  * @return string Event time.
  */
 function eventbrite_event_time() {
@@ -287,9 +255,6 @@ if ( ! function_exists( 'eventbrite_is_multiday_event' ) ) :
 /**
  * Determine if an event spans multiple calendar days.
  *
- * @uses   mysql2date()
- * @uses   eventbrite_event_start()
- * @uses   eventbrite_event_end()
  * @return bool True if start and end date are the same, false otherwise.
  */
 function eventbrite_is_multiday_event() {
@@ -306,8 +271,6 @@ if ( ! function_exists( 'eventbrite_event_eb_url' ) ) :
 /**
  * Give the URL to an event's public viewing page on eventbrite.com.
  *
- * @global $post
- * @uses   apply_filters()
  * @return string URL on eventbrite.com
  */
 function eventbrite_event_eb_url() {
@@ -319,8 +282,6 @@ if ( ! function_exists( 'eventbrite_event_venue' ) ) :
 /**
  * Give access to the current event's venue properties: address, resource_uri, id, name, latitude, longitude
  *
- * @global $post
- * @uses   apply_filters()
  * @return object Venue info
  */
 function eventbrite_event_venue() {
@@ -332,8 +293,6 @@ if ( ! function_exists( 'eventbrite_event_organizer' ) ) :
 /**
  * Give access to the current event's organizer properties: description, logo, resource_uri, id, name, url, num_past_events, num_future_events
  *
- * @global $post
- * @uses   apply_filters()
  * @return object Organizer info
  */
 function eventbrite_event_organizer() {
@@ -345,8 +304,6 @@ if ( ! function_exists( 'eventbrite_event_start' ) ) :
 /**
  * Give access to the current event's start time: timezone, local, utc
  *
- * @global $post
- * @uses   apply_filters()
  * @return object Start time properties
  */
 function eventbrite_event_start() {
@@ -358,8 +315,6 @@ if ( ! function_exists( 'eventbrite_event_end' ) ) :
 /**
  * Give access to the current event's end time: timezone, local, utc
  *
- * @global $post
- * @uses   apply_filters()
  * @return object End time properties
  */
 function eventbrite_event_end() {
@@ -371,11 +326,6 @@ if ( ! function_exists( 'eventbrite_venue_get_archive_link' ) ) :
 /**
  * Output a permalink to a venue's "archive" page.
  *
- * @uses   get_permalink()
- * @uses   get_queried_object_id()
- * @uses   eventbrite_event_venue()
- * @uses   sanitize_title()
- * @uses   absint()
  * @return string URL
  */
 function eventbrite_venue_get_archive_link() {
@@ -398,10 +348,6 @@ if ( ! function_exists( 'eventbrite_edit_post_link' ) ) :
  * @param  string $text
  * @param  string $before
  * @param  string $after
- * @uses   add_query_arg()
- * @uses   get_the_ID()
- * @uses   esc_url()
- * @uses   esc_html()
  */
 function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 	// Assemble the edit URL.
@@ -423,12 +369,6 @@ endif;
 if ( ! function_exists( 'eventbrite_ticket_form_widget' ) ) :
 /**
  * Insert the Eventbrite ticket form widget.
- *
- * @uses  get_the_ID()
- * @uses  add_query_arg()
- * @uses  esc_url()
- * @uses  esc_attr()
- * @uses  apply_filters()
  */
 function eventbrite_ticket_form_widget() {
 	// Build the src attribute URL.
@@ -452,9 +392,6 @@ if ( ! function_exists( 'eventbrite_get_ticket_form_widget_height' ) ) :
 /**
  * Calculate the height of the ticket form widget iframe. Not perfect, but avoids having to do it with JS.
  *
- * @global  $post
- * @uses    mysql2date()
- * @uses    apply_filters()
  * @return  int Height of iframe
  */
 function eventbrite_get_ticket_form_widget_height() {
@@ -497,7 +434,6 @@ endif;
 /**
  * Check if everything we need is working: Keyring is installed, activated, and has a valid user connection to Eventbrite.
  *
- * @uses   Eventbrite_API::$instance->get_token()
  * @return bool True if a valid user token exists, false otherwise.
  */
 function eventbrite_has_active_connection() {
