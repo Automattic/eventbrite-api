@@ -78,7 +78,7 @@ function eventbrite_is_event( $post = null ) {
 	// Maybe we're working with an event ID.
 	if ( is_integer( $post ) && 10 < strlen( strval( $id ) ) ) {
 		$event = eventbrite_get_event( absint( $post ) );
-		return ( empty( $event->error ) ) ? true : false;
+		return ( empty( $event->error ) );
 	}
 
 	// No dice.
@@ -298,7 +298,7 @@ function eventbrite_is_multiday_event() {
 	$end_date = mysql2date( 'Ymd', eventbrite_event_end()->utc );
 
 	// Return true if they're different, false otherwise.
-	return ( $start_date !== $end_date ) ? true : false;
+	return ( $start_date !== $end_date );
 }
 endif;
 
@@ -501,5 +501,5 @@ endif;
  * @return bool True if a valid user token exists, false otherwise.
  */
 function eventbrite_has_active_connection() {
-	return ( Eventbrite_Requirements::has_active_connection() ) ? true : false;
+	return ( Eventbrite_Requirements::has_active_connection() );
 }

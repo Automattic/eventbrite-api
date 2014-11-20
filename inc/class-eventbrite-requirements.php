@@ -36,7 +36,7 @@ class Eventbrite_Requirements {
 	 * @return bool True if a valid user token exists, false otherwise.
 	 */
 	public static function has_active_connection() {
-		return ( class_exists( 'Eventbrite_API', false ) && Eventbrite_API::$instance->get_token() ) ? true : false;
+		return ( class_exists( 'Eventbrite_API', false ) && Eventbrite_API::$instance->get_token() );
 	}
 
 	public function display_admin_notice() {
