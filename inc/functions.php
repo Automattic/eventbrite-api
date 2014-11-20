@@ -78,7 +78,7 @@ function eventbrite_is_event( $post = null ) {
 	// Maybe we're working with an event ID.
 	if ( is_integer( $post ) && 10 < strlen( strval( $id ) ) ) {
 		$event = eventbrite_get_event( absint( $post ) );
-		return ( empty( $event->error ) ) ? true : false;
+		return ( empty( $event->error ) );
 	}
 
 	// No dice.
@@ -298,7 +298,7 @@ function eventbrite_is_multiday_event() {
 	$end_date = mysql2date( 'Ymd', eventbrite_event_end()->utc );
 
 	// Return true if they're different, false otherwise.
-	return ( $start_date !== $end_date ) ? true : false;
+	return ( $start_date !== $end_date );
 }
 endif;
 
@@ -311,8 +311,7 @@ if ( ! function_exists( 'eventbrite_event_eb_url' ) ) :
  * @return string URL on eventbrite.com
  */
 function eventbrite_event_eb_url() {
-	global $post;
-	return apply_filters( 'eventbrite_event_eb_url', $post->url );
+	return apply_filters( 'eventbrite_event_eb_url', get_post()->url );
 }
 endif;
 
@@ -325,8 +324,7 @@ if ( ! function_exists( 'eventbrite_event_venue' ) ) :
  * @return object Venue info
  */
 function eventbrite_event_venue() {
-	global $post;
-	return apply_filters( 'eventbrite_event_venue', $post->venue );
+	return apply_filters( 'eventbrite_event_venue', get_post()->venue );
 }
 endif;
 
@@ -339,8 +337,7 @@ if ( ! function_exists( 'eventbrite_event_organizer' ) ) :
  * @return object Organizer info
  */
 function eventbrite_event_organizer() {
-	global $post;
-	return apply_filters( 'eventbrite_event_organizer', $post->organizer );
+	return apply_filters( 'eventbrite_event_organizer', get_post()->organizer );
 }
 endif;
 
@@ -353,8 +350,7 @@ if ( ! function_exists( 'eventbrite_event_start' ) ) :
  * @return object Start time properties
  */
 function eventbrite_event_start() {
-	global $post;
-	return apply_filters( 'eventbrite_event_start', $post->start );
+	return apply_filters( 'eventbrite_event_start', get_post()->start );
 }
 endif;
 
@@ -367,8 +363,7 @@ if ( ! function_exists( 'eventbrite_event_end' ) ) :
  * @return object End time properties
  */
 function eventbrite_event_end() {
-	global $post;
-	return apply_filters( 'eventbrite_event_end', $post->end );
+	return apply_filters( 'eventbrite_event_end', get_post()->end );
 }
 endif;
 
@@ -467,8 +462,7 @@ function eventbrite_get_ticket_form_widget_height() {
 	$height = 56;
 
 	// Get tickets for the current event.
-	global $post;
-	$tickets = $post->tickets;
+	$tickets = get_post()->tickets;
 
 	// Move along if the event has no ticket information.
 	if ( ! $tickets ) {
@@ -496,7 +490,7 @@ function eventbrite_get_ticket_form_widget_height() {
 		$height -= 74;
 	}
 
-	return (int) apply_filters( 'eventbrite_ticket_form_widget_height', $height, $post );
+	return (int) apply_filters( 'eventbrite_ticket_form_widget_height', $height );
 }
 endif;
 
@@ -507,5 +501,5 @@ endif;
  * @return bool True if a valid user token exists, false otherwise.
  */
 function eventbrite_has_active_connection() {
-	return ( Eventbrite_Requirements::has_active_connection() ) ? true : false;
+	return ( Eventbrite_Requirements::has_active_connection() );
 }
