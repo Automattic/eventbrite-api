@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Eventbrite-api : A WordPress plugin that integrates the Eventbrite API with WordPress and Keyring">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Eventbrite-api</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Automattic/eventbrite-api">View on GitHub</a>
+
+          <h1 id="project_title">Eventbrite-api</h1>
+          <h2 id="project_tagline">A WordPress plugin that integrates the Eventbrite API with WordPress and Keyring</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Automattic/eventbrite-api/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Automattic/eventbrite-api/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="eventbrite-api-wordpress-plugin" class="anchor" href="#eventbrite-api-wordpress-plugin" aria-hidden="true"><span class="octicon octicon-link"></span></a>Eventbrite API WordPress Plugin</h1>
+
+<p>The Eventbrite API plugin brings the power of Eventbrite to WordPress, for both users and developers.</p>
+
+<h2>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<h4>
+<a id="users" class="anchor" href="#users" aria-hidden="true"><span class="octicon octicon-link"></span></a>Users</h4>
+
+<p>By connecting to your <a href="http://eventbrite.com/">Eventbrite account</a>, events can be displayed directly on your WordPress.org website, complete with event details and ticket information. Events will blend in with the design of any theme, and events can be filtered by organizer or venue, just like post archives.</p>
+
+<h4>
+<a id="developers" class="anchor" href="#developers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Developers</h4>
+
+<p>As a developer, you get simple-to-use tools for integrating Eventbrite into your themes or plugins. Use the helper functions to remove the complexity and heavy-lifting of API calls, and take advantage of assorted template tags for displaying various event information.</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<h4>
+<a id="keyring" class="anchor" href="#keyring" aria-hidden="true"><span class="octicon octicon-link"></span></a>Keyring</h4>
+
+<p><a href="https://wordpress.org/plugins/keyring/">Keyring</a> is required for the Eventbrite API plugin to work. Once it's installed with an active connection to Eventbrite, the Eventbrite API plugin will be able to display events.</p>
+
+<p>If needed, admin notices will give helpful links and prompting to get Keyring and the Eventbrite API plugin up and running. These notices will appear on the Dashboard, PLugins, Tools, and Settings admin pages until issues are resolved.</p>
+
+<h2>
+<a id="classes" class="anchor" href="#classes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Classes</h2>
+
+<p><img src="https://raw.githubusercontent.com/Automattic/eventbrite-api/master/eventbrite-api-overview.png" alt="Eventbrite API Classes Overview"></p>
+
+<p><strong><code>Eventbrite_API</code></strong></p>
+
+<ul>
+<li>makes calls to the API</li>
+<li>handles option for the token</li>
+<li>defines supported endpoints</li>
+</ul>
+
+<p><strong><code>Eventbrite_Requirements</code></strong></p>
+
+<ul>
+<li>ensures Keyring is installed, activated</li>
+<li>ensures an active Eventbrite connection</li>
+<li>provides admin notification prompts</li>
+</ul>
+
+<p><strong><code>Eventbrite_Manager</code></strong></p>
+
+<ul>
+<li>uses <code>Eventbrite_API</code> to make API calls</li>
+<li>validates all query args and values to ensure no wasted API calls</li>
+<li>handles storing and returning transients</li>
+<li>prepares API results into the format needed by <code>Eventbrite_Event</code>
+</li>
+</ul>
+
+<p><strong><code>Eventbrite_Query</code></strong></p>
+
+<ul>
+<li>like <code>WP_Query</code> for Eventbrite events (it extends <code>WP_Query</code>)</li>
+<li>creates a secondary loop</li>
+<li>supported arguments, passed as an array
+
+<ul>
+<li>
+<code>display_private</code>: (<em>boolean</em>) Include user events marked as Private. Default is <code>false</code>.</li>
+<li>
+<code>limit</code>: (<em>integer</em>) Return a maximum number of results.</li>
+<li>
+<code>organizer_id</code>: (<em>integer</em>) Return only events for a certain organizer.</li>
+<li>
+<code>p</code>: (<em>integer</em>) Get a single event.</li>
+<li>
+<code>post__not_in</code>: (<em>array</em>) Remove certain events by ID from the results.</li>
+<li>
+<code>venue_id</code>: (<em>integer</em>) Return only events for a certain venue.</li>
+</ul>
+</li>
+</ul>
+
+<p><strong><code>Eventbrite_Event</code></strong></p>
+
+<ul>
+<li>like <code>WP_Post</code> for Eventbrite events</li>
+<li>does not extend <code>WP_Post</code>, as that class is marked <code>final</code>
+</li>
+<li>object properties
+
+<ul>
+<li>
+<code>ID</code> (<em>integer</em>)</li>
+<li>
+<code>post_title</code> (<em>string</em>)</li>
+<li>
+<code>post_content</code> (<em>string</em>)</li>
+<li>
+<code>post_date</code> (<em>string</em>)</li>
+<li>
+<code>post_date_gmt</code> (<em>string</em>)</li>
+<li>
+<code>url</code> (<em>string</em>)</li>
+<li>
+<code>logo_url</code> (<em>string</em>)</li>
+<li>
+<code>start</code> (<em>object</em>)</li>
+<li>
+<code>end</code> (<em>object</em>)</li>
+<li>
+<code>organizer</code> (<em>object</em>)</li>
+<li>
+<code>venue</code> (<em>object</em>)</li>
+<li>
+<code>public</code> (<em>boolean</em>)</li>
+<li>
+<code>tickets</code> (<em>object</em>)</li>
+</ul>
+</li>
+</ul>
+
+<p><strong><code>Eventbrite_Templates</code></strong></p>
+
+<ul>
+<li>extends the Template Hierarchy for handling Eventbrite templates</li>
+<li>adds rewrite rules for templates</li>
+</ul>
+
+<h2>
+<a id="functions" class="anchor" href="#functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Functions</h2>
+
+<h4>
+<a id="helper-functions" class="anchor" href="#helper-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Helper Functions</h4>
+
+<p><strong><code>eventbrite_get_events( $params, $force )</code></strong></p>
+
+<ul>
+<li>Get user-owned events (both public and private are returned by default).</li>
+<li>
+<code>$params</code>: (<em>array, optional</em>) <a href="http://developer.eventbrite.com/docs/user-owned-events/">Accepted parameters and values</a>
+</li>
+<li>
+<code>$force</code>: (<em>boolean, optional</em>) Force a fresh API call, ignoring any available transient. Default is <code>false</code>.</li>
+</ul>
+
+<p><strong><code>eventbrite_get_event( $id, $force )</code></strong></p>
+
+<ul>
+<li>Retrieve a single user-owned event.</li>
+<li>
+<code>$id</code>: (<em>integer, required</em>) Eventbrite event id</li>
+<li>
+<code>$force</code>: (<em>boolean, optional</em>) Force a fresh API call, ignoring any available transient. Default is <code>false</code>.</li>
+</ul>
+
+<p><strong><code>eventbrite_search( $params, $force )</code></strong></p>
+
+<ul>
+<li>Search all public Eventbrite events.</li>
+<li>
+<code>$params</code>: (<em>array, optional</em>) <a href="http://developer.eventbrite.com/docs/event-search/">Accepted parameters and values</a>. Note that not passing any parameters, while technically valid, will usually result in timeout errors. Limiting the search to user-owned events can be done by passing <code>user.id =&gt; Eventbrite_API::$instance-&gt;get_token()-&gt;get_meta( 'user_id' )</code>.</li>
+<li>
+<code>$force</code>: (<em>boolean, optional</em>) Force a fresh API call, ignoring any available transient. Default is <code>false</code>.</li>
+</ul>
+
+<p><strong><code>eventbrite_get_support_args()</code></strong></p>
+
+<ul>
+<li>Get the arguments declared in the theme's <code>add_theme_support()</code> call for Eventbrite.</li>
+<li>Use <code>eventbrite_get_support_args()-&gt;index</code> and <code>eventbrite_get_support_args()-&gt;single</code> to get a theme's template files.</li>
+<li>Returns: (<em>object|false</em>) Arguments passed and their values, or <code>false</code> if support isn't declared (or no arguments were passed during declaration).</li>
+</ul>
+
+<h4>
+<a id="template-tags" class="anchor" href="#template-tags" aria-hidden="true"><span class="octicon octicon-link"></span></a>Template Tags</h4>
+
+<p><strong><code>eventbrite_is_single( $query )</code></strong></p>
+
+<ul>
+<li>Determine if we on an Eventbrite single view.</li>
+<li>
+<code>$query</code>: (<em>object, optional</em>) Accepts an <code>Eventbrite_Query</code> object.</li>
+<li>Returns: (<em>boolean</em>) <code>true</code> if the passed or current query is for an event single view, <code>false</code> otherwise.</li>
+</ul>
+
+<p><strong><code>eventbrite_is_event( $post )</code></strong></p>
+
+<ul>
+<li>Check if a given or current post is an Eventbrite event.</li>
+<li>
+<code>$post</code>: (<em>object or integer, optional</em>) Accepts a post/event object, or an ID.</li>
+<li>Returns: (<em>boolean</em>) <code>true</code> if it's an Eventbrite_Event object or the ID of a valid event, <code>false</code> otherwise.</li>
+</ul>
+
+<p><strong><code>eventbrite_paging_nav( $events )</code></strong></p>
+
+<ul>
+<li>Output pagination HTML for the index views.</li>
+<li>Based on <code>wp_paginate_links()</code>.</li>
+<li>
+<code>$events</code>: (<em>object, required</em>) Requires a valid <code>Eventbrite_Query</code> object. This avoids having to mess with the <code>$wp_query</code> object.</li>
+</ul>
+
+<p><strong><code>eventbrite_event_meta()</code></strong></p>
+
+<ul>
+<li>Outputs meta information for an event: event time, venue, organizer, and a Details link to the event single view.</li>
+<li>On the single view, the Details link goes to the event's page on eventbrite.com.</li>
+</ul>
+
+<p><strong><code>eventbrite_event_time()</code></strong></p>
+
+<ul>
+<li>Output an event's local time, with date, starting, and end time.</li>
+<li>Example: <code>December 8 2014, 7:00 PM - 10:00 PM</code>
+</li>
+</ul>
+
+<p><strong><code>eventbrite_event_venue()</code></strong></p>
+
+<ul>
+<li>Access the current event's venue properties: <code>address</code>, <code>resource_uri</code>, <code>id</code>, <code>name</code>, <code>latitude</code>, <code>longitude</code>
+</li>
+</ul>
+
+<p><strong><code>eventbrite_event_organizer()</code></strong></p>
+
+<ul>
+<li>Access the current event's organizer properties: <code>description</code>, <code>logo</code>, <code>resource_uri</code>, <code>id</code>, <code>name</code>, <code>url</code>, <code>num_past_events</code>, <code>num_future_events</code>
+</li>
+</ul>
+
+<p><strong><code>eventbrite_event_start()</code></strong></p>
+
+<ul>
+<li>Access the current event's start time properties: <code>timezone</code>, <code>local</code>, <code>utc</code>
+</li>
+</ul>
+
+<p><strong><code>eventbrite_event_end()</code></strong></p>
+
+<ul>
+<li>Access the current event's end time properties: <code>timezone</code>, <code>local</code>, <code>utc</code>
+</li>
+</ul>
+
+<p><strong><code>eventbrite_ticket_form_widget()</code></strong></p>
+
+<ul>
+<li>Output ticket information by <code>&lt;iframe&gt;</code> with eventbrite.com's ticket form widget.</li>
+<li><a href="http://help.eventbrite.com/customer/en_us/portal/articles/428470-how-to-sell-eventbrite-tickets-registrations-on-your-website-using-embeddable-widgets">Eventbrite widgets documentation</a></li>
+</ul>
+
+<p><strong><code>eventbrite_ticket_form_widget_height()</code></strong></p>
+
+<ul>
+<li>Calculates what height an event's ticket form <code>&lt;iframe&gt;</code> should be (pretty rough).</li>
+<li>Height is calculated with a rough assortment of variables; <a href="https://github.com/Automattic/eventbrite-api/blob/master/inc/functions.php#L452">see here for details</a>.</li>
+</ul>
+
+<p><strong><code>eventbrite_event_eb_url()</code></strong></p>
+
+<ul>
+<li>Get the URL to the current event on eventbrite.com.</li>
+<li>Returns: (<em>string</em>) The eventbrite.com URL</li>
+</ul>
+
+<p><strong><code>eventbrite_is_multiday_event()</code></strong></p>
+
+<ul>
+<li>Checks if the current event spans two or more calendar days (based on UTC time).</li>
+<li>Returns: (<em>boolean</em>) <code>true</code> if the date is different for the start and end times, <code>false</code> if they're the same.</li>
+</ul>
+
+<h2>
+<a id="filters" class="anchor" href="#filters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Filters</h2>
+
+<p><strong><code>eventbrite_templates</code></strong></p>
+
+<ul>
+<li>Adjust the array of valid Eventbrite templates, used for determining body classes.</li>
+</ul>
+
+<p><strong><code>eventbrite_meta_separator</code></strong></p>
+
+<ul>
+<li>Define the markup used to separate event meta.</li>
+<li>Default: <code>&lt;span class="meta-separator"&gt; &amp;middot; &lt;/span&gt;</code>
+</li>
+</ul>
+
+<p><strong><code>eventbrite_event_meta</code></strong></p>
+
+<ul>
+<li>Filter the final HTML for an event's meta info.</li>
+</ul>
+
+<p><strong><code>eventbrite_paginate_links_args</code></strong></p>
+
+<ul>
+<li>Adjust the arguments passed to the <code>paginate_links()</code> template tag (used by <code>eventbrite_paging_nav()</code>).</li>
+</ul>
+
+<p><strong><code>eventbrite_event_eb_url</code></strong></p>
+
+<ul>
+<li>Filter an event's URL to its eventbrite.com page.</li>
+</ul>
+
+<p><strong><code>eventbrite_event_venue</code></strong></p>
+
+<ul>
+<li>Modify the current event's venue properties (see template tag above).</li>
+</ul>
+
+<p><strong><code>eventbrite_event_organizer</code></strong></p>
+
+<ul>
+<li>Modify the current event's organizer properties (see template tag above).</li>
+</ul>
+
+<p><strong><code>eventbrite_event_start</code></strong></p>
+
+<ul>
+<li>Modify the current event's start time properties (see template tag above).</li>
+</ul>
+
+<p><strong><code>eventbrite_event_end</code></strong></p>
+
+<ul>
+<li>Modify the current event's end time properties (see template tag above).</li>
+</ul>
+
+<p><strong><code>eventbrite_ticket_form_widget</code></strong></p>
+
+<ul>
+<li>Filter the final HTML for the ticket form widgets.</li>
+</ul>
+
+<p><strong><code>eventbrite_ticket_form_widget_height</code></strong></p>
+
+<ul>
+<li>Adjust the <code>&lt;iframe&gt;</code> height used when outputting a ticket form widget.</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Eventbrite-api maintained by <a href="https://github.com/Automattic">Automattic</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
