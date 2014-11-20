@@ -240,7 +240,7 @@ function eventbrite_event_meta() {
 			),
 		) ),
 		esc_url( $url ),
-		esc_html__( 'More details', 'eventbrite_api' )
+		esc_html__( 'Details', 'eventbrite_api' )
 	);
 
 	// Assemble our HTML. Yugly.
