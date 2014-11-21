@@ -11,6 +11,20 @@ License: GPL v2 or newer <https://www.gnu.org/licenses/gpl.txt>
 */
 
 /**
+ * Set our token option on activation if an Eventbrite connection already exists in Keyring.
+ */
+function eventbrite_check_existing_token() {
+	// Get any Eventbrite tokens we may already have.
+	$tokens = Keyring_SingleStore::init()->get_tokens( array( 'service'=>'eventbrite' ) );
+
+	// If we have one, just use the first.
+	if ( ! empty( $tokens[0] ) ) {
+		update_option( 'eventbrite_api_token', $tokens[0]->unique_id );
+	}
+}
+register_activation_hook( __FILE__, 'eventbrite_check_existing_token' );
+
+/**
  * Load our API on top of the Keyring Eventbrite service.
  */
 function eventbrite_api_load_keyring_service() {
