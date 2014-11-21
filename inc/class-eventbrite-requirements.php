@@ -65,42 +65,25 @@ class Eventbrite_Requirements {
 
 		// Keyring is not already installed.
 		if ( ! file_exists( plugin_dir_path( dirname( __DIR__ ) ) . 'keyring' ) ) {
-			$notice = sprintf( __( 'Eventbrite needs the %1$s to work. %2$s.', 'eventbrite-api' ),
-				sprintf( '<a href="https://wordpress.org/plugins/keyring/">%s</a>',
-					esc_html__( 'Keyring plugin', 'eventbrite-api' )
-				),
-				sprintf( '<a href="%s" class="thickbox">%s</a>',
-					esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=keyring&TB_iframe=true&width=600&height=550' ) ),
-					esc_html__( 'Install Keyring', 'eventbrite-api' )
-				)
+			$notice = sprintf( __( 'Eventbrite needs the <a href="%1$s">Keyring plugin</a> to work. <a href="%2$s" class="thickbox">Install Keyring</a>.', 'eventbrite-api' ),
+				'https://wordpress.org/plugins/keyring/',
+				esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=keyring&TB_iframe=true&width=600&height=550' ) )
 			);
 		}
 
 		// Keyring is installed, just not activated.
 		elseif ( ! is_plugin_active( 'keyring/keyring.php' ) ) {
-			$notice = sprintf( __( 'Eventbrite needs the %1$s activated, with a connection to eventbrite.com. %2$s.', 'eventbrite-api' ),
-				sprintf( '<a href="https://wordpress.org/plugins/keyring/">%s</a>',
-					esc_html__( 'Keyring plugin', 'eventbrite-api' )
-				),
-				sprintf( '<a href="%s" class="thickbox">%s</a>',
-					esc_url( wp_nonce_url( network_admin_url( 'plugins.php?action=activate&plugin=keyring/keyring.php&plugin_status=all&paged=1&s' ), 'activate-plugin_keyring/keyring.php' ) ),
-					esc_html__( 'Activate Keyring', 'eventbrite-api' )
-				)
+			$notice = sprintf( __( 'Eventbrite needs the <a href="%1$s">Keyring plugin</a> activated, with a connection to eventbrite.com. <a href="%2$s">Activate Keyring</a>.', 'eventbrite-api' ),
+				'https://wordpress.org/plugins/keyring/',
+				esc_url( wp_nonce_url( network_admin_url( 'plugins.php?action=activate&plugin=keyring/keyring.php&plugin_status=all&paged=1&s' ), 'activate-plugin_keyring/keyring.php' ) )
 			);
 		}
 
 		// We don't have an active Keyring connection to Eventbrite.
 		elseif ( ! self::has_active_connection() ) {
-			$cta_url = get_admin_url( null, 'tools.php?page=keyring' );
-
-			$notice = sprintf( __( 'The Eventbrite API plugin needs a working connection to eventbrite.com. We recommend first %1$s to your eventbrite.com account. %2$s.', 'eventbrite-api' ),
-				sprintf( '<a href="https://www.eventbrite.com/login/">%s</a>',
-					esc_html__( 'logging in', 'eventbrite-api' )
-				),
-				sprintf( '<a href="%s">%s</a>',
-					esc_url( $cta_url ),
-					esc_html__( 'Connect to Eventbrite', 'eventbrite-api' )
-				)
+			$notice = sprintf( __( 'The Eventbrite API plugin needs a working connection to eventbrite.com. We recommend first <a href="%1$s">logging in</a> to your eventbrite.com account. <a href="%2$s">Connect to Eventbrite</a>.', 'eventbrite-api' ),
+				'https://www.eventbrite.com/login/',
+				esc_url( get_admin_url( null, 'tools.php?page=keyring' ) )
 			);
 		}
 
