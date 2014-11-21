@@ -98,8 +98,7 @@ class Eventbrite_Event {
 	 * @static
 	 * @access public
 	 *
-	 * @param int $event_id Event ID.
-	 * @uses eventbrite_get_event()
+	 * @param int $event_id Event ID on eventbrite.com (commonly ten digits).
 	 * @return Eventbrite_Event|bool Eventbrite_Event object, false otherwise.
 	 */
 	public static function get_instance( $event_id ) {
@@ -125,7 +124,7 @@ class Eventbrite_Event {
 	 *
 	 * @access public
 	 *
-	 * @param object $event event object.
+	 * @param object $event An event object from the API results.
 	 */
 	public function __construct( $event ) {
 		foreach ( get_object_vars( $event ) as $key => $value )

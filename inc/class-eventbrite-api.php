@@ -16,14 +16,6 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 
 	/**
 	 * Constructor.
-	 *
-	 * @uses Keyring_Service_Eventbrite::__construct()
-	 * @uses Eventbrite_API::$instance
-	 * @uses get_option()
-	 * @uses Eventbrite_API::set_token()
-	 * @uses Keyring::init()
-	 * @uses Eventbrite_API::define_endpoints()
-	 * @uses add_action()
 	 */
 	function __construct() {
 		parent::__construct();
@@ -43,9 +35,6 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 	 *
 	 * @access public
 	 *
-	 * @uses   get_option()
-	 * @uses   Eventbrite_API::set_token()
-	 * @uses   Keyring::init()
 	 * @return string The user's token
 	 */
 	public function get_token() {
@@ -61,9 +50,6 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 	 * Define API endpoints.
 	 *
 	 * @access private
-	 *
-	 * @uses Eventbrite_API::$instance
-	 * @uses Eventbrite_API::set_endpoint()
 	 */
 	private function define_endpoints() {
 		$token = self::$instance->get_token();
@@ -80,14 +66,9 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 	 *
 	 * @access public
 	 *
-	 * @param  string $endpoint
-	 * @param  array $query_params
-	 * @param  integer $object_id
-	 * @uses   Eventbrite_API::get_token()
-	 * @uses   Eventbrite_API::$instance
-	 * @uses   trailingslashit()
-	 * @uses   absint()
-	 * @uses   add_query_arg()
+	 * @param  string $endpoint API endpoint supported by the plugin.
+	 * @param  array $query_params Parameters to be passed with the API call.
+	 * @param  integer $object_id Eventbrite event ID used when requesting a single event from the API.
 	 * @return object API response if successful, error (Keyring_Error or WP_Error) otherwise
 	 */
 	public static function call( $endpoint, $query_params = array(), $object_id = null ) {
@@ -118,10 +99,9 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 	/**
 	 * Save the token for our Keyring connection.
 	 *
-	 * @param string $service
-	 * @param int $id
-	 * @param object $request_token
-	 * @uses  update_option()
+	 * @param string $service The Keyring service being checked.
+	 * @param int $id The current user's token.
+	 * @param object $request_token Keyring_Request_Token object containing info required for the service's API call.
 	 */
 	function keyring_connection_verified( $service, $id, $request_token ) {
 		if ( 'eventbrite' != $service || 'eventbrite' != $request_token->name ) {
@@ -134,8 +114,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 	/**
 	 * Remove the stored token when the Keyring connection is lost.
 	 *
-	 * @param string $service
-	 * @uses  delete_option()
+	 * @param string $service The Keyring service connection being deleted.
 	 */
 	function keyring_connection_deleted( $service ) {
 		if ( 'eventbrite' != $service ) {
