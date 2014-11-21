@@ -19,6 +19,11 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 	 */
 	function __construct() {
 		parent::__construct();
+
+		// Remove duplicate UI elements caused by constructors.
+		remove_action( 'keyring_eventbrite_manage_ui', array( $this, 'basic_ui' ) );
+		remove_filter( 'keyring_eventbrite_basic_ui_intro', array( $this, 'basic_ui_intro' ) );
+
 		self::$instance = $this;
 
 		$token = get_option( 'eventbrite_api_token' );
