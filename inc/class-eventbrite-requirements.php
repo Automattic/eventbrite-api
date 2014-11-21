@@ -32,7 +32,18 @@ class Eventbrite_Requirements {
 	 * @return bool True if a valid user token exists, false otherwise.
 	 */
 	public static function has_active_connection() {
-		return ( class_exists( 'Eventbrite_API', false ) && Eventbrite_API::$instance->get_token() );
+		// Definitely no connection if Keyring isn't activated.
+		if ( ! class_exists( 'Keyring_SingleStore' ) ) {
+			return false;
+		}
+
+		// Let's check for Eventbrite connections.
+		$tokens = Keyring_SingleStore::init()->get_tokens( array( 'service'=>'eventbrite' ) );
+		if ( ! empty( $tokens[0] ) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
