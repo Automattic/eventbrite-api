@@ -43,7 +43,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access protected
 	 *
-	 * @param  mixed $query
+	 * @param  mixed $query Query string.
 	 * @return array Query arguments
 	 */
 	protected function process_query_args( $query ) {
@@ -179,7 +179,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access protected
 	 *
-	 * @param  null|object $event
+	 * @param  null|object $event An event object from the API results.
 	 * @return object Eventbrite_Event object.
 	 */
 	protected function create_eventbrite_event( $event = null ) {
@@ -240,7 +240,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access protected
 	 *
-	 * @param  object Event
+	 * @param  object $event A single event from the API call results.
 	 * @return bool True with no ID match, false if the ID is in the array of events to be removed.
 	 */
 	protected function filter_by_post_not_in( $event ) {
@@ -253,7 +253,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access protected
 	 *
-	 * @param  object Event
+	 * @param  object $event A single event from the API call results.
 	 * @return bool True if properties match, false otherwise.
 	 */
 	protected function filter_by_organizer( $event ) {
@@ -265,7 +265,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access protected
 	 *
-	 * @param  object Event
+	 * @param  object $event A single event from the API call results.
 	 * @return bool True if properties match, false otherwise.
 	 */
 	protected function filter_by_venue( $event ) {
@@ -277,7 +277,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param  string $url
+	 * @param  string $url The original unfiltered permalink.
 	 * @return string Permalink URL
 	 */
 	public function filter_event_permalink( $url ) { // eg. http://mysite.com/events/july-test-drive-11829569561
@@ -298,7 +298,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param  null    $check
+	 * @param  null    $check The filter's default value.
 	 * @param  integer $object_id Event ID.
 	 * @param  string  $meta_key Name of meta key being checked.
 	 * @return string URL of event logo passed from the API.
@@ -321,8 +321,8 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param  string $html
-	 * @param  int $post_id
+	 * @param  string $html Original unfiltered HTML for a featured image.
+	 * @param  int $post_id The current event ID.
 	 * @return string HTML <img> tag for the Eventbrite logo linked to the event single view.
 	 */
 	public function filter_event_logo( $html, $post_id ) {
@@ -378,7 +378,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param  string $name Author name
+	 * @param  string $url Author archive URL, based on the current page or post.
 	 * @return string Organizer name
 	 */
 	public function filter_author_url( $url ) {
@@ -401,7 +401,7 @@ class Eventbrite_Query extends WP_Query {
 	 *
 	 * @access public
 	 *
-	 * @param  string $name Author name
+	 * @param  string $name Author name, based on the current page or post.
 	 * @return string Organizer name
 	 */
 	public function filter_author_name( $name ) {

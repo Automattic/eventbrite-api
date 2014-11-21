@@ -9,8 +9,8 @@ if ( ! function_exists( 'eventbrite_get_events' ) ) :
 /**
  * Get an array of Eventbrite events, in the format expected by Eventbrite_Event
  *
- * @param  array $params
- * @param  bool $force Force an API call, don't use cache
+ * @param  array $params Parameters for the user_owned_events endpoint to pass during the API call.
+ * @param  bool $force Force an API call, don't use cache.
  * @return object API results
  */
 function eventbrite_get_events( $params = array(), $force = false ) {
@@ -22,8 +22,8 @@ if ( ! function_exists( 'eventbrite_get_event' ) ) :
 /**
  * Retrieves event data given an event ID.
  *
- * @param  int $id
- * @param  bool $force Force an API call, don't use cache
+ * @param  int $id The Eventbrite event ID to be requested.
+ * @param  bool $force Force an API call, don't use cache.
  * @return object Event
  */
 function eventbrite_get_event( $id = false, $force = false ) {
@@ -42,8 +42,8 @@ if ( ! function_exists( 'eventbrite_search' ) ) :
  * Search Eventbrite public events by any user.
  * Note that not limiting the scope of the search somehow will likely result in timeout errors.
  *
- * @param  array $params
- * @param  bool $force Force an API call, don't use cache
+ * @param  array $params Parameters for the event_search endpoint, to be passed during the API call.
+ * @param  bool $force Force an API call, don't use cache.
  * @return object API results
  */
 function eventbrite_search( $params = array(), $force = false ) {
@@ -55,8 +55,7 @@ if ( ! function_exists( 'eventbrite_is_event' ) ) :
 /**
  * Determine if a given object, given ID, or the current post is an Eventbrite event.
  *
- * @param  mixed $post
- * @global $post
+ * @param  mixed $post The current post object or event ID needed by Eventbrite_Event.
  * @return bool True if it's an Eventbrite event, false otherwise.
  */
 function eventbrite_is_event( $post = null ) {
@@ -85,7 +84,7 @@ if ( ! function_exists( 'eventbrite_paging_nav' ) ) :
 /**
  * Paging navigation on event listings, using paginate_links().
  *
- * @param object $events
+ * @param object $events The current Eventbrite_Query object requiring paging navigation.
  */
 function eventbrite_paging_nav( $events = null ) {
 	// Bail if we don't have a valid Eventbrite_Query object.
@@ -137,7 +136,7 @@ if ( ! function_exists( 'eventbrite_is_single' ) ) :
 /**
  * Determine if a query is for an event single view.
  *
- * @param  mixed $query
+ * @param  mixed $query Null, or an Eventbrite_Query object.
  * @return bool True if an event single view, false otherwise.
  */
 function eventbrite_is_single( $query = null ) {
@@ -345,9 +344,9 @@ if ( ! function_exists( 'eventbrite_edit_post_link' ) ) :
 /**
  * Output a link to edit the current event on eventbrite.com.
  *
- * @param  string $text
- * @param  string $before
- * @param  string $after
+ * @param string $text Anchor text.
+ * @param string $before Display before edit link.
+ * @param string $after Display after edit link.
  */
 function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 	// Assemble the edit URL.

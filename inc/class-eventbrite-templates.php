@@ -27,8 +27,8 @@
 	 *
 	 * @access public
 	 *
-	 * @param array $query_vars
-	 * @return array Query vars
+	 * @param array $query_vars Core default query vars.
+	 * @return array Query vars inlcuding our Eventbrite-specific vars.
 	 */
 	public function add_query_vars( $query_vars ) {
 		$query_vars = array_merge( $query_vars, array( 'eventbrite_id', 'organizer_id', 'venue_id' ) );
@@ -86,8 +86,8 @@
 	 *
 	 * @access public
 	 *
-	 * @param  array $params
-	 * @return array $params
+	 * @param  array $params List of available page templates, or data being saved via wp_insert_post_data.
+	 * @return array $params Same as input. The hook is just used to manipulate the page template cache.
 	 */
 	public function inject_page_template( $params ) {
 		if ( ! isset( eventbrite_get_support_args()->index ) ) {
@@ -118,7 +118,7 @@
 	 *
 	 * @access public
 	 *
-	 * @param  string $template
+	 * @param  string $template The template to be used according to the Template Hierarchy.
 	 * @return string Template file name.
 	 */
 	public function check_templates( $template ) {

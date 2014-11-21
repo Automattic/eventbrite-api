@@ -31,10 +31,10 @@ class Eventbrite_Manager {
 	 *
 	 * @access public
 	 *
-	 * @param string $endpoint
-	 * @param array $params
-	 * @param int|string|bool $id
-	 * @param bool $force
+	 * @param string $endpoint Valid Eventbrite v3 API endpoint.
+	 * @param array $params Parameters passed to the API during a call.
+	 * @param int|string|bool $id A specific event ID used for calls to the event_details endpoint.
+	 * @param bool $force Force a fresh API call, ignoring any existing transient.
 	 * @return object Request results
 	 */
 	public function request( $endpoint, $params = array(), $id = false, $force = false ) {
@@ -75,9 +75,9 @@ class Eventbrite_Manager {
 	 *
 	 * @access protected
 	 *
-	 * @param array $params
-	 * @param string $endpoint
-	 * @return bool True if all params were able to be validated, false otherwise
+	 * @param string $endpoint Endpoint to be called.
+	 * @param array $params Parameters to be passed during the API call.
+	 * @return bool True if all params were able to be validated, false otherwise.
 	 */
 	protected function validate_endpoint_params( $endpoint, $params ) {
 		// Get valid request params.
@@ -126,8 +126,8 @@ class Eventbrite_Manager {
 	 *
 	 * @access public
 	 *
-	 * @param array $params
-	 * @param bool $force
+	 * @param array $params Parameters to be passed during the API call.
+	 * @param bool $force Force a fresh API call, ignoring any existing transient.
 	 * @return object Eventbrite_Manager
 	 */
 	public function do_event_search( $params = array(), $force = false ) {
@@ -153,8 +153,8 @@ class Eventbrite_Manager {
 	 *
 	 * @access public
 	 *
-	 * @param array $params
-	 * @param bool $force
+	 * @param array $params Parameters to be passed during the API call.
+	 * @param bool $force Force a fresh API call, ignoring any existing transient.
 	 * @return object Eventbrite_Manager
 	 */
 	public function get_user_owned_events( $params = array(), $force = false ) {
@@ -179,8 +179,8 @@ class Eventbrite_Manager {
 	 *
 	 * @access public
 	 *
-	 * @param int|string|bool $id
-	 * @param bool $force
+	 * @param int|string|bool $id Eventbrite event ID (commonly a ten digit integer).
+	 * @param bool $force Force a fresh API call, ignoring any existing transient.
 	 * @return object Eventbrite_Manager
 	 */
 	public function get_event( $id = false, $force = false ) {
@@ -216,9 +216,9 @@ class Eventbrite_Manager {
 	 *
 	 * @access protected
 	 *
-	 * @param string $endpoint
-	 * @param array $params
-	 * @return mixed Transient if found, false if not
+	 * @param string $endpoint Endpoint being called.
+	 * @param array $params Parameters to be passed during the API call.
+	 * @return mixed Transient if found, false if not.
 	 */
 	protected function get_cache( $endpoint, $params ) {
 		return get_transient( $this->get_transient_name( $endpoint, $params ) ); 
@@ -229,8 +229,8 @@ class Eventbrite_Manager {
 	 *
 	 * @access protected
 	 *
-	 * @param string $endpoint
-	 * @param array $params
+	 * @param string $endpoint Endpoint being called.
+	 * @param array $params Parameters to be passed during the API call.
 	 * @return string
 	 */
 	protected function get_transient_name( $endpoint, $params ) {
@@ -336,7 +336,7 @@ class Eventbrite_Manager {
 	 *
 	 * @access protected
 	 *
-	 * @param object $api_event
+	 * @param object $api_event A single event from the API results.
 	 * @return object Event with Eventbrite_Event keys.
 	 */
 	protected function map_event_keys( $api_event ) {
@@ -363,6 +363,8 @@ class Eventbrite_Manager {
 	 * Add a transient name to the list of registered transients, stored in the 'eventbrite_api_transients' option.
 	 *
 	 * @access protected
+	 *
+	 * @param string $transient_name The transient name/key used to store the transient.
 	 */
 	protected function register_transient( $transient_name ) {
 		// Get any existing list of transients.
@@ -381,6 +383,9 @@ class Eventbrite_Manager {
 	 * Flush all transients.
 	 *
 	 * @access public
+	 *
+	 * @param string $service The Keyring service that has lost its connection.
+	 * @param string $request The Keyring action that's been called ("delete", not used).
 	 */
 	public function flush_transients( $service, $request ) {
 		// Bail if it wasn't an Eventbrite connection that got deleted.
@@ -411,7 +416,6 @@ new Eventbrite_Manager;
 /**
  * Allow themes and plugins a simple function to access Eventbrite_Manager methods and properties.
  *
- * @global Eventbrite_Manager::instance()
  * @return object Eventbrite_Manager
  */
 function eventbrite() {
