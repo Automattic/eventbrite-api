@@ -188,7 +188,7 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
 **`eventbrite_meta_separator`**
 
 * Define the markup used to separate event meta.
-* Default: `<span class="meta-separator"> &middot; </span>`
+* Default: `<span class="sep"> &middot; </span>`
 
 **`eventbrite_event_meta`**
 
