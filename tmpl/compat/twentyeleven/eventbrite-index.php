@@ -41,7 +41,7 @@ get_header(); ?>
 							</div><!-- .entry-content -->
 
 							<footer class="entry-meta">
-								<?php eventbrite_edit_post_link( __( 'Edit', 'eventbrite_api' ), '<span class="meta-separator"> &middot; </span><span class="edit-link">', '</span>' ); ?>
+								<?php eventbrite_edit_post_link( __( 'Edit', 'eventbrite_api' ), '<span class="edit-link">', '</span>' ); ?>
 							</footer><!-- .entry-meta -->
 						</article><!-- #post-## -->
 
