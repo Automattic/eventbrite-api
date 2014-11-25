@@ -106,12 +106,6 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
 * `$params`: (*array, optional*) [Accepted parameters and values](http://developer.eventbrite.com/docs/event-search/). Note that not passing any parameters, while technically valid, will usually result in timeout errors. Limiting the search to user-owned events can be done by passing `user.id => Eventbrite_API::$instance->get_token()->get_meta( 'user_id' )`.
 * `$force`: (*boolean, optional*) Force a fresh API call, ignoring any available transient. Default is `false`.
 
-**`eventbrite_get_support_args()`**
-
-* Get the arguments declared in the theme's `add_theme_support()` call for Eventbrite.
-* Use `eventbrite_get_support_args()->index` and `eventbrite_get_support_args()->single` to get a theme's template files.
-* Returns: (*object|false*) Arguments passed and their values, or `false` if support isn't declared (or no arguments were passed during declaration).
-
 #### Template Tags
 
 **`eventbrite_is_single( $query )`**

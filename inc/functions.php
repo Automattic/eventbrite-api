@@ -120,18 +120,6 @@ function eventbrite_paging_nav( $events = null ) {
 <?php }
 endif;
 
-if ( ! function_exists( 'eventbrite_get_support_args' ) ) :
-/**
- * Get the arguments being passed to add_theme_support().
- *
- * @return mixed Eventbrite theme support arguments, or false if no theme support.
- */
-function eventbrite_get_support_args() {
-	$support = get_theme_support( 'eventbrite' );
-	return ( isset( $support[0] ) ) ? (object) $support[0] : false;
-}
-endif;
-
 if ( ! function_exists( 'eventbrite_is_single' ) ) :
 /**
  * Determine if a query is for an event single view.

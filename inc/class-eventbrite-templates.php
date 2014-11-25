@@ -48,10 +48,9 @@
 		$eb_rules = array();
 
 		// Get all pages that are using the Eventbrite page template.
-		$template = ( isset( eventbrite_get_support_args()->index ) ) ? eventbrite_get_support_args()->index : 'eventbrite-index.php';
 		$pages = get_pages(array(
 			'meta_key' => '_wp_page_template',
-			'meta_value' => $template,
+			'meta_value' => 'eventbrite-index.php',
 		));
 
 		// If any pages are using the template, add rewrite rules for each of them.
@@ -90,25 +89,23 @@
 	 * @return array $params Same as input. The hook is just used to manipulate the page template cache.
 	 */
 	public function inject_page_template( $params ) {
-		if ( ! isset( eventbrite_get_support_args()->index ) ) {
-			// Create the key used for the themes cache
-			$cache_key = 'page_templates-' . md5( trailingslashit( get_theme_root() ) . get_stylesheet() );
+		// Create the key used for the themes cache
+		$cache_key = 'page_templates-' . md5( trailingslashit( get_theme_root() ) . get_stylesheet() );
 
-			// Retrieve the cache listing. Prepare an empty array if it's empty.
-			$templates = wp_get_theme()->get_page_templates();
-			if ( empty( $templates ) ) {
-			        $templates = array();
-			}
-
-			// Remove the original cache.
-			wp_cache_delete( $cache_key , 'themes');
-
-			// Add our template to any existing templates.
-			$templates['eventbrite-index.php'] = 'Eventbrite Events';
-
-			// Update the cache that includes our template.
-			wp_cache_add( $cache_key, $templates, 'themes', 1800 );
+		// Retrieve the cache listing. Prepare an empty array if it's empty.
+		$templates = wp_get_theme()->get_page_templates();
+		if ( empty( $templates ) ) {
+		        $templates = array();
 		}
+
+		// Remove the original cache.
+		wp_cache_delete( $cache_key , 'themes');
+
+		// Add our template to any existing templates.
+		$templates['eventbrite-index.php'] = 'Eventbrite Events';
+
+		// Update the cache that includes our template.
+		wp_cache_add( $cache_key, $templates, 'themes', 1800 );
 
 		return $params;
 	}
@@ -129,17 +126,17 @@
 				$template = plugin_dir_path( __DIR__ ) . 'tmpl/compat/' . get_template() . '/eventbrite-single.php';
 			}
 
-			// The theme defined a single event template, let's use that.
-			elseif ( isset( eventbrite_get_support_args()->single ) ) {
-				$template = esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->single );
-			}
-
-			// The theme declares support but no single template, maybe it's got one in the default location.
+			// The theme declares support, look for an Eventbrite single template.
 			elseif ( current_theme_supports( 'eventbrite' ) && file_exists( get_stylesheet_directory() . '/eventbrite/eventbrite-single.php' ) ) {
 				$template = esc_url( get_stylesheet_directory() . '/eventbrite/eventbrite-single.php' );
 			}
 
-			// No template specified by the theme, and it's not a default theme, so use the one included with the plugin.
+			// Oh, maybe the theme is a child theme; let's check the parent theme for a template too.
+			elseif ( current_theme_supports( 'eventbrite' ) && file_exists( get_template_directory() . '/eventbrite/eventbrite-single.php' ) ) {
+				$template = esc_url( get_template_directory() . '/eventbrite/eventbrite-single.php' );
+			}
+
+			// No template was found, and it's not a default theme, so use the one included with the plugin.
 			else {
 				$template = plugin_dir_path( __DIR__ ) . 'tmpl/eventbrite-single.php';
 			}
@@ -152,14 +149,14 @@
 				$template = plugin_dir_path( __DIR__ ) . 'tmpl/compat/' . get_template() . '/eventbrite-index.php';
 			}
 
-			// The theme defined an index template, let's use that.
-			elseif ( isset( eventbrite_get_support_args()->index ) ) {
-				$template = esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->index );
-			}
-
-			// The theme declares support but no index template, maybe it's got one in the default location.
+			// The theme declares support, looks for an Eventbrite index template.
 			elseif ( current_theme_supports( 'eventbrite' ) && file_exists( get_stylesheet_directory() . '/eventbrite/eventbrite-index.php' ) ) {
 				$template = esc_url( get_stylesheet_directory() . '/eventbrite/eventbrite-index.php' );
+			}
+
+			// Let a child theme inherit its parent's index template.
+			elseif ( current_theme_supports( 'eventbrite' ) && file_exists( get_template_directory() . '/eventbrite/eventbrite-index.php' ) ) {
+				$template = esc_url( get_template_directory() . '/eventbrite/eventbrite-index.php' );
 			}
 
 			// Nothing in the theme, and it's not a default theme; just use our regular template.
@@ -168,7 +165,6 @@
 			}
 		}
 
-		// We have nothing Eventbrite-related, so go with the Template Hierarchy results.
 		return $template;
 	}
 
@@ -210,26 +206,13 @@
 			unset( $classes[ $key ] );
 		}
 
-		// Check for an Eventbrite index view, either from our plugin or the theme.
-		else {
-			// Get any template for the current page being displayed.
-			$template = get_post_meta( get_the_ID(), '_wp_page_template', true );
-
-			// Determine possible templates from the plugin and theme.
-			$eventbrite_templates = array( 'eventbrite-index.php' );
-			if ( ! empty( eventbrite_get_support_args()->index ) ) {
-				$eventbrite_templates[] = eventbrite_get_support_args()->index;
-			}
-			$eventbrite_templates = apply_filters( 'eventbrite_templates', $eventbrite_templates, $template );
-
-			// If there's a match, adjust body classes.
-			if ( in_array( $template, $eventbrite_templates ) ) {
-				$classes[] = 'archive';
-				$classes[] = 'archive-eventbrite';
-				foreach ( array( 'page', 'singular' ) as $value ) {
-					$key = array_search( $value, $classes );
-					unset( $classes[ $key ] );
-				}
+		// Check for an Eventbrite index view.
+		elseif ( 'eventbrite-index.php' == get_post_meta( get_the_ID(), '_wp_page_template', true ) ) {
+			$classes[] = 'archive';
+			$classes[] = 'archive-eventbrite';
+			foreach ( array( 'page', 'singular' ) as $value ) {
+				$key = array_search( $value, $classes );
+				unset( $classes[ $key ] );
 			}
 		}
 
