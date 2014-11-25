@@ -33,6 +33,7 @@ class Eventbrite_Query extends WP_Query {
 		add_filter( 'post_class', array( $this, 'filter_post_classes' ) );
 		add_filter( 'author_link', array( $this, 'filter_author_url' ) );
 		add_filter( 'the_author', array( $this, 'filter_author_name' ) );
+		remove_filter( 'the_content', 'wpautop' );
 
 		// Put our query in motion.
 		$this->query( $query );
