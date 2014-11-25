@@ -124,14 +124,19 @@
 	public function check_templates( $template ) {
 		// If we have an 'eventbrite_id' query var, we're dealing with an event single view.
 		if ( get_query_var( 'eventbrite_id' ) ) {
+			// A default theme is being used; we've got special templates for those.
+			if ( $this->default_theme_activated() ) {
+				$template = plugin_dir_path( __DIR__ ) . 'tmpl/compat/' . get_template() . '/eventbrite-single.php';
+			}
+
 			// The theme defined a single event template, let's use that.
-			if ( isset( eventbrite_get_support_args()->single ) ) {
+			elseif ( isset( eventbrite_get_support_args()->single ) ) {
 				$template = esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->single );
 			}
 
-			// A default theme is being used; we've got special templates for those.
-			elseif ( $this->default_theme_activated() ) {
-				$template = plugin_dir_path( __DIR__ ) . 'tmpl/compat/' . get_template() . '/eventbrite-single.php';
+			// The theme declares support but no single template, maybe it's got one in the default location.
+			elseif ( current_theme_supports( 'eventbrite' ) && file_exists( get_stylesheet_directory() . '/eventbrite/eventbrite-single.php' ) ) {
+				$template = esc_url( get_stylesheet_directory() . '/eventbrite/eventbrite-single.php' );
 			}
 
 			// No template specified by the theme, and it's not a default theme, so use the one included with the plugin.
@@ -140,11 +145,21 @@
 			}
 		}
 
-		// Check if we have a page using the plugin's event listing template. An events template defined in the theme will kick in normally.
+		// Check if we have a page using the Eventbrite event listing template.
 		elseif ( 'eventbrite-index.php' == get_post_meta( get_the_ID(), '_wp_page_template', true ) ) {
 			// We're using a default theme. We've got special template files for those.
 			if ( $this->default_theme_activated() ) {
 				$template = plugin_dir_path( __DIR__ ) . 'tmpl/compat/' . get_template() . '/eventbrite-index.php';
+			}
+
+			// The theme defined an index template, let's use that.
+			elseif ( isset( eventbrite_get_support_args()->index ) ) {
+				$template = esc_url( trailingslashit( get_stylesheet_directory() ) . eventbrite_get_support_args()->index );
+			}
+
+			// The theme declares support but no index template, maybe it's got one in the default location.
+			elseif ( current_theme_supports( 'eventbrite' ) && file_exists( get_stylesheet_directory() . '/eventbrite/eventbrite-index.php' ) ) {
+				$template = esc_url( get_stylesheet_directory() . '/eventbrite/eventbrite-index.php' );
 			}
 
 			// Nothing in the theme, and it's not a default theme; just use our regular template.
