@@ -337,6 +337,11 @@ if ( ! function_exists( 'eventbrite_edit_post_link' ) ) :
  * @param string $after Display after edit link.
  */
 function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
+	// Ensure the Edit link only shows to those that can edit posts.
+	if ( ! current_user_can( 'edit_post', get_post()->ID ) ) {
+		return;
+	}
+
 	// Assemble the edit URL.
 	$url = add_query_arg( array(
 			'eid' => get_the_ID(),
