@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Eventbrite Events
+ * The template for displaying all Eventbrite events (index), and archives (sorted by organizer or venue).
  */
 
 get_header(); ?>
