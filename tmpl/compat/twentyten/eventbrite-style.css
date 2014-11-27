@@ -1,0 +1,29 @@
+/**
+ * Eventbrite styles for Twenty Ten.
+ *
+ * @package Eventbrite_API
+ */
+
+.eventbrite-event .sep {
+	display: none;
+}
+.eventbrite-event .event-venue:before,
+.eventbrite-event .event-organizer:before,
+.eventbrite-event .event-details:before {
+	content: ' | ';
+}
+.archive-eventbrite .nav-links {
+	text-align: center;
+}
+.archive-eventbrite .nav-links .page-numbers {
+	display: inline-block;
+	padding: 8px 12px;
+}
+.archive-eventbrite .nav-links a:hover {
+	background-color: #f1f1f1;
+}
+.archive-eventbrite .nav-links .page-numbers.current {
+	background-color: #f1f1f1;
+	color: #000;
+	font-weight: bold;
+}

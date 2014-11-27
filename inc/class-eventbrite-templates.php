@@ -229,6 +229,7 @@
 	protected function default_theme_activated() {
 		// Our supported default themes.
 		$default_themes = array(
+			'twentyten',
 			'twentyeleven',
 			'twentytwelve',
 			'twentythirteen',
