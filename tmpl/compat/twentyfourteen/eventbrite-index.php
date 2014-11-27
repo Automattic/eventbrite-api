@@ -16,7 +16,14 @@ get_header(); ?>
 
 			<?php
 				// Set up and call our Eventbrite query.
-				$events = new Eventbrite_Query( apply_filters( 'eventbrite_query_args', array() ) );
+				$events = new Eventbrite_Query( apply_filters( 'eventbrite_query_args', array(
+					// 'display_private' => false,  // boolean
+					// 'limit' => null,            // integer
+					// 'organizer_id' => null,     // integer
+					// 'p' => null,                // integer
+					// 'post__not_in' => null,     // array of integers
+					// 'venue_id' => null,         // integer
+				) ) );
 
 				if ( $events->have_posts() ) :
 					while ( $events->have_posts() ) : $events->the_post(); ?>
