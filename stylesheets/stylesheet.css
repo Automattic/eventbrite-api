@@ -392,6 +392,11 @@ Eventbrite Styles
   margin: 10px;
   padding: 10px;
 }
+#main_content img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
 
 
 

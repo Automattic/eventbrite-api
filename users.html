@@ -43,7 +43,7 @@
   <li>Log in to your WordPress site, and go to Plugins > Add New.</li>
   <li>Type "eventbrite api" in the search field on the right, and click Install Now.</li>
   <li>Click the "Activate Plugin" link when the download is done, and you'll be back on the Installed Plugins screen.</li>
-  <li>At the top of the screen, click "Install Keyring" in the admin notice.</li>
+  <li>At the top of the screen, click "Install Keyring" in the admin notice.<img src="images/eb-install-keyring.png"></li>
   <li>A box will pop up with the Keyring plugin already loaded; just click "Install Now" and "Activate Plugin" when it has downloaded.</li>
 </ol>
 
@@ -54,14 +54,15 @@
 <ol>
   <li>Log in to your <a href="https://www.eventbrite.com/myaccount/apps/">Eventbrite account</a>, preferably in a separate tab from your WordPress site.</li>
   <li>Click "Create a new app".</li>
-  <li>Fill in the required fields, using whatever info you like. For OAuth Redirect URI, use your WordPress site's domain name, plus "wp-admin/tools.php?page=keyring&action=verify&service=eventbrite", for example, "http://example.com/wp-admin/tools.php?page=keyring&action=verify&service=eventbrite" (without the quotes).</li>
+  <li>Fill in the required fields, using whatever info you like. For OAuth Redirect URI, use your WordPress site's domain name, plus "wp-admin/tools.php?page=keyring&action=verify&service=eventbrite", for example, "http://example.com/wp-admin/tools.php?page=keyring&action=verify&service=eventbrite" (without the quotes).<img src="images/eb-example-settings.png"></li>
   <li>Check the box to agree to <a href="https://www.eventbrite.com/tos/">Eventbrite's terms of use</a>, and then click "Create Key". We're all set on the Eventbrite side.</li>
-  <li>On the Installed Plugins page of your WordPress site, click on "Connect to Eventbrite", and select "Eventbrite" from the list of available services.</li>
-  <li>We can leave App ID empty. For API Key, use the gray number under the KEYS column. For API Secret, use the Client Secret (click on "Show Client Secret and OAuth Token" to view it).</li>
+  <li>On the Installed Plugins page of your WordPress site, click on "Connect to Eventbrite".<img src="images/eb-connect-to-eventbrite.png"></li>
+  <li>Select "Eventbrite" from the list of available services.<img src="images/eb-add-new-connection.png"></li>
+  <li>We can leave App ID empty. For API Key, use the gray number under the KEYS column. For API Secret, use the Client Secret (click on "Show Client Secret and OAuth Token" to view it).<img src="images/eb-api-settings.png"></li>
   <li>Save the changes, and click "Back".</li>
-  <li>We now have Eventbrite configured, so let's authorize our WordPress website! CLick on "Eventbrite" (the word, not "Manage").</li>
-  <li>This will send you to an eventbrite.com page where you click the green "Allow" button to give your WordPress site access to your Eventbrite account.</li>
-  <li>You'll be back on the Keyring: Managed Connections page in WordPress, with your active connection displayed. Success!</li>
+  <li>We now have Eventbrite configured, so let's authorize our WordPress website! Click on "Eventbrite" (the word, not "Manage").</li>
+  <li>This will send you to an eventbrite.com page where you click the green "Allow" button to give your WordPress site access to your Eventbrite account.<img src="images/eb-allow-deny.png"></li>
+  <li>You'll be back on the Keyring: Managed Connections page in WordPress, with your active connection displayed. Success!<img src="images/eb-connection-success.png"></li>
 </ol>
 
 <p>Your WordPress site is ready to display your Eventbrite events. The final step is to assign a page to be the one to display your events.</p>
@@ -69,7 +70,7 @@
 
 <ol>
   <li>Go to Pages in your WordPress admin, and either edit an existing one, or create a new one. Whatever name the page has will be the heading above your events.</li>
-  <li>In the Page Attributes box, choose "Eventbrite Events" from the Template dropdown, and click Update to save your changes.</li>
+  <li>In the Page Attributes box, choose "Eventbrite Events" from the Template dropdown, and click Update to save your changes.<img src="images/eb-page-template.png"></li>
   <li>Go to that page, and after a moment, you will see your Eventbrite events load in.</li>
 </ol>
 <h2>Congratulations!</h2>
