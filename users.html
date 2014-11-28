@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Eventbrite API: The power of Eventbrite on WordPress">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Eventbrite API</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Automattic/eventbrite-api">View on GitHub</a>
+
+          <h1 id="project_title"><a href="index.html">Eventbrite API</a></h1>
+          <h2 id="project_tagline">The power of Eventbrite on WordPress</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Automattic/eventbrite-api/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Automattic/eventbrite-api/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Assistance</h1>
+
+<p>Below you will find more detailed install and setup help, as well as the answers to some commonly-asked questions about using the Eventbrite API plugin.</p>
+<p>If you have any questions or comments, please <a href="https://wordpress.org/support/plugin/google-sitemap-generator">visit our forums</a>, we'll be happy to help.</p>
+
+<h2>Installation</h2>
+<p>The easiest way to get up and running with Eventbrite is to install the Eventbrite API plugin first, and then follow the prompts for activating and connecting the Keyring plugin.</p>
+
+<ol>
+  <li>Log in to your WordPress site, and go to Plugins > Add New.</li>
+  <li>Type "eventbrite api" in the search field on the right, and click Install Now.</li>
+  <li>Click the "Activate Plugin" link when the download is done, and you'll be back on the Installed Plugins screen.</li>
+  <li>At the top of the screen, click "Install Keyring" in the admin notice.</li>
+  <li>A box will pop up with the Keyring plugin already loaded; just click "Install Now" and "Activate Plugin" when it has downloaded.</li>
+</ol>
+
+<p>Great, everything we need is installed and activated now. On to the next step: connecting to Eventbrite.</p>
+<h2>Connecting to Eventbrite</h2>
+<p>Because the Eventbrite API plugin can access your Eventbrite account, both your site and eventbrite.com need to know that they're securely speaking to each other. So the first thing we need to do is give the two sites a "secret handshake" to use when talking, so that they're confident that your WordPress site has the proper permissions to access your Eventbrite account.</p>
+
+<ol>
+  <li>Log in to your <a href="https://www.eventbrite.com/myaccount/apps/">Eventbrite account</a>, preferably in a separate tab from your WordPress site.</li>
+  <li>Click "Create a new app".</li>
+  <li>Fill in the required fields, using whatever info you like. For OAuth Redirect URI, use your WordPress site's domain name, plus "wp-admin/tools.php?page=keyring&action=verify&service=eventbrite", for example, "http://example.com/wp-admin/tools.php?page=keyring&action=verify&service=eventbrite" (without the quotes).</li>
+  <li>Check the box to agree to <a href="https://www.eventbrite.com/tos/">Eventbrite's terms of use</a>, and then click "Create Key". We're all set on the Eventbrite side.</li>
+  <li>On the Installed Plugins page of your WordPress site, click on "Connect to Eventbrite", and select "Eventbrite" from the list of available services.</li>
+  <li>We can leave App ID empty. For API Key, use the gray number under the KEYS column. For API Secret, use the Client Secret (click on "Show Client Secret and OAuth Token" to view it).</li>
+  <li>Save the changes, and click "Back".</li>
+  <li>We now have Eventbrite configured, so let's authorize our WordPress website! CLick on "Eventbrite" (the word, not "Manage").</li>
+  <li>This will send you to an eventbrite.com page where you click the green "Allow" button to give your WordPress site access to your Eventbrite account.</li>
+  <li>You'll be back on the Keyring: Managed Connections page in WordPress, with your active connection displayed. Success!</li>
+</ol>
+
+<p>Your WordPress site is ready to display your Eventbrite events. The final step is to assign a page to be the one to display your events.</p>
+<h2>Assigning a page for your events</h2>
+
+<ol>
+  <li>Go to Pages in your WordPress admin, and either edit an existing one, or create a new one. Whatever name the page has will be the heading above your events.</li>
+  <li>In the Page Attributes box, choose "Eventbrite Events" from the Template dropdown, and click Update to save your changes.</li>
+  <li>Go to that page, and after a moment, you will see your Eventbrite events load in.</li>
+</ol>
+<h2>Congratulations!</h2>
+<p>You're all set. Enjoy having your Eventbrite events displayed right along-side your other website content. See below for answers to some common questions.</p>
+<h2>Frequently Asked Questions (FAQ)</h2>
+<h4>Events don't quite look like the rest of the theme – how can I fix it?</h4>
+
+While a theme doesn't need to know about the plugin to display events, it's always best if the theme developer makes a theme "Eventbrite-optimized". You can post on the [theme's forum](https://wordpress.org/support/) and send them [this link](https://github.com/Automattic/eventbrite-api). You can also send an email to themes@wordpress.com and we'll see what we can do to help.
+
+Many themes available for free in the WordPress.org repository are already Eventbrite-optimized. They include:
+<ul>
+  <li>All default themes
+  <ul>
+    <li>Twenty Fifteen</li>
+    <li>Twenty Fourteen</li>
+    <li>Twenty Thirteen</li>
+    <li>Twenty Twelve</li>
+    <li>Twenty Eleven</li>
+    <li>Twenty Ten</li>
+  </ul>
+  </li>
+  <li><a href="https://wordpress.org/themes/bosco/">Bosco</a></li>
+  <li><a href="https://wordpress.org/themes/chunk/">Chunk</a></li>
+  <li><a href="https://wordpress.org/themes/coraline/">Coraline</a></li>
+  <li><a href="https://wordpress.org/themes/edin/">Edin</a></li>
+  <li><a href="https://wordpress.org/themes/fictive/">Fictive</a></li>
+  <li><a href="https://wordpress.org/themes/goran/">Goran</a></li>
+  <li><a href="https://wordpress.org/themes/ryu/">Ryu</a></li>
+  <li><a href="https://wordpress.org/themes/sketch/">Sketch</a></li>
+  <li><a href="https://wordpress.org/themes/sidekick/">Sidekick</a></li>
+  <li><a href="https://wordpress.org/themes/singl/">Singl</a></li>
+  <li><a href="https://wordpress.org/themes/superhero/">Superhero</a></li>
+  <li><a href="https://wordpress.org/themes/sorbet/">Sorbet</a></li>
+  <li><a href="https://wordpress.org/themes/tonal/">Tonal</a></li>
+  <li><a href="https://wordpress.org/themes/writr/">Writr</a></li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Eventbrite-api maintained by <a href="https://github.com/Automattic">Automattic</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
