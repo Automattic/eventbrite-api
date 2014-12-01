@@ -94,7 +94,7 @@ class Eventbrite_Requirements {
 		elseif ( ! self::has_active_connection() ) {
 			$notice = sprintf( __( 'The Eventbrite API plugin needs a working connection to eventbrite.com. We recommend first <a href="%1$s">logging in</a> to your eventbrite.com account. <a href="%2$s">Connect to Eventbrite</a>.', 'eventbrite-api' ),
 				'https://www.eventbrite.com/login/',
-				esc_url( get_admin_url( null, 'tools.php?page=keyring' ) )
+				esc_url( get_admin_url( null, 'tools.php?page=keyring&action=services' ) )
 			);
 		}
 
