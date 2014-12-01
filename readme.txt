@@ -30,13 +30,17 @@ If the eventbrite API plugin is installed but missing Keyring or an eventbrite.c
 
 == Frequently Asked Questions ==
 
+= Are there more detailed instructions for Keyring and getting connected to Eventbrite?
+
+Yes! Check out the [user assistance page](http://automattic.github.io/eventbrite-api/users.html) on the [Eventbrite API website](http://automattic.github.io/eventbrite-api/), and [post to the forums](https://wordpress.org/support/plugin/eventbrite-api/) if you need any further help.
+
 = Events don't quite look like the rest of the theme – how can I fix it? =
 
-While a theme doesn't need to know about the plugin to display events, it's always best if the theme developer makes a theme "Eventbrite-compatible". You can post on the [theme's forum](https://wordpress.org/support/) and send them [this link](https://github.com/Automattic/eventbrite-api). You can also send an email to themes@wordpress.com and we'll see what we can do to help.
+While a theme doesn't need to know about the plugin to display events, it's always best if the theme developer optimizes their theme for Eventbrite. You can post on the [theme's forum](https://wordpress.org/support/) and send them [this link](https://github.com/Automattic/eventbrite-api). You can also send an email to themes@wordpress.com and we'll see what we can do to help.
 
-= I'm a theme developer; how can I make my theme Eventbrite-compatible? =
+= I'm a theme developer; how can I make my theme Eventbrite-optimized? =
 
-Assuming your theme is based on [Underscores](http://underscores.me/), most of the work is already done for you. Just load the theme, and compare your markup to that of the plugin's [included templates](https://github.com/Automattic/eventbrite-api/tree/master/tmpl). Make your own copies, adjusting the markup as needed, and then assign your templates in an `add_theme_support` call. Most themes can be done in under five minutes. More details can be found at the [Eventbrite API GitHub repo](https://github.com/Automattic/eventbrite-api/).
+Assuming your theme is based on [Underscores](http://underscores.me/), most of the work is already done for you. Just load the theme, and compare your markup to that of the plugin's [included templates](https://github.com/Automattic/eventbrite-api/tree/master/tmpl). Make your own copies, adjusting the markup as needed, and then assign your templates in an `add_theme_support` call. Most themes can be done in under ten minutes. More details can be found at the [Eventbrite API GitHub repo](https://github.com/Automattic/eventbrite-api/).
 
 = What Eventbrite endpoints are supported? =
 
@@ -48,19 +52,11 @@ The following endpoints are currently supported, with more on the way. Open an i
 
 = Where can I get detailed documentation for working with the plugin? =
 
-All development and documentation for the Eventbrite API plugin is done through the [GitHub repo](https://github.com/Automattic/eventbrite-api/).
+All development for Eventbrite API plugin is done through the [GitHub repo](https://github.com/Automattic/eventbrite-api/), and detailed documentation can be found on the repo's [GitHub page](http://automattic.github.io/eventbrite-api/developers.html).
 
 = Who made this plugin? =
 
 This plugin was developed by [Automattic](http://automattic.com/), in direct partnership with [Eventbrite](http://eventbrite.com). The Eventbrite name and logo are used by permission.
- 
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets 
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png` 
-(or jpg, jpeg, gif).
-2. This is the second screen shot
 
 == Changelog ==
 
