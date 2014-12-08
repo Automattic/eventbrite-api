@@ -24,6 +24,7 @@ class Eventbrite_Requirements {
 
 		// Add hooks.
 		add_action( 'admin_notices', array( $this, 'display_admin_notice' ) );
+		add_filter( 'keyring_eventbrite_request_token_params', array( $this, 'add_connection_referrer' ) );
 	}
 
 	/**
@@ -100,6 +101,20 @@ class Eventbrite_Requirements {
 
 		// Output notice HTML.
 		printf( '<div id="message" class="updated"><p>%s</p></div>', $notice );
+	}
+
+	/**
+	 * Append a referrer to the OAuth request made to Eventbrite, giving them an idea of WordPress adoption.
+	 *
+	 * @param array $params Parameters to be passed on an OAuth request.
+	 * @return array OAuth request parameters with the referral added.
+	 */
+	public function add_connection_referrer( $params ) {
+		if ( ! isset( $params['ref'] ) ) {
+			$params['ref'] = 'wpoauth';
+		}
+
+		return $params;
 	}
 }
 
