@@ -61,7 +61,7 @@ class Eventbrite_Manager {
 		// Make a fresh request and cache it.
 		$request = Eventbrite_API::call( $endpoint, $params, $id );
 		$transient_name = $this->get_transient_name( $endpoint, $params );
-		set_transient( $transient_name, $request, WEEK_IN_SECONDS );
+		set_transient( $transient_name, $request, apply_filters( 'eventbrite_cache_expiry', DAY_IN_SECONDS ) );
 
 		// Register the transient in case we need to flush.
 		$this->register_transient( $transient_name );
