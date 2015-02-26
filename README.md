@@ -144,6 +144,18 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
 
 * Access the current event's organizer properties: `description`, `logo`, `resource_uri`, `id`, `name`, `url`, `num_past_events`, `num_future_events`
 
+**`eventbrite_event_category()`**
+
+* Access the current event's category properties: `resource_uri`, `id`, `name`, `name_localized`, `short_name`, `short_name_localized`
+
+**`eventbrite_event_subcategory()`**
+
+* Access the current event's subcategory properties: `resource_uri`, `id`, `name`, `name_localized`, `short_name`, `short_name_localized`
+
+**`eventbrite_event_format()`**
+
+* Access the current event's format properties: `resource_uri`, `id`, `name`, `name_localized`, `short_name`, `short_name_localized`
+
 **`eventbrite_event_start()`**
 
 * Access the current event's start time properties: `timezone`, `local`, `utc`
