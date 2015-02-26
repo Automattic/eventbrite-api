@@ -66,6 +66,18 @@ class Eventbrite_Query extends WP_Query {
 			$query['venue_id'] = (int) $venue_id;
 		}
 
+		// Filter by category ID if a venue archive (all events at a certain category) was requested.
+		$category_id = get_query_var( 'category_id' );
+		if ( ! empty( $category_id ) ) {
+			$query['category_id'] = (int) $category_id;
+		}
+
+		// Filter by format ID if a venue archive (all events at a certain format) was requested.
+		$format_id = get_query_var( 'format_id' );
+		if ( ! empty( $format_id ) ) {
+			$query['format_id'] = (int) $format_id;
+		}
+
 		return $query;
 	}
 
@@ -230,6 +242,16 @@ class Eventbrite_Query extends WP_Query {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_venue' ) );
 		}
 
+		// Filter by venue: 'category_id'
+		if ( isset( $this->query_vars['category_id'] ) && is_integer( $this->query_vars['category_id'] ) ) {
+			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_category' ) );
+		}
+
+		// Filter by venue: 'format_id'
+		if ( isset( $this->query_vars['format_id'] ) && is_integer( $this->query_vars['format_id'] ) ) {
+			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_format' ) );
+		}
+
 		// Limit the number of results: 'limit'
 		if ( isset( $this->query_vars['limit'] ) && is_integer( $this->query_vars['limit'] ) ) {
 			$this->api_results->events = array_slice( $this->api_results->events, 0, absint( $this->query_vars['limit'] ) );
@@ -271,6 +293,30 @@ class Eventbrite_Query extends WP_Query {
 	 */
 	protected function filter_by_venue( $event ) {
 		return ( isset( $event->venue->id ) ) ? $event->venue->id == $this->query_vars['venue_id'] : false;
+	}
+
+	/**
+	 * Determine if an event is occurring at a given category.
+	 *
+	 * @access protected
+	 *
+	 * @param  object $event A single event from the API call results.
+	 * @return bool True if properties match, false otherwise.
+	 */
+	protected function filter_by_category( $event ) {
+		return ( isset( $event->category->id ) ) ? $event->category->id == $this->query_vars['category_id'] : false;
+	}
+
+	/**
+	 * Determine if an event is occurring at a given format.
+	 *
+	 * @access protected
+	 *
+	 * @param  object $event A single event from the API call results.
+	 * @return bool True if properties match, false otherwise.
+	 */
+	protected function filter_by_format( $event ) {
+		return ( isset( $event->format->id ) ) ? $event->format->id == $this->query_vars['format_id'] : false;
 	}
 
 	/**
@@ -335,7 +381,7 @@ class Eventbrite_Query extends WP_Query {
 			$event = Eventbrite_Event::get_instance( $post_id );
 
 			// Does the event have a logo set?
-			if ( isset( $event->logo_url ) ) {
+			if ( ! empty( $event->logo_url ) ) {
 				// No need for a permalink on event single views.
 				if ( eventbrite_is_single() ) {
 					$html = '<img src="' . esc_url( $event->logo_url ) . '" class="wp-post-image">';

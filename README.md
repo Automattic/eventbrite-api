@@ -58,6 +58,8 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
   * `p`: (*integer*) Get a single event.
   * `post__not_in`: (*array*) Remove certain events by ID from the results.
   * `venue_id`: (*integer*) Return only events for a certain venue.
+  * `category_id`: (*integer*) Return only events for a certain category.
+  * `format_id`: (*integer*) Return only events for a certain format.
 
 
 **`Eventbrite_Event`**
