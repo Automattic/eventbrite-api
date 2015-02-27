@@ -338,7 +338,7 @@ if ( ! function_exists( 'eventbrite_edit_post_link' ) ) :
  */
 function eventbrite_edit_post_link( $text = null, $before = '', $after = '' ) {
 	// Ensure the Edit link only shows to those that can edit posts.
-	if ( ! current_user_can( 'edit_post', get_post()->ID ) ) {
+	if ( ! current_user_can( 'install_plugins' ) ) {
 		return;
 	}
 
