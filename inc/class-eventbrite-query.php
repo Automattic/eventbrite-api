@@ -335,7 +335,7 @@ class Eventbrite_Query extends WP_Query {
 			$event = Eventbrite_Event::get_instance( $post_id );
 
 			// Does the event have a logo set?
-			if ( isset( $event->logo_url ) ) {
+			if ( ! empty( $event->logo_url ) ) {
 				// No need for a permalink on event single views.
 				if ( eventbrite_is_single() ) {
 					$html = '<img src="' . esc_url( $event->logo_url ) . '" class="wp-post-image">';
@@ -366,7 +366,7 @@ class Eventbrite_Query extends WP_Query {
 		if ( eventbrite_is_event() ) {
 			$classes[] = 'eventbrite-event';
 
-			if ( isset( get_post()->logo_url ) ) {
+			if ( ! empty( get_post()->logo_url ) ) {
 				$classes[] = 'has-post-thumbnail';
 			}
 		}
