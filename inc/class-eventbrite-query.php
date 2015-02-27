@@ -128,7 +128,7 @@ class Eventbrite_Query extends WP_Query {
 
 		// We need the Eventbrite user ID if we're getting only public events.
 		if ( ! isset( $this->query_vars['display_private'] ) || true !== $this->query_vars['display_private'] ) {
-			$params['user.id'] = Eventbrite_API::$instance->get_token()->get_meta( 'user_id' );
+			$params['user.id'] = Eventbrite_API::$instance->eventbrite_external_id;
 			$params['sort_by'] = 'date';
 		}
 

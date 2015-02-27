@@ -48,6 +48,9 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 			return false;
 
 		$this->set_token( Keyring::init()->get_token_store()->get_token( array( 'type' => 'access', 'id' => $token ) ) );
+
+		$this->eventbrite_external_id = ( defined( 'IS_WPCOM' ) && IS_WPCOM ) ? $this->token->get_meta( 'external_id' ) : $this->token->get_meta( 'user_id' );
+
 		return $this->token;
 	}
 
@@ -61,7 +64,7 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		if ( empty( $token ) )
 			return;
 
-		$this->set_endpoint( 'user_owned_events', self::API_BASE . 'users/' . $token->get_meta( 'user_id' ) . '/owned_events', 'GET' );
+		$this->set_endpoint( 'user_owned_events', self::API_BASE . 'users/' . $this->eventbrite_external_id . '/owned_events', 'GET' );
 		$this->set_endpoint( 'event_details', self::API_BASE . 'events/', 'GET' );
 		$this->set_endpoint( 'event_search', self::API_BASE . 'events/search/', 'GET' );
 	}
