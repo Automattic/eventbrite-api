@@ -102,8 +102,8 @@ class Eventbrite_Event {
 	 * @return Eventbrite_Event|bool Eventbrite_Event object, false otherwise.
 	 */
 	public static function get_instance( $event_id ) {
-		// We can bail if no event ID was passed.
-		if ( ! $event_id ) {
+		// We can bail if no event ID was passed, or it wasn't an integer.
+		if ( ! $event_id || ! is_int( $event_id ) ) {
 			return false;
 		}
 
