@@ -350,7 +350,7 @@ class Eventbrite_Manager {
 		$event['post_date']     = ( isset( $api_event->start->local ) )      ? $api_event->start->local      : '';
 		$event['post_date_gmt'] = ( isset( $api_event->start->utc ) )        ? $api_event->start->utc        : '';
 		$event['url']           = ( isset( $api_event->url ) )               ? $api_event->url               : '';
-		$event['logo_url']      = ( isset( $api_event->logo_url ) )          ? $api_event->logo_url          : '';
+		$event['logo_url']      = ( isset( $api_event->logo->url ) )         ? $api_event->logo->url         : '';
 		$event['start']         = ( isset( $api_event->start ) )             ? $api_event->start             : '';
 		$event['end']           = ( isset( $api_event->end ) )               ? $api_event->end               : '';
 		$event['organizer']     = ( isset( $api_event->organizer ) )         ? $api_event->organizer         : '';
