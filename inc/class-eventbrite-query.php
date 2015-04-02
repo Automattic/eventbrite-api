@@ -215,6 +215,11 @@ class Eventbrite_Query extends WP_Query {
 	 * @access protected
 	 */
 	protected function post_api_filters() {
+		// Do nothing if API results were empty, false, or an error.
+		if ( empty( $this->api_results ) || is_wp_error( $this->api_results ) ) {
+			return false;
+		}
+
 		// Filter out specified IDs: 'post__not_in'
 		if ( isset( $this->query_vars['post__not_in'] ) && is_array( $this->query_vars['post__not_in'] ) ) {
 			$this->api_results->events = array_filter( $this->api_results->events, array( $this, 'filter_by_post_not_in' ) );
