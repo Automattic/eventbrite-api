@@ -58,14 +58,16 @@ class Eventbrite_Manager {
 			}
 		}
 
-		// Make a fresh request and cache it.
+		// Make a fresh request.
 		$request = Eventbrite_API::call( $endpoint, $params, $id );
-		$transient_name = $this->get_transient_name( $endpoint, $params );
-		set_transient( $transient_name, $request, apply_filters( 'eventbrite_cache_expiry', DAY_IN_SECONDS ) );
 
-		// Register the transient in case we need to flush.
-		$this->register_transient( $transient_name );
-
+		// If we get back a proper response, cache it.
+		if ( ! is_wp_error( $request ) ) {
+			$transient_name = $this->get_transient_name( $endpoint, $params );
+			set_transient( $transient_name, $request, apply_filters( 'eventbrite_cache_expiry', DAY_IN_SECONDS ) );
+			$this->register_transient( $transient_name );
+		}
+		
 		return $request;
 	}
 
