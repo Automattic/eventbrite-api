@@ -20,6 +20,8 @@
 		add_action( 'template_include', array( $this, 'check_templates' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'body_class', array( $this, 'adjust_body_classes' ) );
+		add_action( 'save_post_page', array( $this, 'flush_rewrite_rules_on_save_post' ), 10, 2 );
+		add_action( 'updated_postmeta', array( $this, 'flush_rewrite_rules_on_updated_postmeta' ), 10, 3 );
  	}
 
 	/**
@@ -238,6 +240,35 @@
 		);
 
 		return in_array( get_template(), $default_themes );
+	}
+
+	/**
+	 * Flush rewrite rules when the Eventbrite Event page template is active on a saved page.
+	 *
+	 * @access public
+	 *
+	 * @param int $post_id Post ID
+	 * @param object $post WP_Post object
+	 */
+	public function flush_rewrite_rules_on_save_post( $post_id, $post ) {
+		if ( 'eventbrite-index.php' == $post->page_template ) {
+			flush_rewrite_rules();
+		}
+	}
+
+	/**
+	 * Flush rewrite rules when a page template change is registered.
+	 *
+	 * @access public
+	 *
+	 * @param int $meta_id ID of updated metadata entry
+	 * @param int $object_id Object ID
+	 * @param string $meta_key Meta key
+	 */
+	public function flush_rewrite_rules_on_updated_postmeta( $meta_id, $object_id, $meta_key ) {
+		if ( '_wp_page_template' == $meta_key ) {
+			flush_rewrite_rules();
+		}
 	}
  }
 
