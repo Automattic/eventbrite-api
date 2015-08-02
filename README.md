@@ -59,6 +59,7 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
   * `post__not_in`: (*array*) Remove certain events by ID from the results.
   * `venue_id`: (*integer*) Return only events for a certain venue.
   * `category_id`: (*integer*) Return only events for a certain category.
+  * `subcategory_id`: (*integer*) Return only events for a certain subcategory.
   * `format_id`: (*integer*) Return only events for a certain format.
 
 
