@@ -20,6 +20,9 @@ get_header(); ?>
 						// 'p' => null,                // integer
 						// 'post__not_in' => null,     // array of integers
 						// 'venue_id' => null,         // integer
+						// 'category_id' => null,      // integer
+						// 'subcategory_id' => null,   // integer
+						// 'format_id' => null,        // integer
 					) ) );
 
 					if ( $events->have_posts() ) :
