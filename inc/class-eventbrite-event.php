@@ -93,6 +93,27 @@ class Eventbrite_Event {
 	public $venue_id; // venue->id
 
 	/**
+	 * The event's subcategory.
+	 *
+	 * @var string
+	 */
+	public $subcategory;  // subcategory->name
+
+	/**
+	 * The event's category.
+	 *
+	 * @var string
+	 */
+	public $category;  // category->name
+
+	/**
+	 * The event's format.
+	 *
+	 * @var string
+	 */
+	public $format;  // format->name
+
+	/**
 	 * Retrieve Eventbrite_Event instance.
 	 *
 	 * @static

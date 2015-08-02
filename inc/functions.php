@@ -287,6 +287,39 @@ function eventbrite_event_organizer() {
 }
 endif;
 
+if ( ! function_exists( 'eventbrite_event_category' ) ) :
+/**
+ * Give access to the current event's category properties: resource_uri, id, name, name_localized, short_name, short_name_localized
+ *
+ * @return object Organizer info
+ */
+function eventbrite_event_category() {
+	return apply_filters( 'eventbrite_event_category', get_post()->category );
+}
+endif;
+
+if ( ! function_exists( 'eventbrite_event_subcategory' ) ) :
+/**
+ * Give access to the current event's subcategory properties: resource_uri, id, name, name_localized, short_name, short_name_localized
+ *
+ * @return object Organizer info
+ */
+function eventbrite_event_subcategory() {
+	return apply_filters( 'eventbrite_event_subcategory', get_post()->subcategory );
+}
+endif;
+
+if ( ! function_exists( 'eventbrite_event_format' ) ) :
+/**
+ * Give access to the current event's format properties: resource_uri, id, name, name_localized, short_name, short_name_localized
+ *
+ * @return object Organizer info
+ */
+function eventbrite_event_format() {
+	return apply_filters( 'eventbrite_event_format', get_post()->format );
+}
+endif;
+
 if ( ! function_exists( 'eventbrite_event_start' ) ) :
 /**
  * Give access to the current event's start time: timezone, local, utc

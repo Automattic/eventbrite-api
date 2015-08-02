@@ -357,6 +357,9 @@ class Eventbrite_Manager {
 		$event['venue']         = ( isset( $api_event->venue ) )             ? $api_event->venue             : '';
 		$event['public']        = ( isset( $api_event->listed ) )            ? $api_event->listed            : '';
 		$event['tickets']       = ( isset( $api_event->ticket_classes ) )    ? $api_event->ticket_classes    : '';
+		$event['category']      = ( isset( $api_event->category ) )          ? $api_event->category          : '';
+		$event['subcategory']   = ( isset( $api_event->subcategory ) )       ? $api_event->subcategory       : '';
+		$event['format']        = ( isset( $api_event->format ) )            ? $api_event->format            : '';
 
 		return (object) $event;
 	}
