@@ -67,7 +67,7 @@ class Eventbrite_Manager {
 			set_transient( $transient_name, $request, apply_filters( 'eventbrite_cache_expiry', DAY_IN_SECONDS ) );
 			$this->register_transient( $transient_name );
 		}
-		
+
 		return $request;
 	}
 

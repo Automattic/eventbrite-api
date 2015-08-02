@@ -2,8 +2,8 @@
 Contributors: jkudish, kwight
 Tags: eventbrite, events, api, WordPress.com
 Requires at least: 3.8
-Tested up to: 4.1
-Stable tag: 1.0.3
+Tested up to: 4.2
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,13 @@ All development for Eventbrite API plugin is done through the [GitHub repo](http
 This plugin was developed by [Automattic](http://automattic.com/), in direct partnership with [Eventbrite](http://eventbrite.com). The Eventbrite name and logo are used by permission.
 
 == Changelog ==
+
+= 1.0.6 - August 2, 2015 =
+* Avoid caching and filtering on invalid API responses.
+* Improve rewrite rules flushing on page saves and template changes.
+
+= 1.0.5 - April 23, 2015 =
+* Add expansions, to handle breaking changes to the API planned for May 13, 2015.
 
 = 1.0.4 - April 2, 2015 =
 * Update to logo handling; Eventbrite announced a sudden breaking change to happen April 7th, 2015.
