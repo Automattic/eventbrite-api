@@ -165,33 +165,29 @@ class Eventbrite_Query extends WP_Query {
 			// Set found_posts based on all posts returned after Eventbrite_Query filtering.
 			$this->found_posts = ( isset( $this->query_vars['limit'] ) && ( $this->query_vars['limit'] < $this->api_results->pagination->object_count ) ) ? count( $this->api_results->events ) : $this->api_results->pagination->object_count;
 
+			// Return all posts if `nopaging` is true (maximum of 50).
+			if ( isset( $this->query_vars['nopaging'] ) && true === $this->query_vars['nopaging'] ) {
+				$this->posts = $this->api_results->events;
+			}
+
 			// Determine posts according to any pagination querying. Math hurts.
-			$modulus = ( 2 <= $this->query_vars['paged'] && 0 == $this->query_vars['paged'] % 5 ) ? 5 : $this->query_vars['paged'] % 5;
-			$offset = ( 2 <= $modulus && 5 >= $modulus ) ? ( $modulus - 1 ) * 10 : 0;
-			//Otterly Addition	
-			if(!empty($this->query_vars['display_all'])){
-				if($this->query_vars['display_all'] == false){
-					$this->posts = array_slice( $this->api_results->events, $offset, 10 ); // kwight: support posts_per_page
-				}
-				else{
-					$this->posts = $this->api_results->events;
-				}
-			}	
-			else{
-				$this->posts = array_slice( $this->api_results->events, $offset, 10 ); // kwight: support posts_per_page
-			}	
+			else {
+				$modulus = ( 2 <= $this->query_vars['paged'] && 0 == $this->query_vars['paged'] % 5 ) ? 5 : $this->query_vars['paged'] % 5;
+				$offset = ( 2 <= $modulus && 5 >= $modulus ) ? ( $modulus - 1 ) * 10 : 0;
+				$this->posts = array_slice( $this->api_results->events, $offset, 10 );
+			}
 
 			// Turn the posts into Eventbrite_Event objects.
 			$this->posts = array_map( array( $this, 'create_eventbrite_event' ), $this->posts );
 
-			// The post count will always equal the number of posts while we only support a fixed number of 10 posts returned. kwight: support posts_per_page
+			// The post count will always equal the number of posts while we only support a fixed number of 10 posts returned.
 			$this->post_count = count( $this->posts );
 
 			// Set the first post.
 			$this->post = reset( $this->posts );
 		}
 
-		$this->max_num_pages = ceil( $this->found_posts / 10 ); // kwight: support posts_per_page
+		$this->max_num_pages = ceil( $this->found_posts / 10 );
 
 		// Adjust some WP_Query parsing.
 		if ( ! empty( $this->query_vars['p'] ) ) {
