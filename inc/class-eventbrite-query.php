@@ -98,6 +98,12 @@ class Eventbrite_Query extends WP_Query {
 		// Set up query variables.
 		$this->parse_query();
 
+		// Restore `paged` if changed to `page` (in the case of index pagination).
+		if ( ! empty( $this->query_vars['page'] ) ) {
+			$this->query_vars['paged'] = $this->query_vars['page'];
+			unset( $this->query_vars['page'] );
+		}
+
 		// Set any required parameters for the API request based on the query vars.
 		$params = $this->set_api_params();
 
@@ -167,7 +173,8 @@ class Eventbrite_Query extends WP_Query {
 
 			// Return all posts if `nopaging` is true (maximum of 50).
 			if ( isset( $this->query_vars['nopaging'] ) && true === $this->query_vars['nopaging'] ) {
-				$this->posts = $this->api_results->events;
+				$this->posts = array_slice( $this->api_results->events, 0, $this->found_posts );
+				$posts_per_page = count( $this->posts );
 			}
 
 			// Determine posts according to any pagination querying. Math hurts.
@@ -175,19 +182,19 @@ class Eventbrite_Query extends WP_Query {
 				$modulus = ( 2 <= $this->query_vars['paged'] && 0 == $this->query_vars['paged'] % 5 ) ? 5 : $this->query_vars['paged'] % 5;
 				$offset = ( 2 <= $modulus && 5 >= $modulus ) ? ( $modulus - 1 ) * 10 : 0;
 				$this->posts = array_slice( $this->api_results->events, $offset, 10 );
+				$posts_per_page = 10;
 			}
 
 			// Turn the posts into Eventbrite_Event objects.
 			$this->posts = array_map( array( $this, 'create_eventbrite_event' ), $this->posts );
 
-			// The post count will always equal the number of posts while we only support a fixed number of 10 posts returned.
+			// Determine the maximum number of pages.
 			$this->post_count = count( $this->posts );
+			$this->max_num_pages = ceil( $this->found_posts / $posts_per_page );
 
 			// Set the first post.
 			$this->post = reset( $this->posts );
 		}
-
-		$this->max_num_pages = ceil( $this->found_posts / 10 );
 
 		// Adjust some WP_Query parsing.
 		if ( ! empty( $this->query_vars['p'] ) ) {
