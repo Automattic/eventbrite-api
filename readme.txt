@@ -3,7 +3,7 @@ Contributors: jkudish, kwight
 Tags: eventbrite, events, api, WordPress.com
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,10 @@ All development for Eventbrite API plugin is done through the [GitHub repo](http
 This plugin was developed by [Automattic](http://automattic.com/), in direct partnership with [Eventbrite](http://eventbrite.com). The Eventbrite name and logo are used by permission.
 
 == Changelog ==
+
+= 1.0.7 - August 9, 2015 =
+* Add support for the `nopaging` query parameter (props @otterly).
+* Add support for the `category_id`, `subcategory_id`, and `format_id` query parameters (props @moust).
 
 = 1.0.6 - August 2, 2015 =
 * Avoid caching and filtering on invalid API responses.
