@@ -291,7 +291,7 @@ if ( ! function_exists( 'eventbrite_event_category' ) ) :
 /**
  * Give access to the current event's category properties: resource_uri, id, name, name_localized, short_name, short_name_localized
  *
- * @return object Organizer info
+ * @return object Category info
  */
 function eventbrite_event_category() {
 	return apply_filters( 'eventbrite_event_category', get_post()->category );
@@ -302,7 +302,7 @@ if ( ! function_exists( 'eventbrite_event_subcategory' ) ) :
 /**
  * Give access to the current event's subcategory properties: resource_uri, id, name, name_localized, short_name, short_name_localized
  *
- * @return object Organizer info
+ * @return object Subcategory info
  */
 function eventbrite_event_subcategory() {
 	return apply_filters( 'eventbrite_event_subcategory', get_post()->subcategory );
@@ -313,7 +313,7 @@ if ( ! function_exists( 'eventbrite_event_format' ) ) :
 /**
  * Give access to the current event's format properties: resource_uri, id, name, name_localized, short_name, short_name_localized
  *
- * @return object Organizer info
+ * @return object Format info
  */
 function eventbrite_event_format() {
 	return apply_filters( 'eventbrite_event_format', get_post()->format );
