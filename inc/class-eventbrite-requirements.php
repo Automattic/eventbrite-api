@@ -39,7 +39,7 @@ class Eventbrite_Requirements {
 		}
 
 		// Let's check for Eventbrite connections.
-		$tokens = Keyring_SingleStore::init()->get_tokens( array( 'service'=>'eventbrite' ) );
+		$tokens = Keyring_SingleStore::init()->get_tokens( array( 'service'=>'eventbrite', 'user_id' => 0 ) );
 		if ( ! empty( $tokens[0] ) ) {
 			return true;
 		} else {
