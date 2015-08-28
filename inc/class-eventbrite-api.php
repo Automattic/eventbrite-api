@@ -102,7 +102,8 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		}
 		
 		$response = self::$instance->request( $endpoint_url, $params );
-		return $response;
+
+		return apply_filters( 'eventbrite_api_call_response', $response, $endpoint, $query_params, $object_id );
 	}
 
 	/**
