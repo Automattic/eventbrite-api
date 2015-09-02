@@ -437,12 +437,12 @@ function eventbrite_get_ticket_form_widget_height() {
 	// Check each ticket.
 	foreach ( $tickets as $ticket ) {
 		// Add height for each visible ticket type.
-		if ( ! $ticket->hidden ) {
+		if ( ! isset( $ticket->hidden ) || true != $ticket->hidden ) {
 			$height += 45;
 		}
 
 		// Check if any visible sales are still open.
-		if ( ( time() < mysql2date( 'U', $ticket->sales_end ) ) && ! $ticket->hidden ) {
+		if ( ( ! isset( $ticket->sales_end ) || time() < mysql2date( 'U', $ticket->sales_end ) ) && ( ! isset( $ticket->hidden ) || true != $ticket->hidden ) ) {
 			$sales_open = true;
 		}
 	}
