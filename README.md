@@ -234,3 +234,7 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
 **`eventbrite_ticket_form_widget_height`**
 
 * Adjust the `<iframe>` height used when outputting a ticket form widget.
+
+**`eventbrite_api_expansions`**
+
+* Adjust the [expansions](https://www.eventbrite.com/developer/v3/reference/expansions/) requested on all API calls to Eventbrite.
