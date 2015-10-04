@@ -58,8 +58,14 @@ class Eventbrite_Manager {
 			}
 		}
 
+		// Extend the HTTP timeout to account for Eventbrite API calls taking longer than ~5 seconds.
+		add_filter( 'http_request_timeout', array( $this, 'increase_timeout' ) );
+
 		// Make a fresh request.
 		$request = Eventbrite_API::call( $endpoint, $params, $id );
+
+		// Remove the timeout extension for any non-Eventbrite calls.
+		remove_filter( 'http_request_timeout', array( $this, 'increase_timeout' ) );
 
 		// If we get back a proper response, cache it.
 		if ( ! is_wp_error( $request ) ) {
@@ -415,6 +421,15 @@ class Eventbrite_Manager {
 
 		// Reset the list of registered transients.
 		delete_option( 'eventbrite_api_transients' );
+	}
+
+	/**
+	 * Increase the timeout for Eventbrite API calls from the default 5 seconds to 15.
+	 *
+	 * @access public
+	 */
+	public function increase_timeout() {
+		return 15;
 	}
 }
 
