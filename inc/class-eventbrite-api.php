@@ -84,13 +84,13 @@ class Eventbrite_API extends Keyring_Service_Eventbrite {
 		if ( empty( $token ) )
 			return new Keyring_Error( '400', 'No token present for the Eventbrite API.' );
 
-		$endpoint_url = self::$instance->{$endpoint . '_url'};
+		$endpoint_url = trailingslashit( self::$instance->{$endpoint . '_url'} );
 		$query_params['expand'] = apply_filters( 'eventbrite_api_expansions', 'logo,organizer,venue,ticket_classes,format,category,subcategory', $endpoint, $query_params, $object_id );
 		$method = self::$instance->{$endpoint . '_method'};
 		$params = array( 'method' => $method );
 
 		if ( ! empty( $object_id ) && is_numeric( $object_id ) ) {
-			$endpoint_url = trailingslashit( $endpoint_url ) . absint( $object_id );
+			$endpoint_url = trailingslashit( $endpoint_url . absint( $object_id ) );
 		}
 
 		if ( 'GET' == $method ) {
