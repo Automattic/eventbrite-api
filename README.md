@@ -52,7 +52,7 @@ If needed, admin notices will give helpful links and prompting to get Keyring an
 * like `WP_Query` for Eventbrite events (it extends `WP_Query`)
 * creates a secondary loop
 * supported arguments, passed as an array
-  * `display_private`: (*boolean*) Include user events marked as Private. Default is `false`.
+  * `display_private`: (*boolean*) Include user events marked as Private. Default is `false`. Note that this changes the endpoint called from `event_search` to `user_owned_events`. See the [Eventbrite API docs](https://www.eventbrite.com/developer/v3/) for details.
   * `limit`: (*integer*) Return a maximum number of results.
   * `organizer_id`: (*integer*) Return only events for a certain organizer.
   * `p`: (*integer*) Get a single event.
