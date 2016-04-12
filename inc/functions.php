@@ -222,15 +222,20 @@ if ( ! function_exists( 'eventbrite_event_time' ) ) :
  * @return string Event time.
  */
 function eventbrite_event_time() {
+	// Collect our formats from the admin.
+	$date_format = get_option( 'date_format' );
+	$time_format = get_option( 'time_format' );
+	$combined_format = apply_filters( 'eventbrite_date_time_format', $date_format . ', ' . $time_format, $date_format, $time_format );
+
 	// Determine if the end time needs the date included (in the case of multi-day events).
 	$end_time = ( eventbrite_is_multiday_event() )
-		? mysql2date( 'F j Y, g:i A', eventbrite_event_end()->local )
-		: mysql2date( 'g:i A', eventbrite_event_end()->local );
+		? mysql2date( $combined_format, eventbrite_event_end()->local )
+		: mysql2date( $time_format, eventbrite_event_end()->local );
 
 	// Assemble the full event time string.
 	$event_time = sprintf(
 		_x( '%1$s - %2$s', 'Event date and time. %1$s = start time, %2$s = end time', 'eventbrite_api' ),
-		esc_html( mysql2date( 'F j Y, g:i A', eventbrite_event_start()->local ) ),
+		esc_html( mysql2date( $combined_format, eventbrite_event_start()->local ) ),
 		esc_html( $end_time )
 	);
 
@@ -246,8 +251,8 @@ if ( ! function_exists( 'eventbrite_is_multiday_event' ) ) :
  */
 function eventbrite_is_multiday_event() {
 	// Set date variables for comparison.
-	$start_date = mysql2date( 'Ymd', eventbrite_event_start()->utc );
-	$end_date = mysql2date( 'Ymd', eventbrite_event_end()->utc );
+	$start_date = mysql2date( 'Ymd', eventbrite_event_start()->local );
+	$end_date = mysql2date( 'Ymd', eventbrite_event_end()->local );
 
 	// Return true if they're different, false otherwise.
 	return ( $start_date !== $end_date );
