@@ -28,7 +28,8 @@ If the eventbrite API plugin is installed but missing Keyring or an eventbrite.c
 1. Upload `eventbrite-api.zip` or search for it from the Plugins > Add New admin page.
 2. Activate the plugin through the Plugins menu.
 3. Repeat these steps for the [Keyring plugin](https://wordpress.org/plugins/keyring/).
-4. [Assign](http://codex.wordpress.org/Page_Templates#Selecting_a_Page_Template) the Eventbrite Events page template to a page. This will be the page that shows your Eventbrite events.
+4. Log in to your Eventbrite account, create an app, and authorize Keyring.
+5. [Assign](http://codex.wordpress.org/Page_Templates#Selecting_a_Page_Template) the Eventbrite Events page template to a page. This will be the page that shows your Eventbrite events.
 
 For more detailed instructions, see the Eventbrite API [user assistance page](http://automattic.github.io/eventbrite-api/users.html).
 
