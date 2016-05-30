@@ -163,6 +163,11 @@ class Eventbrite_Query extends WP_Query {
 			}
 		}
 
+		// Adjust status for private events if necessary.
+		if ( true === $this->query_vars['display_private'] && ! empty( $this->query_vars['status'] ) ) {
+			$params['status'] = $this->query_vars['status'];
+		}
+
 		return $params;
 	}
 
