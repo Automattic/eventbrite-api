@@ -2,7 +2,7 @@
 Contributors: jkudish, kwight
 Tags: eventbrite, events, api, WordPress.com
 Requires at least: 3.8
-Tested up to: 4.5
+Tested up to: 4.6
 Stable tag: 1.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -11,7 +11,7 @@ Display Eventbrite events right in your WordPress site. Developers get easy-to-u
 
 == Description ==
 
-The Eventbrite API plugin brings the power of Eventbrite to WordPress, for both users and developers.
+The Eventbrite API plugin brings the power of Eventbrite to WordPress, for both users and developers. [Docs available here](http://automattic.github.io/eventbrite-api/).
 
 By connecting to your [Eventbrite account](http://eventbrite.com/), events can be displayed directly on your WordPress.org website, complete with event details and ticket information. Events will blend in with the design of any theme, and events can be filtered by organizer or venue, just like post archives.
 
