@@ -426,24 +426,24 @@ if ( ! function_exists( 'eventbrite_get_ticket_form_widget_height' ) ) :
  */
 function eventbrite_get_ticket_form_widget_height() {
 	// Set the minimum height (essentially iframe chrome).
-	$height = 56;
+	$height = 54;
 
 	// Get tickets for the current event.
 	$tickets = get_post()->tickets;
 
 	// Move along if the event has no ticket information.
 	if ( ! $tickets ) {
-		return $height + 45;
+		return $height + 40;
 	}
 
 	// Add height for various ticket table elements.
-	$height += 123;
+	$height += 137;
 
 	// Check each ticket.
 	foreach ( $tickets as $ticket ) {
 		// Add height for each visible ticket type.
 		if ( ! isset( $ticket->hidden ) || true != $ticket->hidden ) {
-			$height += 45;
+			$height += 85;
 		}
 
 		// Check if any visible sales are still open.
