@@ -1,7 +1,7 @@
 === Eventbrite API ===
 Contributors: jkudish, kwight
 Tags: eventbrite, events, api, WordPress.com
-Requires at least: 3.8
+Requires at least: 4.4
 Tested up to: 4.6
 Stable tag: 1.0.11
 License: GPLv2 or later

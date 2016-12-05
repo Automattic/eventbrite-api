@@ -15,8 +15,7 @@
  		// Register hooks.
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
-		add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'inject_page_template' ) );
-		add_filter( 'wp_insert_post_data', array( $this, 'inject_page_template' ) );
+		add_filter( 'theme_page_templates', array( $this, 'inject_page_template' ), 10, 3 );
 		add_action( 'template_include', array( $this, 'check_templates' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'body_class', array( $this, 'adjust_body_classes' ) );
@@ -82,34 +81,16 @@
 	}
 
 	/**
-	 * Force our way into the theme's cache of page template listings. Gah.
-	 * Based on code by Harri Bell-Thomas: https://github.com/wpexplorer/page-templater
+	 * Make the Eventbrite Events page template available to the templates dropdown.
 	 *
 	 * @access public
 	 *
-	 * @param  array $params List of available page templates, or data being saved via wp_insert_post_data.
-	 * @return array $params Same as input. The hook is just used to manipulate the page template cache.
+	 * @param  array $templates The theme's registered page templates.
+	 * @return array $templates Page templates with the Eventbrite index template added.
 	 */
-	public function inject_page_template( $params ) {
-		// Create the key used for the themes cache
-		$cache_key = 'page_templates-' . md5( trailingslashit( get_theme_root() ) . get_stylesheet() );
-
-		// Retrieve the cache listing. Prepare an empty array if it's empty.
-		$templates = wp_get_theme()->get_page_templates();
-		if ( empty( $templates ) ) {
-		        $templates = array();
-		}
-
-		// Remove the original cache.
-		wp_cache_delete( $cache_key , 'themes');
-
-		// Add our template to any existing templates.
-		$templates['eventbrite-index.php'] = 'Eventbrite Events';
-
-		// Update the cache that includes our template.
-		wp_cache_add( $cache_key, $templates, 'themes', 1800 );
-
-		return $params;
+	public function inject_page_template( $templates ) {
+		$templates['eventbrite-index.php'] = __( 'Eventbrite Events', 'eventbrite-api' );
+		return $templates;
 	}
 
 	/**
