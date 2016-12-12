@@ -425,36 +425,48 @@ if ( ! function_exists( 'eventbrite_get_ticket_form_widget_height' ) ) :
  * @return  int Height of iframe
  */
 function eventbrite_get_ticket_form_widget_height() {
-	// Set the minimum height (essentially iframe chrome).
-	$height = 54;
+	$sales_open = false;
+
+	// Set the starting height: includes the header (50), dates/sales (39+23), and call-to-action (75).
+	$height = 190;
 
 	// Get tickets for the current event.
 	$tickets = get_post()->tickets;
 
-	// Move along if the event has no ticket information.
-	if ( ! $tickets ) {
-		return $height + 40;
-	}
+	if ( is_array( $tickets ) ) {
+		$tickets_height = 0;
+		$sales_end = array();
 
-	// Add height for various ticket table elements.
-	$height += 137;
-
-	// Check each ticket.
-	foreach ( $tickets as $ticket ) {
-		// Add height for each visible ticket type.
-		if ( ! isset( $ticket->hidden ) || true != $ticket->hidden ) {
-			$height += 85;
+		foreach ( $tickets as $ticket ) {
+			// Add height for each ticket type.
+			$tickets_height += 85;
+			// Note if any ticket types are still available.
+			if ( 'AVAILABLE' === $ticket->on_sale_status ) {
+				$sales_open = true;
+				$sales_end[] = $ticket->sales_end;
+			}
 		}
 
-		// Check if any visible sales are still open.
-		if ( ( ! isset( $ticket->sales_end ) || time() < mysql2date( 'U', $ticket->sales_end ) ) && ( ! isset( $ticket->hidden ) || true != $ticket->hidden ) ) {
-			$sales_open = true;
+		// Adjust for no active ticket sales.
+		if ( ! $sales_open ) {
+			// Remove Sales End date.
+			$height -= 22;
+			// Add Sales Ended graphic.
+			$height += 190;
+			// Remove call-to-action section.
+			$height -= 75;
+		} else {
+			// At least one ticket type is available, so add the ticket heights (accounting for same sales end times or not).
+			$sales_end = array_unique( $sales_end );
+			if ( 2 <= count( $sales_end ) ) {
+				$tickets_height += count( $tickets ) * 18;
+				$height -= 23;
+			}
+			$height += $tickets_height;
 		}
-	}
-
-	// Remove call-to-action spacing if no tickets are still on sale.
-	if ( ! isset( $sales_open ) ) {
-		$height -= 74;
+	} else {
+		// No ticket info to go by, we'll return a safe assumption of two ticket types with the same sales end time.
+		$height += ( 2 * 85 );
 	}
 
 	return (int) apply_filters( 'eventbrite_ticket_form_widget_height', $height );
