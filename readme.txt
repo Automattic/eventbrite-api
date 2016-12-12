@@ -2,8 +2,8 @@
 Contributors: jkudish, kwight
 Tags: eventbrite, events, api, WordPress.com
 Requires at least: 4.4
-Tested up to: 4.6
-Stable tag: 1.0.11
+Tested up to: 4.7
+Stable tag: 1.0.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,10 +86,15 @@ This plugin was developed by [Automattic](http://automattic.com/), in direct par
 
 == Changelog ==
 
+= 1.0.12 - December 12, 2016 =
+* Fix display of Eventbrite ticket iframes.
+* Improve page template handling.
+* Make the full uploaded logo available in the event object.
+
 = 1.0.11 - May 30, 2016 =
 * Support the `status` parameter in Eventbrite_Query when displaying private events.
 * Have date formats reflect the admin settings.
-* Improve the URL format to avoid ocaccional issues with the Eventbrite API.
+* Improve the URL format to avoid occasional issues with the Eventbrite API.
 
 = 1.0.10 - October 7, 2015 =
 * Fix bug from when `Eventbrite_Query` args conflict with the loading URL.
