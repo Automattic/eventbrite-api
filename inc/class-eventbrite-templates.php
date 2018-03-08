@@ -70,7 +70,7 @@
 				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&venue_id=$matches[2]&paged=$matches[3]';
 
 				// Add a rule for event single views. Event IDs are 11 digits long (for the foreseeable future).
-				$eb_rules_key = sprintf( '(%s)/[0-9a-z-]+-(\d{11})/?$', $page->post_name );
+				$eb_rules_key = sprintf( '(%s)/[0-9a-z-]+-(\d{10,11})/?$', $page->post_name );
 				$eb_rules[$eb_rules_key] = 'index.php?pagename=$matches[1]&eventbrite_id=$matches[2]';
 			}
 		}
