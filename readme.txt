@@ -2,7 +2,7 @@
 Contributors: jkudish, kwight
 Tags: eventbrite, events, api, WordPress.com
 Requires at least: 4.4
-Tested up to: 4.7
+Tested up to: 4.9.5
 Stable tag: 1.0.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -83,6 +83,12 @@ All development for Eventbrite API plugin is done through the [GitHub repo](http
 = Who made this plugin? =
 
 This plugin was developed by [Automattic](http://automattic.com/), in direct partnership with [Eventbrite](http://eventbrite.com). The Eventbrite name and logo are used by permission.
+
+= Known issues =
+
+The Eventbrite page template needs to be a parent page; it will not function properly as a subpage, giving 404 errors.
+
+Caching for the Eventbrite API and the plugin itself will cause events to take up to ten minutes to show on the Eventbrite page. Disconnecting and reconnecting can force the events to refresh more quickly. For more detailed instructions, see the Eventbrite API [user assistance page](http://automattic.github.io/eventbrite-api/users.html).
 
 == Changelog ==
 
