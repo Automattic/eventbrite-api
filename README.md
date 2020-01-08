@@ -1,3 +1,5 @@
+**Note: This plugin is not maintained, and relies on an Eventbrite endpoint that will cease to operate on February 20, 2020. See [this issue](https://github.com/Automattic/eventbrite-api/issues/83) for details and other options.**
+
 # Eventbrite API WordPress Plugin
 
 The Eventbrite API plugin brings the power of Eventbrite to WordPress, for both users and developers.
